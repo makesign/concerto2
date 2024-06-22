@@ -1,0 +1,38 @@
+en:
+  elements:
+    topmenu_contents:
+      accounts: "Accounts"
+      admin: "Admin"
+      pages: "Pages"
+      backup: "Backup"
+      browse: "Browse"
+      configuration: "Configuration"
+      content: "Content"
+      dashboard_tooltip: "View the Concerto Dashboard"
+      groups: "Groups"
+      leader: "You are a leader of one or more groups"
+      log_out: "Log Out"
+      moderate: "Moderate"
+      network: "Network"
+      no_account: "No account?"
+      now: "now!"
+      plugins: "Plugins"
+      restart_webserver: "Restart Webserver"
+      return_home_msg: 'Return home'
+      screens: "Screens"
+      settings: "Settings"
+      settings: "Settings"
+      sign_in: "Sign In"
+      sign_up: "Register"
+      signin_login_spiel: "to upload and manage content."  
+      submissions_to_moderate: { one: "You have %{count} submission to moderate", other: "You have %{count} submissions to moderate" }
+      system_admin: "You are a system-wide admin"
+      templates: "Templates"
+      users: "Users"
+      users_and_groups: "User Groups"
+
+    owner_select:
+      no_users_found: 'No users found.'
+      select_user: 'Select a User...'
+      select_user_title: 'Select a User'
+      type_to_filter: 'Type to filter ...'

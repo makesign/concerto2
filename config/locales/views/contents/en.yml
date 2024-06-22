@@ -1,0 +1,148 @@
+
+en:
+  activerecord:
+    models:
+      graphic:
+        one: 'Graphic'
+        other: 'Graphics'
+
+      client_time:
+        one: 'Client Time'
+        other: 'Client Times'
+
+      html_text:
+        one: 'HTML Text'
+        other: 'HTML Texts'
+
+      ticker:
+        one: 'Text'
+        other: 'Texts'
+
+      content:
+        one: 'Content'
+        other: 'Contents'
+
+    attributes:
+      content:
+        duration: 'Display Duration'
+        end_time: 'End Time'
+        name: 'Name'
+        start_time: 'Start Time'
+
+  contents:
+    provide_details: 'Provide Details'
+    submit_to_feeds: 'Submit to Feeds'
+
+    dynamic_content_tools: 
+      owner_tools: 'Owner Tools'
+      force_update: 'Force Update'
+      purge_children: 'Purge Children'
+
+    edit:
+      edit_content: "Edit %{type} Content"
+
+    form:
+      preview: 'Preview'
+      provide_details: "Provide Basic Details"
+      select_content_type: "Select Content Type to Add"
+      select_feed: "Select Feed"
+
+    form_bottom:
+      submit_content: 'Submit Content'
+
+    form_elements:
+      feeds:
+        filter_feeds: 'Filter Feeds'
+        no_feeds: "No feeds have been selected yet for this submission."
+        select_a_feed: "Select a feed"
+        type_to_filter: "Type here to filter"
+      selected_feed_display:
+        appears_on_screens: "Appears on %{screens_count} screens"
+      dates:
+        finish_displaying: 'Finish Displaying'
+        start_displaying: 'Start Displaying'
+        set_specific_times: 'Set specific times'
+      duration:
+        show_on_screen: 'Show on Screen'
+        second:
+          one: '%{count} second'
+          other: '%{count} seconds'
+        change: 'Change'
+
+    form_top:
+      data: 'Data'
+
+    graphic:
+      form_top:
+        accepted_filetypes: "Accepted Filetypes"
+        specify_file: "Specify File"
+        upload_graphic: "Upload Graphic"
+      js:
+        preview: "Preview..."
+
+    index:
+      browse_content: "Browse Concerto Content"
+      browse_content_by_feed: "Browse Content by Feed"
+      browse_content_by_screen: "Find Content on a Particular Screen"
+      contents_search: "Concerto Content"
+      filtered_content: "Filtered Content"
+      active: Hide expired & future content?
+      content_search: Content Search
+      feed: Feed
+      screen: Screen
+      search: Search
+      type: Type
+      user: User
+
+    new:
+      add_content: "Add %{type} Content"
+      content: "Content"
+      content_type: "Content type to add:"
+      design_graphic: "Design a Graphic"
+      select_type: "Select Type"
+
+    show:
+      display_from: Display From
+      display_until: Display Until
+      feeds_moderation_status: Submission Status
+      not_submitted: This content has not been submitted to any feeds.
+      submitted_by: Submitted by
+      the_dawn_of_time: The Dawn of Time.
+      the_end_of_time: The End of Time.
+
+    show_details:
+      display_from: "Display From"
+      display_until: "Display Until"
+      duration: "Duration"
+      feeds_moderation_status: "Submission Status"
+      not_submitted: 'This content has not been submitted to any feeds.'
+      seconds: 'seconds'
+      submitted_by: "Submitted by"
+      the_dawn_of_time: 'The Dawn of Time.'
+      the_end_of_time: 'The End of Time.'
+      content_resubmission: "Content Resubmission"
+      renew_submission: 'Renew Submission'
+
+    table:
+      description: "Description"
+      link: "Link"
+      submitted: "Submitted"
+      title: "Title"
+      updated: "Updated"
+
+    ticker:
+      form_top:
+        allowed_html: "Markdown and some simple formatting html is allowed here.  More information on markdown can be found at http://wikipedia.org/wiki/Markdown."
+        characters: 'Characters'
+        display_format: 'Display Format'
+        display_format_tip: 'The ticker display format is used for a smaller amount of text usually along the bottom of the screen.  The text display format is used for major text and usually appears where weather and rss feeds appear.'
+        markdown_allowed: "Some markdown or HTML is allowed in this field "
+        preview: 'Preview'
+        ticker_text: 'Ticker Text'
+        type_your_message: "Type Your Message"
+
+  helpers:
+    label:
+      graphic:
+        name: 'Name'
+        submit: 'Submit'

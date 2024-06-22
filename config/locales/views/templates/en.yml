@@ -1,0 +1,59 @@
+en:
+  manage_fields: 'Manage Fields'
+  activerecord:
+    models:
+      template:
+        one: 'Template'
+        other: 'Templates'
+    attributes:
+      template:
+        author: Author
+        is_hidden: Hidden?
+        name: Name
+  templates:
+    from_scratch: 'Create from Scratch'
+    import_existing: 'Import Existing'
+
+    form:
+      background_image_fields: 'Existing Background Image and Field Placement'
+      custom_css: 'Existing Custom CSS'
+
+    import_form:
+      package: 'Package'
+      image: 'Image'
+      descriptor: 'Descriptor file'
+
+    index_body:
+      no_templates_html: "Oops - there are no templates yet.  Why don't you %{href}?"
+      add_one: 'add one'
+      author: 'by'
+
+    new:
+      invalid_xml: 'The template descriptor file contains invalid XML'
+      template_import_requires_archive: 'You need to specify an archive (ZIP) file that contains your template'
+      template_import_requires_image: 'Your template package is missing a background image'
+      template_import_requires_xml: 'Your template package is missing an xml descriptor'
+      template_import_requires_zip: 'The selected file is not a ZIP file'
+      template_method: 'Template method:'
+      template_type: "%{type} Template"
+
+    show_header:
+      edit_template: 'Edit Template'
+      delete_template: 'Delete Template'
+
+    show_body:
+      preview_alt: '%{name} Preview'
+      author: 'Author'
+      usage: 'Used by the following screens:'
+
+    template:
+      by: "by %{author}"
+
+  helpers:
+    label:
+      template:
+        author: 'Author'
+        is_hidden: 'Hide this template from being shown in lists'
+        media: 'New Background Image and/or Custom CSS'
+        name: 'Name'
+        owner: 'Owner'

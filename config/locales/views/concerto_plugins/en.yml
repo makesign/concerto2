@@ -1,0 +1,53 @@
+en:
+  gems_frozen_warning: "Bundler has been run on Concerto using a frozen gem configuration—likely due to a deployment tool using the --deployment option for Bundler. In this setup, Concerto cannot automatically update the Gemfile with any plugins added/removed here nor install or update Concerto gems automatically."
+
+  activerecord:
+    models:
+      concerto_plugin:
+        one: 'Plugin'
+        other: 'Plugins'
+    attributes:
+      concerto_plugin:
+        enable: 'Enable Gem?'
+        gem_name: 'Gem Name'
+        gem_version: 'Gem Version'
+        source: 'Source'
+        source_url: 'Source URL'
+
+  concerto_plugins:
+    edit:
+      prohibited_plugin_save: 'prohibited plugin save'
+    sources:
+      concerto_plugins: 'Concerto Plugins'
+      rubygems: 'RubyGems'
+      git: 'Git Repository'
+      path: 'Filesystem Path'
+
+    index:
+      disabled: "disabled"
+      disabled_msg: "This plugin is currently disabled."
+      enabled: "enabled"
+      enabled_msg: "This plugin is currently enabled."
+      upgrade_available: "An updated version of this plugin is available."
+      gem_description: "Description"
+      status: "Status"
+
+    new:
+      install_plugin: 'Install Plugin'
+      path_instructions: 'This should be a path to a directory or file location for the plugin. Please note that on Mac OS X, directories inserted into /var/www/ should be prefixed with /private.'
+      source_url: "Source URL"
+
+    show:
+      enabled: 'Enabled:'
+      gem_name: 'Gem name:'
+      gem_version: 'Gem version:'
+      installed: 'Installed:'
+      locked: '(Locked)'
+      source: 'Source:'
+      source_url: 'Source url:'
+      installed_yes: 'Yes'
+      installed_no: 'No'
+      visit_plugin_website: "Visit plugin website"
+      upgrade: "Upgrade"
+      upgrade_available: "(Upgrade available to %{version})"
+      unknown: "Unknown"

@@ -1,0 +1,63 @@
+en:
+  activerecord:
+    models:
+      screen:
+        one: 'Screen'
+        other: 'Screens'
+    attributes:
+      screen:
+        is_public: 'This screen is publicly viewable'
+        location: 'Location'
+        name: 'Name'
+        owner: 'Owner'
+        owner_id: 'Owned By'
+        template_id: 'Template'
+
+  screens:
+    index:
+      common_templates: "Top 5 Templates"
+      view_all: 'View All'
+      screen_summary: 'Screen Summary'
+
+    index_body:
+      add_one: 'Why not add one?'
+      my_screens: 'My Screens'
+      no_screens: 'Oops - there are no screens to display.'
+      other_screens: 'Other Screens'
+      to_add: " to add one"
+
+    feeds:
+      filter_for_feed: "Filter for Feed"
+      select_feed: "Select Feed"
+
+    form:
+      auth_action: 'Authentication Action'
+      authentication: 'Authentication'
+      connection_details: 'Connection Details'
+      dimensions: 'Dimensions'
+      existing_mac: 'Use existing legacy MAC address'
+      new_token: 'Secure with a new token'
+      new_token_override: 'Remove existing authentication and secure with a new token'
+      no_auth: 'None (Unsecured)'
+      private_token: 'Secured by an existing private token'
+      provide_details: 'Provide Details'
+
+    screen_info:
+      offline: 'Offline'
+      online: 'Online'
+      mac_address: 'MAC Address: %{mac}'
+
+    show_body:
+      manage: 'Manage'
+      preview_screen: 'Preview Screen'
+      field: '%{name} Field'
+
+    template_selection:
+      best_fit_templates: "Best-Fit Templates"
+      select_template: 'Select Template'
+
+    thumbs:
+      owner: 'owner'
+
+      #current_template: "Current Selection"
+      #other_templates: "Other Templates"

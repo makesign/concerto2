@@ -1,0 +1,34 @@
+en:
+  activerecord:
+    models:
+      subscription:
+        one: 'Subscription'
+        other: 'Subscriptions'
+
+  subscriptions:
+    approved_content:
+      one: '%{count} approved item'
+      other: '%{count} approved items'
+    records_created: 'Subscriptions created'
+    records_updated: 'Subscriptions have been saved for this field on your screen.'
+    shown_frequently: 'Frequently shown'
+    shown_rarely: 'Rarely shown'
+
+    index:
+      add_a_new_feed:  'Add A New Feed...'
+      field: '%{kind} field'
+      field_custom_configurations: 'Custom Field Configurations'
+      make_changes: 'First make some changes above to save.'
+      manage_model_for_field: 'Manage %{model} for %{name} Field'
+      no_configuration_yet: 'This field does not have any configuration.'
+      save_changes_to_model: 'Save changes to %{model}'
+      search_and_find_a_feed_to_add: "Search and Find a Feed to Add"
+      subscriptions: 'Subscriptions'
+
+    show:
+      back: "Back"
+      edit: "Edit"
+      feed: "Feed:"
+      field: "Field:"
+      screen: "Screen:"
+      weight: "Weight:"
