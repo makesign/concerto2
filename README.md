@@ -9,6 +9,17 @@
 fix migration in (refers to model, was not found)
 db/migrate/20150512235521_add_front_end_plugin.rb
 
+in 01-db_create_load... wtf?
+- # is_manual_migration = File.split($0).last == 'rake' && $*.first == 'db:migrate'
+
+# Major changes
+
+
+# config/initializers/01-db_create_load_or_migrate.rb
+
+contained a self-knit db migration logic.
+
+
 ### Issues
 [DEVISE] Please review the [changelog] and [upgrade guide] for more info on Hotwire / Turbo integration.
 
