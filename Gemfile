@@ -3,6 +3,9 @@ source "https://rubygems.org"
 
 ruby "3.3.3"
 
+# workaround for net-pop till fixed with ruby 3.3.4
+gem 'net-pop', github: 'ruby/net-pop'
+
 # TBD: is nokogiri still needed in rails 7?
 # gem 'nokogiri', '~> 1.13', '>= 1.13.10' # pin while on ruby < 2.7
 gem "rails", "~> 7.1.3", ">= 7.1.3.4"
@@ -118,3 +121,5 @@ gem "font-awesome-sass", "~> 6.5"
 
 
 gem "bootstrap", "~> 5.3"
+
+
