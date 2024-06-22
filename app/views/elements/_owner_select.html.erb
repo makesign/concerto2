@@ -1,0 +1,61 @@
+<div id="selectedOwner">
+  <%= link_to '#', id: "select-owner-btn", title: t('.select_user_title'),
+      class: "dropdown-toggle dropdown-control dd-select-owner", 
+      rel: "#select-owner" do %> 
+      <% if defined? screen and !screen.new_record? and screen.owner.present? %>
+        <%= screen.owner.name %>
+      <% else %>
+        <%= t('.select_user') %>
+      <% end %>
+  <% end %>
+</div>
+
+<div id="select-owner" style="display: none;">
+  <% if options.empty? %>
+    <p> <%= t('.no_users_found') %> </p>
+  <% else %>
+
+    <div class="tooltip-filter-cont">
+      <input type="text" class="owner_filter fillWidth" placeholder="<%= t('.type_to_filter') %>" />
+    </div>
+
+    <div class="tooltip-scrollY" style="height: 300px; width: 100%;">
+      <ul class="filterable selector-list">
+
+        <% if !options[Group].nil? %>
+          <% if options[Group].length > 0 %>
+            <h4 class="default-padding" style="text-align: center"> <%= Group.model_name.human(count: 42) %> </h4>
+            <% options[Group].each do |group| %>
+              <li id="ownerItem" class = "link-hl default-padding" style="padding: 10px"
+                onclick='addOwner("<%= group[0].gsub /"/, '' %>", "group_select", "<%=group[1]%>")'
+                  data-group-index = '<%=group[1].split("-")[1]%>'
+                  data-group-name = '<%=group[0] %>'
+                  data-group-id = '<%=group[1].split("-")[1]%>'
+                  data-filter = '<%=group[0]%>'>
+                <b><%= group[0] %></b>
+              </li>
+            <% end %>
+          <% end %>
+        <% end %>
+ 
+        <% if !options[User].nil? %>
+          <% if options[User].length > 0 %>
+            <h4 class="default-padding" style="text-align: center"> <%= User.model_name.human(count: 42) %> </h4>
+            <% options[User].each do |user| %>
+              <li id="ownerItem" class = "link-hl default-padding" style="padding: 10px"
+                onclick='addOwner("<%= user[0].gsub /"/, '' %>", "user_select", "<%= user[1]%>")'
+                  data-user-index = '<%=user[1].split("-")[1]%>'
+                  data-user-name = '<%=user[0] %>'
+                  data-user-id = '<%=user[1].split("-")[1]%>'
+                  data-filter='<%=user[0] %>'>
+                <b><%= user[0] %></b>
+              </li>
+            <% end %>
+          <% end %>
+        <% end %>
+
+      </ul>
+    </div>
+
+  <% end %>
+</div>

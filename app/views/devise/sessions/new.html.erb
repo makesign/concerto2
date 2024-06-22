@@ -1,0 +1,21 @@
+<% if params[:no_content_cell] %>
+  <div class="form-stacked">
+    <%= render 'form' %>
+  </div>
+<% else %>
+  <section class="viewblock no">
+  	<header class="viewblock-header">
+  		<h1 class="default-padding"><%= t('.sign_in') %></h1>
+  	</header>
+  	<div class="viewblock-cont">
+			<% if flash[:alert] %>
+        <div class="alert alert-banner alert-error">
+          <%= alert %>
+        </div>
+      <% end %>
+
+      <%= render 'form' %>
+  	</div>
+  </section>
+<% end %>
+

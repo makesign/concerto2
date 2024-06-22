@@ -1,0 +1,33 @@
+<div id="add-sub">
+  <% feeds = dfs_tree(Feed.roots) %>
+  <% feeds.reject!{ |feed| !allowed_feeds.include?(feed) && !current_feeds.include?(feed)} %>
+    <% if feeds.empty? %>
+      <p><%= t 'contents.form_elements.feeds.no_feeds' %></p>
+    <% else %>
+
+    <div class="tooltip-filter-cont">
+      <input type="text" class="feed_filter fillWidth" placeholder="Type here to filter"/>
+    </div>
+
+    <div class="tooltip-scrollY">
+      <ul class="filterable selector-list">
+      <% feeds.each_with_index do |feed, i| %>
+        <li data-filter="<%= feed.name %>" class="<%= "checked" if current_feeds.include?(feed) %>">
+          <% if current_feeds.include?(feed) %>
+            <%= ("&nbsp;" * feed.depth).html_safe %>
+            <i class="fas fa-thumbs-up"></i>
+            <b><%= feed.name %></b>
+            <b><%= feed.name %></b>
+          <% else %>
+            <%= link_to screen_field_subscriptions_path(@screen, @field, subscription: {feed_id: feed.id, weight: 1}), {method: :post, remote: true}, class: "link-hl", "data-feed-id" => feed.id do %>
+              <%= ("&nbsp;" * feed.depth).html_safe %>
+              <i class="fas fa-thumbs-up"></i>
+              <b><%= feed.name %></b>
+            <% end %>
+          <% end %>
+        </li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+</div>

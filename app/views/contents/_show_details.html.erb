@@ -1,0 +1,84 @@
+<div class="subblock">
+  <p class="uppercase"><small><b><%= t('.display_from') %></b></small></p>
+  <% if !content.start_time.nil? %>
+    <p><%= l content.start_time, format: :short_day %><br /><%= l content.start_time, format: :twelve_hour_time %></p>
+  <% else %>
+    <p><%= t('.the_dawn_of_time') %></p>
+  <% end %>
+  <p class="uppercase"><small><b><%= t('.display_until') %></b></small></p>
+  <% if !content.end_time.nil? %>
+    <p><%= l content.end_time, format: :short_day %><br /><%= l content.end_time, format: :twelve_hour_time %></p>
+  <% else %>
+    <p><%= t '.the_end_of_time' %></p>
+  <% end %>
+
+  <p class="uppercase"><small><b><%= t('.duration') %></b></small></p>
+  <p><%= content.duration %> <%= t('.seconds') %></p>
+
+  <p class="uppercase"><small><b><%= t('.submitted_by') %></b></small></p>
+  <p><%= link_to user.name, user %></p>
+
+  <% if content.media.present? && content.media.preferred.present? %>
+    <p class="uppercase"><small><b><%= t('.file_size') %></b></small></p>
+    <p><%= number_to_human_size(content.media.preferred.first.file_size) %></p>
+  <% end %>
+</div>
+
+<%= ConcertoPlugin.render_view_hook self, :content_details, { content: content, user: user } %>
+
+<div class="subblock">
+  <p class="uppercase"><small><b><%= t('.feeds_moderation_status') %></b></small></p>
+  <% if content.submissions.all.count > 0 %>
+    <ul>
+      <% content.submissions.all.each do |submission| %>
+        <li>
+          <% if defined?(feed) and !feed.blank? and feed.id == submission.feed.id %>
+            <%= submission.feed.name %>
+          <% else %>
+            <%= link_to submission.feed.name, [submission.feed, submission] %>
+          <% end %> 
+           - <%= submission.moderation_text %>
+        </li>
+      <% end %> 
+    </ul>
+  <% else %>
+    <%= t('.not_submitted') %>
+  <% end %>
+</div>
+
+<!-- Content Resubmission -->
+<% if !@submission.nil? and @submission.content.is_expired? and can?(:update, @submission.content) %>
+  <div class="subblock">
+    <p class="uppercase"><small><b><%= t('.content_resubmission') %></b></small></p>
+    <!-- Show tooltip to edit content start/end time and date -->
+    <div class="default-padding">
+        <%= link_to '#', id: "resubmit-content-btn", title: "Content Resubmission", class: "btn dropdown-toggle dropdown-control dd-content-resubmit", rel: "#content-resubmit" do %>
+        <%= t('.renew_submission') %>
+      <% end %>
+    </div>
+
+    <!-- Hidden form that is used when tooltip is shown -->
+    <div id="resubmit-dates" style="display: none">
+      <div>
+        <!-- Content resubmission form -->
+        <% @content = @submission.content %>
+        <%= form_for(@content) do |f| %>
+          <div  class="default-padding">
+            <%= hidden_field_tag :type, @content.type %>
+            <%= render partial: "contents/form_elements/dates", locals: {form: f} %>
+            <!-- Submissions need to be included with content update -->
+            <div id="hidden-submissions">
+              <% @content.submissions.each do |submission| %>
+                <input type="hidden" class="selected-feed-input" name="feed_id[<%= submission.feed_id %>]" value="<%= submission.feed_id %>" />
+              <% end %>
+            </div>
+          </div>
+          <div class="actions">
+            <%= f.submit "Resubmit", class: 'btn btn-primary' %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+
+  </div>
+<% end %>

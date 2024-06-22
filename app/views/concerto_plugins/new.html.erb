@@ -1,0 +1,54 @@
+<section class="viewblock">
+  <header class="viewblock-header">
+    <h1 class="default-padding">
+      <%= t :new_model, model: ConcertoPlugin.model_name.human %>
+    </h1>
+  </header>
+  <div class="viewblock-cont">
+    <% if ENV['FROZEN'] == "1" %>
+      <div id="gem-frozen">
+        <%= t(:gems_frozen_warning) %>
+      </div>
+    <% end %>
+    <%= form_for(@concerto_plugin) do |f| %>
+      <%= render partial: "layouts/errors", object: @concerto_plugin %>
+
+      <fieldset>
+
+        <div class="clearfix">
+          <%= f.label :source %>
+          <div class="input">
+            <%= f.select :source, plugin_sources %>
+          </div>
+        </div>
+
+        <div class="clearfix">
+          <%= f.label :gem_name %>
+          <div class="input">
+            <%= f.text_field :gem_name, autofocus: true, class: "input-xlarge" %>
+          </div>
+        </div>
+
+        <div class="clearfix">
+          <%= f.label :gem_name %>
+          <div class="input">
+            <%= f.select :gem_name, options_for_select(ConcertoPlugin::ADDONS), {:include_blank => true}, id: "gem_name_select" %>
+          </div>
+        </div>
+
+        <div class="clearfix">
+          <%= label_tooltip 'concerto_plugin', :source_url, t('.source_url'), tip: t('.path_instructions') %>
+          <div class="input">
+            <%= f.text_field :source_url, class: "input-xxlarge" %>
+          </div>
+        </div>
+      </fieldset>
+
+      <div class="submit_bar actions">
+        <%= f.submit t('.install_plugin'), class: "btn btn-primary" %>
+        <%= link_to t(:cancel), concerto_plugins_path, class: "btn" %>
+      </div>
+    <% end %>
+
+  </div>
+</section>

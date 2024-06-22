@@ -1,0 +1,111 @@
+<%# this form is only used for :edit %>
+<%= form_for(template, html: { multipart: true }) do |f| %>
+  <%= render partial: "layouts/errors", object: template %>
+
+  <fieldset>
+    <div class="clearfix">
+      <%= f.label :name %>
+      <div class="input">
+        <%= f.text_field :name, autofocus: true, class: "input-xlarge" %>
+      </div>
+    </div>
+
+    <div class="clearfix">
+      <%= f.label :author %>
+      <div class="input">
+        <%= f.text_field :author, class: "input-xlarge" %>
+      </div>
+    </div>
+
+    <div class="clearfix">
+      <div class="input checkbox">
+        <%= f.check_box :is_hidden %> <%= f.label :is_hidden %>
+      </div>
+    </div>
+
+    <div class="clearfix">
+      <%= f.label :owner %>
+      <div class="input">
+            <% if can?(:manage, :all)
+                 @users = User.order('last_name ASC')
+                 @groups = Group.order('name ASC')
+               else
+                 @users = [current_user]
+                 @groups = current_user.leading_groups + current_user.supporting_groups(:screen, [:all])
+               end
+               options = {}
+               if !@users.empty?
+                 options[User] = @users.map { |u| [u.name, "User-#{u.id}"]}
+               end
+               if !@groups.empty?
+                 options[Group] = @groups.map { |g| [g.name, "Group-#{g.id}"] }
+               end
+            %>
+        <%= select_tag :owner, grouped_options_for_select(options, "#{template.owner_type}-#{template.owner_id}") %>
+      </div>
+    </div>
+  </fieldset>
+
+  <fieldset>
+    <div class="row-fluid">
+      <div class="span6">
+        <%= label_tag 'background_image', t('.background_image_fields') %>
+        <%= image_tag preview_template_path(@template, lm: @template.last_modified_md5, width: "400", format: :jpg) %>
+      </div>
+      <% unless @template_css.blank? %>
+        <div class="span6">
+          <%= label_tag 'custom_css', t(".custom_css") %>
+          <textarea id="css" disabled style="width:100%;" rows="12"><%= @template_css %></textarea>
+        </div>
+      <% end %>
+    </div>
+  </fieldset>
+
+  <fieldset>
+    <div class="clearfix">
+      <%= f.label :media %>
+      <div class="input">
+        <%= f.file_field :template_css %>
+        <%= f.file_field :template_image %>
+      </div>
+    </div>
+  </fieldset>
+
+
+  <fieldset>
+    <legend><span><%= Position.model_name.human(count: 42) %></span>&nbsp; <%= link_to t(:manage_fields), Field, class: "btn" %></legend>
+
+    <div class="template-positions">
+      <div class="row-fluid">
+        <div class="span2">
+          <label><%= Position.human_attribute_name(:field) %></label>
+        </div>
+        <div class="span1">
+          <label><%= Position.human_attribute_name(:top) %></label>
+        </div>
+        <div class="span1">
+          <label><%= Position.human_attribute_name(:left) %></label>
+        </div>
+        <div class="span1">
+          <label><%= Position.human_attribute_name(:bottom) %></label>
+        </div>
+        <div class="span1">
+          <label><%= Position.human_attribute_name(:right) %></label>
+        </div>
+        <div class="span5">
+          <label><%= Position.human_attribute_name(:style) %></label>
+        </div>
+        <div class="span1">
+        </div>
+      </div>
+      <%= f.fields_for :positions do |p| %>
+        <% render 'position_fields', p: p %>
+      <% end %>
+    </div>
+    <%= link_to_add_position_fields t(:add_model, model: Position.model_name.human), f, :positions %>
+  </fieldset>
+
+  <div class="submit_bar actions">
+    <%= f.submit button_text, class: "btn btn-primary" %> <%= link_to t(:cancel), screens_path, class: "btn" %>
+  </div>
+<% end %>

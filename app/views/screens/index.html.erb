@@ -1,0 +1,63 @@
+<%
+  # Hide the template from non-logged in users.
+  # This is purely for aesthetics, we're not concerned
+  # about the templates but anonymous users don't need them.
+  screen_span = 9
+  template_span = 3
+  if !user_signed_in?
+    screen_span = 12
+    template_span = 0
+  end
+%>
+<div class="row-fluid">
+  <div class="span<%= screen_span %>">
+    <section class="viewblock">
+      <header class="viewblock-header" id="screens-header">
+        <div class="viewblock-header_right">
+          <div class="button-padding">
+            <%= link_to t(:new_model, model: Screen.model_name.human), new_screen_path, class: "btn" if can? :create, Screen %>
+          </div>
+        </div>
+        <h1 class="default-padding">
+          <%= t(:all_model, model: Screen.model_name.human(count: 42)) %>
+        </h1>
+      </header>
+      <div id="screens-body" class="viewblock-cont">
+        <%= render partial: "screens/index_body" %>
+      </div>
+    </section>
+  </div>
+  <% if template_span > 0 %>
+  <div class="span<%= template_span %>">
+    <% if can? :manage, @screens %>
+      <section class="viewblock">
+        <header class="viewblock-header">
+
+          <h1 class="default-padding"><%= t('.screen_summary') %></h1>
+        </header>
+        <div class="viewblock-cont">
+          <div class="default-padding">
+            <p><b>Screens Online:</b> <%= Screen.online.size %>/<%= Screen.count %></p>
+            <%= ConcertoPlugin.render_view_hook self, :screen_statistics %>
+          </div>
+        </div>
+      </section>
+    <% end %>
+
+    <section class="viewblock">
+      <header class="viewblock-header">
+        <div class="viewblock-header_right">
+          <div class="button-padding">
+            <%= link_to t(".view_all"), templates_path, class: "btn" %>
+          </div>
+        </div>
+        <h1 class="default-padding"><%= t('.common_templates') %></h1>
+      </header>
+      <div class="viewblock-cont common-templates">
+        <%= render partial: "templates/index_body" %>
+      </div>
+    </section>
+  </div>
+
+  <% end %>
+</div>

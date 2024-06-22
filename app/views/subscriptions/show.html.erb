@@ -1,0 +1,23 @@
+<p>
+  <b><%= t('.feed') %></b>
+  
+</p>
+
+<p>
+  <b><%= t('.field') %></b>
+  <%= @subscription.field.name %>
+</p>
+
+<p>
+  <b><%= t('.screen') %></b>
+  <%= @subscription.screen.name %>
+</p>
+
+<p>
+  <b><%= t('.weight') %></b>
+  <%= @subscription.weight %>
+</p>
+
+
+<%= link_to t('.edit'), edit_screen_field_subscription_path(@screen, @field, @subscription) %> |
+<%= link_to t('.back'), screen_field_subscriptions_path(@screen, @field) %>

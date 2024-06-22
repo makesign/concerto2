@@ -1,0 +1,42 @@
+<section class="viewblock">
+  <header class="viewblock-header light-version">
+    <div class="default-padding" style="padding: 40px 12px; text-align: center;">
+      <%= image_tag("elements/logomark.png", height: 100, alt: "") %>
+      <br /><br />
+      <h1 style="font-size: 4em; letter-spacing: -0.025em;">
+        <%= t('.coming_soon') %>
+      </h1>
+    </div>
+  </header>
+
+  <div class="viewblock-cont" style="min-height: 300px;">
+    <div class="default-padding">
+
+      <div class="alert alert-block">
+        <p class="center">
+          <%= t('.configure') %>
+        </p>
+        <p class="center" style="font-size: 4em; font-family: Courier New, monospace; line-height: 1em;">
+          <%# The following span is used to identify this page to the javscript. %>
+          <span id="screen_temp_token"><strong><%= @temp_token %></strong></span>
+        </p>
+      </div>
+
+      <div style="margin: 20px auto; max-width: 850px;">
+        <br />
+        <h2><b><%= t('.step_one') %></b><br />
+          <%= t('.step_one_message') %>
+        </h2>
+        <br />
+        <h2><b><%= t('.step_two') %></b><br /><%= t('.step_two_header') %></h2>
+        <%= t('.step_two_details') %>
+        <br />
+        <h2><b><%= t('.step_three') %></b><br /><%= t('.step_three_header') %></h2>
+        <p><%= t('.step_three_details') %></p>
+        <br />
+        <h1 class="center"><%= t('.happy_advertising') %></h1>
+      </div>
+
+    </div>
+  </div>
+</div>

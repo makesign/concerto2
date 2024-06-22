@@ -1,0 +1,25 @@
+<%= form_for(@template, url: import_templates_path, html: { multipart: true }) do |f| %>
+  <%= render partial: "layouts/errors", object: @template %>
+
+  <fieldset>
+    <div class="clearfix">
+      <%= label_tag :package, t('.package') %>
+      <div class="input">
+        <%= file_field_tag :package %>
+      </div>
+    </div>
+    <hr />
+
+    <div class="clearfix">
+      <div class="input checkbox">
+        <%= f.check_box :is_hidden %> <%= f.label :is_hidden %>
+      </div>
+    </div>
+
+  </fieldset>
+
+
+  <div class="submit_bar actions">
+    <%= f.submit button_text, class: "btn btn-primary" %> <%= link_to t(:cancel), screens_path, class: "btn" %>
+  </div>
+<% end %>

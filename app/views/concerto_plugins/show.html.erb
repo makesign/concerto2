@@ -1,0 +1,63 @@
+<section class="viewblock">
+  <header class="viewblock-header">
+    <div class="viewblock-header_right">
+      <div class="button-padding">
+        <% if !@gemspec.nil? && !@rubygems_current_version.nil? && (Gem::Version.new(@rubygems_current_version.to_s) > Gem::Version.new(@gemspec.version.to_s)) %>
+          <%= link_to t('.upgrade'), update_gem_concerto_plugin_path(@concerto_plugin),
+            class: "btn update-plugin-btn", remote: true %>
+        <% end %>
+        <% if can? :edit, @concerto_plugin %>
+          <%= link_to t(:edit_model, model: ConcertoPlugin.model_name.human), edit_concerto_plugin_path(@concerto_plugin), class: "btn" %>
+        <% end %>
+        <% if can? :delete, @concerto_plugin %>
+          <%= link_to t(:destroy_model, model: ConcertoPlugin.model_name.human), @concerto_plugin, data: { confirm: t(:are_you_sure_delete_model_key, model: ConcertoPlugin.model_name.human, key: sanitize(@concerto_plugin.gem_name)) }, method: :delete, class: "btn" %>
+        <% end %>
+      </div>
+    </div>
+
+    <div class="default-padding">
+      <h1>
+        <%= link_to t(:manage_model, model: ConcertoPlugin.model_name.human(count: 42)), concerto_plugins_path %> &gt; <%= @concerto_plugin.name %>
+      </h1>
+    </div>
+  </header>
+  <div class="viewblock-cont">
+    <% if ENV['FROZEN'] == "1" %>
+      <div id="gem-frozen">
+        <%= t(:gems_frozen_warning) %>
+      </div>
+    <% end %>
+    <div class="default-padding">
+      <h3>
+        <%= @concerto_plugin.module_name %> via <%= source_link %><% if @concerto_plugin.source != "rubygems" %> (<%= @concerto_plugin.source_url %>) <% end %>
+      </h3>
+      <p><%= link_to !@gemspec.nil? ? @gemspec.homepage : "#" do %><%= t('.visit_plugin_website') %><% end %></p>
+
+      <p><%= !@gemspec.nil? ? @gemspec.description : "" %></p>
+      <p>
+        <b><%= t('.gem_version') %></b>
+        <% if @concerto_plugin.gem_version.present? %>
+          <%= @concerto_plugin.gem_version %> <%= t('.locked') %>
+        <% elsif !@gemspec.nil? %>
+          <%= @gemspec.version.to_s %>
+          <% if !@rubygems_current_version.nil? && @rubygems_current_version.to_s > @gemspec.version.to_s %> <%= t('.upgrade_available', version: @rubygems_current_version) %>
+          <% end %>
+        <% else %>
+          <%= t('.unknown') %>
+        <% end %>
+      </p>
+
+      <p>
+        <b><%= t('.installed') %></b>
+        <%= (@concerto_plugin.installed? && !@gemspec.nil?) ? t('.installed_yes') : t('.installed_no') %>
+      </p>
+
+      <p>
+        <b><%= ConcertoPlugin.human_attribute_name(:enabled) %></b>
+        <%= @concerto_plugin.enabled ? t('.installed_yes') : t('.installed_no') %>
+      </p>
+    </div>
+    <div id="updatePluginResults" class="default-padding">
+    </div>
+  </div>
+</section>

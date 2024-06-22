@@ -1,0 +1,18 @@
+<% if !activities.empty? %>
+  <ul class="list-stacked condensed">
+  <% activities.each do |activity| %>
+    <%# if File.exist?(Rails.root.join("app", "views", "public_activity", activity.key.split('.')[0], "_#{activity.key.split('.')[1]}.html.erb")) %>
+    <% 
+    begin
+      a = render_activity activity 
+    rescue ActionView::MissingTemplate => e
+      Rails.logger.error('public_activity view not found ' + e.message)
+      a = nil
+    end
+    %>
+    <% unless a.nil? %>
+      <li><b><%= l activity.created_at, format: :date_time %>:</b> <%= a %></li>
+    <% end %>
+  <% end %>
+  </ul>
+<% end %>

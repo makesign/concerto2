@@ -1,0 +1,5 @@
+<h1><%= t(:edit) %> <%= @screen.name %> <%= Subscription.model_name.human(count: 42) %></h1>
+
+<%= render 'form' %>
+
+<%= link_to t(:back), screen_field_subscriptions_path(@screen, @field) %>

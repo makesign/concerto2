@@ -1,0 +1,21 @@
+<%= link_to content do %>
+<div class="tile <% unless content.children.empty? %>tile-stack<% end %>">
+  <div class="tile-content">
+    <% if content.media && content.media.preferred.present? %>
+      <div class="file-size"><%= number_to_human_size(content.media.preferred.first.file_size) %></div>
+    <% end %>
+    <%= render_content(content, {type: 'tile'}) %>
+    <div class="tile-labels">
+      <%= ConcertoPlugin.render_view_hook self, :tile_labels, { content: content } %>
+      <% type_folder = "contents/#{content.type.underscore}" %>
+      <%= render_partial_if("#{type_folder}/tab_icon") %>
+
+      <% # Note: The line below is extra verbose for performance reasons.  See #483. %>
+      <% if !content.children.empty? &&
+            !content.children.active.empty? %>
+        <div class="tile-count">x <%= content.children.active.size %></div>
+      <% end %>
+    </div>
+  </div>
+</div>
+<% end %>

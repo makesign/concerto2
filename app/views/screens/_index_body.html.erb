@@ -1,0 +1,41 @@
+<div>
+  <% if @screens.empty? %>
+    <div class="clearfix default-padding">
+      <div class="alert alert-block alert-zero">
+        <p class="alert-heading"><%= t('.no_screens') %></p>
+        <% if ConcertoConfig['allow_user_screen_creation'] %>
+          <%= user_signed_in? ? link_to( t('.add_one'), new_screen_path) : link_to( t('feeds.browse_body.sign_in'), new_user_session_path) + t('.to_add') %>
+        <% end %>
+      </div>
+    </div>
+  <% else %>
+
+    <% if !@my_screens.empty? %>
+      <div class="clearfix default-padding">
+        <div class="header-with-icon">
+          <h3>
+            <%= t('.my_screens') %>
+          </h3>
+        </div>
+        <br />
+        <%= render partial: "thumbs", object: @my_screens, 
+        locals: { show_field_count: true, show_owner: true } %>
+      </div>
+    <% end %>
+
+    <% other_screens = @screens - @my_screens %>
+    <% if other_screens.size > 0 %>
+      <div class="clearfix default-padding">
+        <div class="header-with-icon">
+          <h3>
+            <%= t('.other_screens') %>
+          </h3>
+        </div>
+        <br />
+        <%= render partial: "thumbs", object: other_screens, 
+        locals: { show_field_count: true, show_owner: true }  %>
+      </div>
+    <% end %>
+    
+  <% end %>
+</div>

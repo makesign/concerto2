@@ -1,0 +1,38 @@
+<section class="viewblock">
+  <header id="browse-header" class="viewblock-header">
+    <div class="viewblock-header_right">
+      <div class="status-block">
+        <label><%= t('feeds.pending').upcase %></label>
+        <span><%= @pending_submissions_count %></span>
+      </div>
+    </div>
+    <div class="default-padding">
+      <h1><%= t('.contents_pending_moderation') %></h1>
+    </div>
+  </header>
+
+  <div id="browse-body" class="viewblock-cont feeds-moderate">
+    <% if @feeds.length > 0 %>
+
+      <div class="clearfix default-padding">
+        <div class="header-with-icon">
+          <h3>
+            <%= pluralize(@feeds.length, Feed.model_name.human, Feed.model_name.human(count: 42)) %> <%= t('.with_pending_content') %>
+          </h3>
+        </div>
+        <ul class="list-stacked">
+          <%= render @feeds %>
+        </ul>
+      </div>
+      
+    <% else %>
+      <br />
+      <div class="default-padding">
+        <div class="alert alert-block alert-zero">
+          <p class="alert-heading"><%= t('.nothing_to_moderate') %></p>
+          <% if can? :create, Content %><%= t('.no_pending_content') %><% end %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</section>

@@ -1,0 +1,19 @@
+<%= form_for([@screen, @field, @subscription]) do |f| %>
+  <%= render partial: "layouts/errors", object: @subscription %>
+
+  <div class="field">
+    <%= f.label :feed %><br />
+    <%= f.collection_select :feed_id, Feed.all, :id, :name %>
+  </div>
+  <div class="field">
+    <%= f.label :field %><br />
+    <%= f.collection_select :field_id, Field.all, :id, :name %>
+  </div>
+  <div class="field">
+    <%= f.label :weight %><br />
+    <%= f.select :weight, Subscription::WEIGHTS%>
+  </div>
+  <div class="submit_bar actions">
+    <%= f.submit "Submit", class: "btn btn-primary" %>
+  </div>
+<% end %>

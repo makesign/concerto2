@@ -1,0 +1,80 @@
+.approval {
+  text-align: center;
+  padding: 12px 0px;
+}
+
+.approval-info {
+  width: 800px !important;
+  margin: 0 auto;
+}
+
+.content-ticker {
+  background: $grayLightest;
+  border: solid 1px $grayLight;
+  text-align: center;
+  padding: 50px 20px 40px 20px;
+  @include border-radius(6px);
+  position: relative;
+
+  p {
+    font-size: 3em;
+    line-height: normal;
+  }
+
+  .quotemarks-top, .quotemarks-bottom {
+    position: absolute;
+    @include serif-font(bold, 30px, normal);
+  }
+  .quotemarks-top {
+    top: 15px;
+    left: 15px;
+  }
+  .quotemarks-bottom {
+    bottom: 0px;
+    right: 15px;
+  }
+}
+
+// used in submissions#show:
+.content-frame {
+  position: relative;
+
+  .tile-overlay {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+  }
+}
+.moderate-select {
+  .btn:nth-child(2) {
+    margin-left: 8px;
+  }
+}
+
+.edit-content {
+  position: absolute;
+  top: 10%;
+//height: 100%;
+  width: 100%;
+
+  a:hover {
+    text-decoration: none;
+  }
+
+  h1 {
+    visibility: hidden;
+    color: white;
+    font-size: 15vmin;
+    position: relative;
+    padding-top: 10px;
+    top: 50%;
+    width: 100%;
+    background: rgba(0,0,0,.4);
+    text-align: center;
+  }
+}
+
+ul.screens-list {
+  margin-left: 0;
+}

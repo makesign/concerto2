@@ -1,0 +1,222 @@
+<div class="subnav clearfix">
+  <div class="pull-left" style="padding: 3px 0px; width:85px">
+    <%= link_to "#", title: t('.click_to_jump'), class: "btn btn-small btn-info dropdown-toggle dropdown-control dd-jumpto", rel: "#jump_to" do %>
+      <i class="fas fa-bolt"></i> <%= t('.jump_to_feed') %>
+    <% end %>
+
+    <div id="jump_to" style="display: none;">
+      <% feeds = dfs_tree(Feed.roots) %>
+      <% if feeds.empty? %>
+        <p><%= t('feeds.no_availible_feeds') %></p>
+      <% else %>
+
+      <div class="tooltip-filter-cont">
+        <input type="text" class="feed_filter fillWidth" placeholder="<%= t('.type_to_filter') %>"/>
+      </div>
+
+      <div class="tooltip-scrollY">
+        <ul class="filterable selector-list">
+          <% feeds.each_with_index do |feed, i| %>
+          <li data-filter="<%= feed.name %>">
+            <%= link_to feed_submissions_path(feed), class: "link-hl" do %>
+              <%= ("&nbsp;" * feed.depth).html_safe %>
+              <b><%= feed.name %></b>
+            <% end %>
+          </li>
+          <% end %>
+        </ul>
+      </div>
+      <% end %>
+    </div>
+
+  </div>
+
+  <ul class="nav nav-pills">
+    <% if @feed.children.empty? %>
+    <li class="legend">&nbsp;<%= t('.no_sub_feeds') %>&nbsp;</li>
+    <% else %>
+    <li class="legend"><% t('.sub_feeds') %></li>
+    <% end %>
+    <% @feed.children.each do |feed| %>
+    <li>
+      <%= link_to feed_submissions_path(feed) do %>&nbsp;<%= feed.name %>&nbsp;<% end %>
+    </li>
+    <% end %>
+  </ul>
+
+</div>
+
+<!-- details -->
+
+<div class="clearfix default-padding">
+  <p class="uppercase" style="margin-bottom: 0px;"><small><b><%= Feed.human_attribute_name(:description) %></b></small></p>
+  <p><%= @feed.description %></p>
+
+  <p class="uppercase" style="margin-bottom: 0px;"><small><b><%= t('.allowed_types') %></b></small></p>
+  <p><%= Concerto::Application.config.content_types.sort_by{|type| type.display_name}.select{|t| @feed.content_types["#{t.name}"] == "1"}.collect{|t| t.display_name}.join(', ') %></p>
+
+  <p class="uppercase" style="margin-bottom: 0px;"><small><b><%= t('.moderated_by') %></b></small></p>
+  <p><%= link_to @feed.group.name, group_path(@feed.group) %></p>
+
+  <p class="uppercase" style="margin-bottom: 0px;"><small><b><%= Feed.human_attribute_name(:is_viewable) %></b></small></p>
+  <p>
+    <%= @feed.is_viewable ? t('yes') : t('no') %>
+    <% if !@feed.is_viewable %>
+      <i class="fas fa-eye-slash muted" title="<%= t 'feeds.browse_body.not_viewable' %>"></i>
+    <% end %>
+  </p>
+
+  <p class="uppercase" style="margin-bottom: 0px;"><small><b><%= Feed.human_attribute_name(:is_submittable) %></b></small></p>
+  <p>
+    <%= @feed.is_submittable ? t('yes') : t('no') %>
+    <% if !@feed.is_submittable %>
+      <i class="fas fa-hand-paper muted" title="<%= t 'feeds.browse_body.not_submittable' %>"></i>
+    <% end %>
+  </p>
+
+  <% if (screens = @feed.shown_on_screens.reject{|s| s.nil? || (cannot? :read, s)}).size > 0 %>
+    <p class="uppercase" style="margin-bottom: 0px;"><small><b><%= t('.subscribed_by_screens') %></b></small></p>
+    <ul class="screens-list members-list">
+      <%= render screens %>
+    </ul>
+  <% end %>
+</div>
+
+
+
+<% submissions = @feed.submissions_to_moderate %>
+<% if @can_moderate_feed and submissions.count > 0 %>
+<!-- note that we do not show an alert banner when there are no pending contents; we just hide it altogether -->
+<div class="clearfix default-padding">
+  <h3 class="header-with-icon" style="color:#993333;"><i class="concertocon-header-pendingcontent"></i><%= t('.submissions_pending', count: submissions.count) %></h3>
+  <br />
+  <% submissions.each do |submission| %>
+    <%= render partial: "submissions/submission_tile", locals: { submission: submission } %>
+  <% end %>
+</div>
+<% end %>
+
+<div class="default-padding" style="padding-bottom: 0px; height: 25px;">
+  <div id="browse-filter-select" class="clearfix">
+
+    <div class="pull-left">
+      <p style="line-height: 24px; margin-right: 6px;"><%= t(:show) %>:</p>
+    </div>
+    <div class="pull-left">
+      <div class="btn-group">
+        <% if params[:state] == "active" or params[:state].nil? %>
+          <%= link_to feed_submissions_path(@feed, state: 'active'), class: 'btn active' do %>
+            <span class="badge"><%= @feed.submissions.approved.active.count %></span>
+            <%= t('feeds.active') %>
+          <% end %>
+        <% else %>
+          <%= link_to feed_submissions_path(@feed, state: 'active'), class: 'btn' do %>
+            <span class="badge"><%= @feed.submissions.approved.active.count %></span>
+            <%= t('feeds.active') %>
+          <% end %>
+        <% end %>
+
+        <% if params[:state] == "future" %>
+          <%= link_to feed_submissions_path(@feed, state: 'future'), class: 'btn active' do %>
+            <span class="badge"><%= @feed.submissions.approved.future.count %></span>
+            <%= t('feeds.future') %>
+          <% end %>
+        <% else %>
+          <%= link_to feed_submissions_path(@feed, state: 'future'), class: 'btn' do %>
+            <span class="badge"><%= @feed.submissions.approved.future.count %></span>
+            <%= t('feeds.future') %>
+          <% end %>
+        <% end %>
+
+        <% if params[:state] == "expired" %>
+          <%= link_to feed_submissions_path(@feed, state: 'expired'), class: 'btn active' do %>
+            <span class="badge"><%= @feed.submissions.approved.expired.count %></span>
+            <%= t('feeds.expired') %>
+          <% end %>
+        <% else %>
+          <%= link_to feed_submissions_path(@feed, state: 'expired'), class: 'btn' do %>
+            <span class="badge"><%= @feed.submissions.approved.expired.count %></span>
+            <%= t('feeds.expired') %>
+          <% end %>
+        <% end %>
+
+        <% if @can_moderate_feed %>
+          <% if params[:state] == "denied" %>
+            <%= link_to feed_submissions_path(@feed, state: 'denied'), class: 'btn active' do %>
+              <span class="badge"><%= @feed.submissions.denied.count %></span>
+              <%= t('feeds.denied') %>
+            <% end %>
+          <% else %>
+            <%= link_to feed_submissions_path(@feed, state: 'denied'), class: 'btn' do %>
+              <span class="badge"><%= @feed.submissions.denied.count %></span>
+              <%= t('feeds.denied') %>
+            <% end %>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<%
+   items_in_state = case @state
+                      when 'active'
+                        t('.items_in_state.active', count: @submissions.count)
+                      when 'future'
+                        t('.items_in_state.future', count: @submissions.count)
+                      when 'expired'
+                        t('.items_in_state.expired', count: @submissions.count)
+                      when 'denied'
+                        t('.items_in_state.denied', count: @submissions.count)
+                      else
+                        t('.items_in_state.generic', count: @submissions.count, state: @state)
+                    end
+%>
+
+<% if @paginated_submissions.empty? %>
+<div class="clearfix default-padding">
+  <div class="header-with-icon clearfix">
+    <h3 style="float: left;">
+      <i class="concertocon-header-<%= @state %>content"></i> <%= items_in_state %>
+    </h3>
+  </div>
+  <br />
+  <div class="alert alert-block alert-zero">
+    <p class="alert-heading">
+      <%= case @state
+            when 'active'
+              t('.no_state_content.active')
+            when 'future'
+              t('.no_state_content.future')
+            when 'expired'
+              t('.no_state_content.expired')
+            when 'denied'
+              t('.no_state_content.denied')
+            else
+              t('.no_state_content.generic', state: @state)
+            end
+      %>
+    </p>
+    <% if (can? :create, Content) && @state == 'active' %><%= t('.would_you_kindly') %> <%= link_to t('.submit_something'), new_content_path %> <%= t('.to_make_this_feed_happy') %><% end %>
+  </div>
+</div>
+<% else %>
+
+<div class="clearfix default-padding">
+  <div class="header-with-icon clearfix">
+    <h3 style="float: left;">
+      <i class="concertocon-header-<%= @state %>content"></i> <%= items_in_state %>
+    </h3>
+    <div class="pagination-cont">
+      <%= paginate @paginated_submissions %>
+    </div>
+  </div>
+  <br />
+  <div class="submissions-<%= @state %>" data-feed-id="<%= @feed.id %>">
+    <% @paginated_submissions.select{|s| @state != 'active' || s.content.parent.nil?}.each do |submission| %>
+      <%= render partial: "submissions/submission_tile", locals: { submission: submission } %>
+    <% end %>
+  </div>
+</div>
+<% end %>

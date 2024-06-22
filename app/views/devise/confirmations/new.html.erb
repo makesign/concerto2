@@ -1,0 +1,29 @@
+<section class="viewblock no">
+  <header class="viewblock-header">
+    <h1 class="default-padding"><%= t('.header') %></h1>
+  </header>
+  <div class="viewblock-cont">
+    <% if flash[:alert] %>
+        <div class="alert alert-banner alert-error">
+          <%= alert %>
+        </div>
+    <% end %>
+    <%= form_for(resource, as: resource_name, url: confirmation_path(resource_name), html: {method: :post}) do |f| %>
+        <%= devise_error_messages! %>
+        <fieldset>
+          <div class="clearfix">
+            <%= f.label :email %>
+            <div class="input">
+              <%= f.email_field :email, autofocus: true, class: "input-xlarge" %>
+            </div>
+          </div>
+        </fieldset>
+
+        <div class="submit_bar actions">
+          <%= f.submit t('.submit'), class: "btn btn-primary"%>
+          &nbsp;&nbsp;&nbsp;
+          <%= render partial: "devise/shared/links" %>
+        </div>
+    <% end %>
+  </div>
+</section>

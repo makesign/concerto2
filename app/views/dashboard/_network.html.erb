@@ -1,0 +1,31 @@
+<section class="viewblock">
+  <header class="viewblock-header">
+    <h1 class="default-padding"><%= t('.your_network') %></h1>
+  </header>
+  <div class="viewblock-cont">
+    <div class="row-fluid">
+      <div class="span6">
+        <div class="default-padding">
+          <% if current_user.memberships.count > 0 %>
+            <p><%= Group.model_name.human(count: 42) %>:</p>
+            <ul class="members-list">
+              <%= render partial: 'memberships/membership', collection: current_user.memberships.sort{|a,b| a.group.name <=> b.group.name}, locals: { user: false, group: true } %>
+            </ul>
+          <% else %>
+            <p><%= t('.no_membership') %></p>
+          <% end %>
+        </div>
+      </div>
+      <div class="span6">
+        <div class="default-padding">
+          <% if current_user.screens.count > 0 %>
+            <p><%= Screen.model_name.human(count: 42) %>:</p>
+            <ul class="members-list">
+              <%= render current_user.screens %>
+            </ul>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
