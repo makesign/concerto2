@@ -61,80 +61,92 @@ Feed.where(:name => "Concerto").first_or_create(
     :is_submittable => 1,
     :content_types => installed_content_types)
 
-#Create an initial template
-@template = Template.where(:name => "BlueSwoosh").first_or_create(:author => "Concerto")
+def create_template(template_name, image_filename)
+  admin = User.first
+  template = Template.where(:name => template_name).first_or_create(:author => "Concerto")
+  template.owner = admin
+  template.save
 
-#Taking care to make this file upload idempotent
-if Media.where(:file_name => "BlueSwooshNeo_16x9.jpg").to_a.empty?
-  file = File.new("db/seed_assets/BlueSwooshNeo_16x9.jpg")
-  @template.media.create(:file => file, :key => "original", :file_type => "image/jpg")
+  #Taking care to make this file upload idempotent
+  if Media.where(:file_name => image_filename).to_a.empty?
+    file = File.new("db/seed_assets/{image_filename}")
+    media = @template.media.build(:key => "original", :file_type => "image/jpg",
+                                  :file_name => image_filename)
+    media.attached_file.attach(io: file, filename: image_filename)
+    media.file_size = file.size
+    media.save!
+  end
+  template
 end
 
+#Create an initial template
+template = create_template "BlueSwoosh", "BlueSwooshNeo_16x9.jpg"
+
 #Associate each field with a position in the template
-concerto_template = Template.where(:name => "BlueSwoosh").first.id
+concerto_template = template.id
 Position.where(:field_id => Field.where(:name => "Graphics").first.id, :template_id => concerto_template).first_or_create(:top => ".026", :left => ".025", :bottom => ".796", :right => ".592", :style => "border:solid 2px #ccc;")
 Position.where(:field_id => Field.where(:name => "Ticker").first.id, :template_id => concerto_template).first_or_create(:top => ".885", :left => ".221", :bottom => ".985", :right => ".975", :style => "color:#FFF; font-family:Frobisher, Arial, sans-serif; font-weight:bold !important;")
 Position.where(:field_id => Field.where(:name => "Text").first.id, :template_id => concerto_template).first_or_create(:top => ".015", :left => ".68", :bottom => ".811", :right => ".98", :style =>"color:#FFF; font-family:Frobisher, Arial, sans-serif;")
 Position.where(:field_id => Field.where(:name => "Time").first.id, :template_id => concerto_template).first_or_create(:top => ".885", :left => ".024", :bottom => ".974", :right => ".18", :style => "color:#ccc; font-family:Frobisher, Arial, sans-serif; font-weight:bold !important; letter-spacing:.12em !important;")
 
-@template = Template.where(:name => "Waves").first_or_create(:author => "Concerto")
-if Media.where(:file_name => "Waves_16x9.jpg").to_a.empty?
-  file = File.new("db/seed_assets/Waves_16x9.jpg")
-  @template.media.create(:file => file, :key => "original", :file_type => "image/jpg")
-end
+
+
+# -------------- Waves -------------------
+template = create_template "Waves", "Waves_16x9.jpg"
+
 #Associate each field with a position in the template
-waves_template = Template.where(:name => "Waves").first.id
+waves_template = template.id
 Position.where(:field_id => Field.where(:name => "Graphics").first.id, :template_id => waves_template).first_or_create(:top => ".009", :left => ".046", :bottom => ".816", :right => ".641", :style => "font-family:Frobisher, sans-serif; font-size:0.8em; font-weight:bold; ")
 Position.where(:field_id => Field.where(:name => "Text").first.id, :template_id => waves_template).first_or_create(:top => ".009", :left => ".712", :bottom => ".809", :right => ".967", :style =>"font-family:Frobisher, sans-serif;")
 Position.where(:field_id => Field.where(:name => "Time").first.id, :template_id => waves_template).first_or_create(:top => ".858", :left => ".691", :bottom => ".975", :right => ".938", :style => "font-family:Frobisher, sans-serif; font-size:0.8em; font-weight:bold;")
 
-@template = Template.where(:name => "Stoic").first_or_create(:author => "Concerto")
-if Media.where(:file_name => "Stoic_16x9.jpg").to_a.empty?
-  file = File.new("db/seed_assets/Stoic_16x9.jpg")
-  @template.media.create(:file => file, :key => "original", :file_type => "image/jpg")
-end
-stoic_template = Template.where(:name => "Stoic").first.id
+
+# -------------- Stoic -------------------
+
+template = create_template "Stoic", "Stoic_16x9.jpg"
+
+stoic_template = template.id
 Position.where(:field_id => Field.where(:name => "Graphics").first.id, :template_id => stoic_template).first_or_create(:top => ".023", :left => ".016", :bottom => ".838", :right => ".626", :style => "font-family:Frobisher, Arial, sans-serif; color:#000;")
 Position.where(:field_id => Field.where(:name => "Ticker").first.id, :template_id => stoic_template).first_or_create(:top => ".903", :left => ".27", :bottom => ".995", :right => ".97", :style => "font-family:Frobisher, Arial, sans-serif; color:#FFF;")
 Position.where(:field_id => Field.where(:name => "Text").first.id, :template_id => stoic_template).first_or_create(:top => ".01", :left => ".652", :bottom => ".816", :right => ".992", :style =>"font-family:Frobisher, Arial, sans-serif; color:#FFF;")
 Position.where(:field_id => Field.where(:name => "Time").first.id, :template_id => stoic_template).first_or_create(:top => ".903", :left => ".091", :bottom => ".995", :right => ".231", :style => "font-family:Frobisher, Arial, sans-serif; color:#FFF;")
 
-@template = Template.where(:name => "Simplicity").first_or_create(:author => "Concerto")
-if Media.where(:file_name => "Simplicity.jpg").to_a.empty?
-  file = File.new("db/seed_assets/Simplicity.jpg")
-  @template.media.create(:file => file, :key => "original", :file_type => "image/jpg")
-end
-simplicity_template = Template.where(:name => "Simplicity").first.id
+
+# -------------- Simplicity -------------------
+template = create_template "Simplicity", "Simplicity.jpg"
+
+simplicity_template = template.id
 Position.where(:field_id => Field.where(:name => "Graphics").first.id, :template_id => simplicity_template).first_or_create(:top => "0", :left => "0", :bottom => "1", :right => "1", :style => "")
 
-@template = Template.where(:name => "Ruby").first_or_create(:author => "Concerto")
-if Media.where(:file_name => "Ruby_16x9.jpg").to_a.empty?
-  file = File.new("db/seed_assets/Ruby_16x9.jpg")
-  @template.media.create(:file => file, :key => "original", :file_type => "image/jpg")
-end
-ruby_template = Template.where(:name => "Ruby").first.id
+
+
+
+# -------------- Ruby -------------------
+template = create_template "Waves", "Ruby_16x9.jpg"
+
+ruby_template = template.id
 Position.where(:field_id => Field.where(:name => "Graphics").first.id, :template_id => ruby_template).first_or_create(:top => ".196", :left => ".042", :bottom => ".879", :right => ".606", :style => "font-family:Frobisher, Arial, sans-serif; color:#000; border:solid 1px #ccc;")
 Position.where(:field_id => Field.where(:name => "Ticker").first.id, :template_id => ruby_template).first_or_create(:top => ".011", :left => ".078", :bottom => ".15", :right => ".606", :style => "font-family:Frobisher, Arial, sans-serif; color:#FFF;")
 Position.where(:field_id => Field.where(:name => "Text").first.id, :template_id => ruby_template).first_or_create(:top => ".117", :left => ".671", :bottom => ".819", :right => ".991", :style =>"font-family:Frobisher, Arial, sans-serif; color:#FFF;")
 Position.where(:field_id => Field.where(:name => "Time").first.id, :template_id => ruby_template).first_or_create(:top => ".011", :left => ".689", :bottom => ".074", :right => ".99", :style => "font-family:Frobisher, Arial, sans-serif; color:#FFF;")
 
-@template = Template.where(:name => "Ribbon").first_or_create(:author => "Concerto")
-if Media.where(:file_name => "Ribbon_16x9.jpg").to_a.empty?
-  file = File.new("db/seed_assets/Ribbon_16x9.jpg")
-  @template.media.create(:file => file, :key => "original", :file_type => "image/jpg")
-end
-ribbon_template = Template.where(:name => "Ribbon").first.id
+
+
+# -------------- Ribbon -------------------
+template = create_template "Ribbon", "Ribbon_16x9.jpg"
+
+ribbon_template = template.id
 Position.where(:field_id => Field.where(:name => "Graphics").first.id, :template_id => ribbon_template).first_or_create(:top => ".013", :left => ".038", :bottom => ".832", :right => ".633", :style => "border:solid 2px #999 ;")
 Position.where(:field_id => Field.where(:name => "Ticker").first.id, :template_id => ribbon_template).first_or_create(:top => ".867", :left => ".012", :bottom => ".986", :right => ".572", :style => "font-family:Arial, sans-serif ;")
 Position.where(:field_id => Field.where(:name => "Text").first.id, :template_id => ribbon_template).first_or_create(:top => ".293", :left => ".76", :bottom => ".837", :right => ".96", :style =>"color:#FFF ; font-family:Arial, sans-serif ;")
 Position.where(:field_id => Field.where(:name => "Time").first.id, :template_id => ribbon_template).first_or_create(:top => ".033", :left => ".84", :bottom => ".233", :right => ".972", :style => "color:#ccc ; font-family:Arial, sans-serif ;")
 
-@template = Template.where(:name => "GraySwoosh").first_or_create(:author => "Concerto")
-if Media.where(:file_name => "GraySwoosh_16x9.jpg").to_a.empty?
-  file = File.new("db/seed_assets/GraySwoosh_16x9.jpg")
-  @template.media.create(:file => file, :key => "original", :file_type => "image/jpg")
-end
-grayswoosh_template = Template.where(:name => "GraySwoosh").first.id
+
+
+# -------------- GraySwoosh -------------------
+template = create_template "GraySwoosh", "GraySwoosh_16x9.jpg"
+
+grayswoosh_template = template.id
 Position.where(:field_id => Field.where(:name => "Graphics").first.id, :template_id => grayswoosh_template).first_or_create(:top => ".2", :left => ".412", :bottom => ".95", :right => ".975", :style => "border: solid 2px #FFF;")
 Position.where(:field_id => Field.where(:name => "Ticker").first.id, :template_id => grayswoosh_template).first_or_create(:top => ".023", :left => ".458", :bottom => ".11", :right => ".988", :style => "color: #000; font-family:Frobisher, sans-serif;")
 Position.where(:field_id => Field.where(:name => "Text").first.id, :template_id => grayswoosh_template).first_or_create(:top => ".2", :left => ".04", :bottom => ".95", :right => ".38", :style =>"font-family: Frobisher, sans-serif; color:#FFF;")
