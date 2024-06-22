@@ -76,7 +76,7 @@ class ConcertoDevise::RegistrationsController < Devise::RegistrationsController
     if ConcertoConfig[:setup_complete]
       respond_with resource
     else
-      respond_with resource do |format|
+      respond_to do |format|
         format.html { render "new_first_admin", layout: "no-topmenu" }
       end
     end
