@@ -69,8 +69,8 @@ def create_template(template_name, image_filename)
 
   #Taking care to make this file upload idempotent
   if Media.where(:file_name => image_filename).to_a.empty?
-    file = File.new("db/seed_assets/{image_filename}")
-    media = @template.media.build(:key => "original", :file_type => "image/jpg",
+    file = File.new("db/seed_assets/#{image_filename}")
+    media = template.media.build(:key => "original", :file_type => "image/jpg",
                                   :file_name => image_filename)
     media.attached_file.attach(io: file, filename: image_filename)
     media.file_size = file.size

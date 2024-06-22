@@ -15,7 +15,7 @@ class Feed < ActiveRecord::Base
   # Validations
   validates :name, presence: true, uniqueness: true
   validates :group, presence: true, associated: true
-  validate :parent_id_cannot_be_this_feed
+  # validate :parent_id_cannot_be_this_feed
 
   #Newsfeed
   include PublicActivity::Common if defined? PublicActivity::Common
@@ -25,6 +25,7 @@ class Feed < ActiveRecord::Base
     return subscriptions.collect{|s| s.screen }.uniq
   end
 
+  #deprecated
   def parent_id_cannot_be_this_feed
     if !parent_id.blank? and parent_id == id
       errors.add(:parent_id, I18n.t(:cant_be_this_feed))
@@ -32,6 +33,8 @@ class Feed < ActiveRecord::Base
   end
 
   # Feed Hierarchy
+  # belongs_to -> parent_id can no longer be nil
+
   belongs_to :parent, class_name: "Feed"
   has_many :children, class_name: "Feed", foreign_key: "parent_id"
 
@@ -40,7 +43,7 @@ class Feed < ActiveRecord::Base
 
   # Test if this feed is a root feed or not
   def is_root?
-    parent_id.nil?
+    parent_id == id
   end
 
   # Collect a list of parent feeds.
@@ -49,7 +52,7 @@ class Feed < ActiveRecord::Base
   # Compliments of DHH http://github.com/rails/acts_as_tree
   def ancestors
     node, nodes = self, []
-    nodes << node = node.parent while node.parent
+    nodes << node = node.parent while !node.is_root? && node.parent
     nodes
   end
 
