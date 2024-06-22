@@ -78,6 +78,8 @@
     <orderEntry type="library" scope="PROVIDED" name="mail (v2.8.1, RVM: ruby-3.3.3 [concerto-new]) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="marcel (v1.0.4, RVM: ruby-3.3.3 [concerto-new]) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="matrix (v0.4.2, RVM: ruby-3.3.3 [concerto-new]) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="mime-types (v3.5.2, RVM: ruby-3.3.3 [concerto-new]) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="mime-types-data (v3.2024.0604, RVM: ruby-3.3.3 [concerto-new]) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="mini_mime (v1.1.5, RVM: ruby-3.3.3 [concerto-new]) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="minitest (v5.24.0, RVM: ruby-3.3.3 [concerto-new]) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="msgpack (v1.7.2, RVM: ruby-3.3.3 [concerto-new]) [gem]" level="application" />

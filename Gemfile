@@ -109,3 +109,5 @@ gem "octokit", "~> 9.1"
 gem "cancancan", "~> 3.6"
 
 gem "font-awesome-sass", "~> 6.5"
+
+gem "mime-types", "~> 3.5"

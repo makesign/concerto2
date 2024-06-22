@@ -1,4 +1,11 @@
 # Gems
+## Errors
+-cannot load such file -- mime/types -> gem
+## serialize
+error: 
+missing keyword: :coder If no default coder is configured, a coder must be provided to `serialize`.
+
+https://api.rubyonrails.org/v7.1.2/classes/ActiveRecord/AttributeMethods/Serialization/ClassMethods.html
 
 ## Sass
 
