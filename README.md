@@ -14,7 +14,6 @@ in 01-db_create_load... wtf?
 
 
 
-
 # Major changes
 
 # initialization

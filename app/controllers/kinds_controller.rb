@@ -53,7 +53,7 @@ class KindsController < ApplicationController
     @kind = Kind.find(params[:id])
     auth!
     
-    if @kind.update_attributes(kind_params)
+    if @kind.update(kind_params)
       flash[:notice] = t(:kind_updated)
     end
     respond_with(@kind)

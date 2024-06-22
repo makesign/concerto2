@@ -112,7 +112,7 @@ class TemplatesController < ApplicationController
       template_parameters.delete(file)
     end
 
-    if @template.update_attributes(template_parameters)
+    if @template.update(template_parameters)
       process_notification(@template, {}, process_notification_options({params: {template_name: @template.name}}))
       flash[:notice] = t(:template_updated)
     end

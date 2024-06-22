@@ -76,7 +76,7 @@ class FieldConfigsController < ApplicationController
     auth!
 
     respond_to do |format|
-      if @field_config.update_attributes(field_config_params)
+      if @field_config.update(field_config_params)
         process_notification(@field_config, {}, process_notification_options({
           params: {
             field_config_name: @field_config.key,

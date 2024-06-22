@@ -62,7 +62,7 @@ class GroupsController < ApplicationController
   def update
     @group = Group.find(params[:id])
     auth!
-    if @group.update_attributes(group_params)  
+    if @group.update(group_params)  
       process_notification(@group, {}, process_notification_options({params: {group_name: @group.name}}))
       flash[:notice] = t(:group_updated) 
     end  

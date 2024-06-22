@@ -11,9 +11,9 @@ class MembershipsController < ApplicationController
     @membership = Membership.where(user_id: params[:membership][:user_id], group_id: params[:group_id]).first_or_create
 
     if params[:autoconfirm] || current_user.is_admin?
-      @membership.update_attributes(level: Membership::LEVELS[:regular])
+      @membership.update(level: Membership::LEVELS[:regular])
     else
-      @membership.update_attributes(level: Membership::LEVELS[:pending])
+      @membership.update(level: Membership::LEVELS[:pending])
     end
 
     @membership.perms[:screen] = params[:screen]

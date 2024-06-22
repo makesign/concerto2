@@ -65,7 +65,7 @@ class ScreensController < ApplicationController
 
     auth!
 
-    if @screen.update_attributes(screen_params)
+    if @screen.update(screen_params)
       process_notification(@screen, {}, process_notification_options({params: {screen_name: @screen.name}}))
 
       run_callbacks :change # Run plugin hooks

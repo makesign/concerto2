@@ -83,7 +83,7 @@ class SubscriptionsController < ApplicationController
     auth!
 
     respond_to do |format|
-      if @subscription.update_attributes(subscription_params)
+      if @subscription.update(subscription_params)
         format.html { redirect_to(screen_field_subscriptions_path(@screen, @field), notice: t('subscriptions.records_updated')) }
         format.xml  { head :ok }
         format.js { head :ok }

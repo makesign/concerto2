@@ -95,7 +95,7 @@ class FeedsController < ApplicationController
     auth!
 
     respond_to do |format|
-      if @feed.update_attributes(feed_params)
+      if @feed.update(feed_params)
         process_notification(@feed, {}, process_notification_options({params: {feed_name: @feed.name}}))
         format.html { redirect_to(feed_submissions_path(@feed), notice: t(:feed_updated)) }
         format.xml  { head :ok }

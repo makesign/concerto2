@@ -133,7 +133,7 @@ class SubmissionsController < ApplicationController
     auth!
 
     respond_to do |format|
-      if @submission.update_attributes(submission_params)
+      if @submission.update(submission_params)
         process_notification(@submission, {}, process_notification_options({
           params: {
             status: @submission.moderation_flag,

@@ -207,13 +207,13 @@ class ContentsController < ApplicationController
     # end
     # end from create --------------------------------
 
-    if @content.update_attributes(update_info)
+    if @content.update(update_info)
       process_content_notification action_name
       submissions = @content.submissions
       submissions.each do |submission|
         if @feed_ids.include? submission.feed_id
           # set the "needs moderated" flag if they cannot moderate the submission
-          submission.update_attributes(moderation_flag: nil) if !can?(:update, submission)
+          submission.update(moderation_flag: nil) if !can?(:update, submission)
         else
           submission.mark_for_destruction
         end

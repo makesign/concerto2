@@ -72,7 +72,7 @@ class UsersController < ApplicationController
     auth!
 
     set_admin = params[:user].delete("is_admin")
-    if @user.update_attributes(user_params)
+    if @user.update(user_params)
       flash[:notice] = t(:user_updated)
     
       if !(set_admin.nil?) and can? :manage, User

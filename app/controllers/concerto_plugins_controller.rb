@@ -75,7 +75,7 @@ class ConcertoPluginsController < ApplicationController
   def update
     @concerto_plugin = ConcertoPlugin.find(params[:id])
     auth!
-    if @concerto_plugin.update_attributes(concerto_plugin_params)
+    if @concerto_plugin.update(concerto_plugin_params)
       process_plugin_notification
       if ENV['FROZEN'] == "1"
         flash[:notice] = t :plugin_updated_frozen_env

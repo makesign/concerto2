@@ -110,7 +110,7 @@ class ConcertoConfig < ActiveRecord::Base
       end
     end
     if !options_to_resync.empty?
-      entry.update_attributes(options_to_resync)
+      entry.update(options_to_resync)
     end
   end  
 
