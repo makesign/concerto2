@@ -150,6 +150,8 @@ GEM
       faraday-net_http (>= 2.0, < 3.2)
     faraday-net_http (3.1.0)
       net-http
+    faraday-retry (2.2.1)
+      faraday (~> 2.0)
     ffi (1.17.0-aarch64-linux-gnu)
     ffi (1.17.0-arm64-darwin)
     font-awesome-sass (6.5.2)
@@ -428,6 +430,7 @@ DEPENDENCIES
   debug
   delayed_job (~> 4.1)
   devise
+  faraday-retry (~> 2.2)
   font-awesome-sass (~> 6.5)
   image_processing (~> 1.2)
   importmap-rails

@@ -55,7 +55,7 @@ module Concerto
 
     # Class for converting various document types using the docsplit gem.
     class DocSplitConverter
-      require 'docsplit'
+      # require 'docsplit'
 
       # Converts the first page of the original media to a png and loads it back into
       #   the media as a processed entry.

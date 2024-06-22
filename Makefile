@@ -1,5 +1,7 @@
 .RECIPEPREFIX = -
 
+open:
+- open http://localhost:3000
 bash:
 - docker-compose exec concerto bash
 

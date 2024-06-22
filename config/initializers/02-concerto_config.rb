@@ -2,7 +2,8 @@ Rails.logger.debug "Starting #{File.basename(__FILE__)} at #{Time.now.to_s}"
 
 require 'socket'
 begin
-  concerto_hostname = Socket.gethostbyname(Socket.gethostname).first
+  # maybe just concerto_hostname = Socket.gethostname
+  concerto_hostname = Addrinfo.getaddrinfo(Socket.gethostname, 80).first.getnameinfo.first
 rescue SocketError => e
   concerto_hostname = ""
   Rails.logger.debug "Socket error in trying to determine hostname: #{e}"
