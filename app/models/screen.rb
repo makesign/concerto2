@@ -307,4 +307,4 @@ private
     return value if type == token_type
     return nil
   end
-end
+  end

@@ -4,12 +4,16 @@ class ScreenTest < ActiveSupport::TestCase
   #Test the fields that should be required
   test "name cannot be blank" do
     s = screens(:one)
+    t = templates(:one)
     screen = Screen.new(s.attributes)
     screen.owner = users(:katie)
+    screen.template = Template.new(t.attributes)
     screen.authentication_token="auth:nametest" # Must be unique
     screen.name = ""
     assert !screen.valid?, "Screen name is blank"
     screen.name = "Blah"
+    valid = screen.valid?
+    errors = screen.errors
     assert screen.valid?, "Screen name has entry"
   end
 

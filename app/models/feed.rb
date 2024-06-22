@@ -5,7 +5,7 @@ class Feed < ActiveRecord::Base
   has_many :submissions, dependent: :destroy
   has_many :contents, through: :submissions
   has_many :subscriptions, dependent: :destroy
-  serialize :content_types, Hash, coder: YAML # see https://api.rubyonrails.org/v7.1.2/classes/ActiveRecord/AttributeMethods/Serialization/ClassMethods.html
+  serialize :content_types, type: Hash, coder: YAML # see https://api.rubyonrails.org/v7.1.2/classes/ActiveRecord/AttributeMethods/Serialization/ClassMethods.html
 
   # Scoped relations for content approval states
   has_many :approved_contents, -> { where "submissions.moderation_flag" => true}, through: :submissions, source: :content

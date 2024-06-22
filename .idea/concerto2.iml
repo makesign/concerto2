@@ -72,6 +72,7 @@
     <orderEntry type="library" scope="PROVIDED" name="execjs (v2.9.1, RVM: ruby-3.3.3 [concerto-new]) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="faraday (v2.9.2, RVM: ruby-3.3.3 [concerto-new]) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="faraday-net_http (v3.1.0, RVM: ruby-3.3.3 [concerto-new]) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="faraday-retry (v2.2.1, RVM: ruby-3.3.3 [concerto-new]) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="ffi (v1.17.0, RVM: ruby-3.3.3 [concerto-new]) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="font-awesome-sass (v6.5.2, RVM: ruby-3.3.3 [concerto-new]) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="gems (v1.2.0, RVM: ruby-3.3.3 [concerto-new]) [gem]" level="application" />
