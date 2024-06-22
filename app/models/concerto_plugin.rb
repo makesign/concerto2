@@ -9,7 +9,7 @@
 # which gets instantiated in engines to enable use of the Concerto
 # Plugin interface.
 
-class ConcertoPlugin < ActiveRecord::Base
+class ConcertoPlugin < ApplicationRecord
   include ActiveModel::ForbiddenAttributesProtection
   include PublicActivity::Common if defined? PublicActivity::Common
 

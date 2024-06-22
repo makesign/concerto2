@@ -7,7 +7,7 @@ rescue SocketError => e
   concerto_hostname = ""
   Rails.logger.debug "Socket error in trying to determine hostname: #{e}"
 end
-
+Rails.configuration.after_initialize do
 if ActiveRecord::Base.connection.data_source_exists? 'concerto_configs'
   if ConcertoConfig.columns_hash.has_key?("plugin_id")
     # defaults
@@ -63,23 +63,6 @@ if ActiveRecord::Base.connection.data_source_exists? 'concerto_configs'
       description: 'HTML to display on the footer of every page.', seq_no: 91)
     ConcertoConfig.make_concerto_config("secret_token", "", value_type: "string", value_default: "", hidden: "false", category: 'System')
   end
-
-  Rails.logger.debug "Completed 02-concerto_config.rb at #{Time.now.to_s}"
-
-  # 5/8/2015 - We've done something dumb in the ConcertoConfigs controller and
-  # created a 3-state boolean issue where we're using NULL for false and
-  # real falses are ignored and invisible - this patch fixes that
-  ConcertoConfig.where("hidden IS NULL").update_all(hidden: false)
-
-  #Set the time here instead of in application.rb to get ConcertoConfig access
-  Rails.application.config.time_zone = ConcertoConfig[:system_time_zone]
-  #Set Time.zone specifically, because it's too late to derive it from config.
-  Time.zone = ConcertoConfig[:system_time_zone]
-
-  if !ConcertoConfig[:http_proxy_settings].empty?
-    ENV['HTTP_PROXY'] = ConcertoConfig[:http_proxy_settings]
-  end
-
 end
-
+end
 Rails.logger.debug "Completed #{File.basename(__FILE__)} at #{Time.now.to_s}"

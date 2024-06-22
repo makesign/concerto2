@@ -1,11 +1,12 @@
 require_relative "boot"
+
 require "rails/all"
 
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
 
-#module Concerto 
+module Concerto 
   class Application < Rails::Application
 
     # rails 7
@@ -91,4 +92,4 @@ Bundler.require(*Rails.groups)
   #  end
 
   end
-# end
+end

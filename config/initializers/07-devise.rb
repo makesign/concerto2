@@ -1,5 +1,12 @@
 Rails.logger.debug "Starting #{File.basename(__FILE__)} at #{Time.now.to_s}"
 
+Rails.configuration.after_initialize do
+  Devise.setup do |config|
+    if ActiveRecord::Base.connection.data_source_exists? 'concerto_configs'
+      config.mailer_sender = ConcertoConfig[:mailer_from]
+    end
+  end
+end
 # Use this hook to configure devise mailer, warden hooks and so forth.
 # Many of these configuration options can be set straight in your model.
 Devise.setup do |config|
@@ -7,9 +14,7 @@ Devise.setup do |config|
   # Configure the e-mail address which will be shown in Devise::Mailer,
   # note that it will be overwritten if you use your own mailer class with default "from" parameter.
   # Checking if configs exist on account of Travis
-  if ActiveRecord::Base.connection.data_source_exists? 'concerto_configs'
-    config.mailer_sender = ConcertoConfig[:mailer_from]
-  end
+  config.mailer_sender = "concerto@example.com"
 
   # Configure the class responsible to send e-mails.
   # config.mailer = "Devise::Mailer"

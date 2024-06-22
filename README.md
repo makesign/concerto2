@@ -1,7 +1,25 @@
 # README
 
+    rvm use 3.3.3@concerto-new
+
+    bin/rails db:migrate
+
+# Todo
+
+fix migration in (refers to model, was not found)
+db/migrate/20150512235521_add_front_end_plugin.rb
+
+### Issues
+[DEVISE] Please review the [changelog] and [upgrade guide] for more info on Hotwire / Turbo integration.
+
+  [changelog] https://github.com/heartcombo/devise/blob/main/CHANGELOG.md
+  [upgrade guide] https://github.com/heartcombo/devise/wiki/How-To:-Upgrade-to-Devise-4.9.0-%5BHotwire-Turbo-integration%5D
 
 
+  /Users/kleinen/mine/current/htw/courses/project-makerspace/code/concerto-new/concerto2/config/initializers/02-concerto_config.rb:5: warning: Socket.gethostbyname is deprecated; use Addrinfo.getaddrinfo instead.
+
+/Users/kleinen/mine/current/htw/courses/project-makerspace/code/concerto-new/concerto2/config/initializers/02-concerto_config.rb:5: warning: Socket.gethostbyname is deprecated; use Addrinfo.getaddrinfo instead.
+  
 ## git diff app/assets/config/manifest.js
 
 @@ -1,4 +1,6 @@
