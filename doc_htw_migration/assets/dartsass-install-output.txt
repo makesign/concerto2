@@ -1,0 +1,38 @@
+ok  (barne.kleinen@htw-berlin.de @ main√)code/concerto-new/concerto2>./bin/rails dartsass:install
+To use retry middleware with Faraday v2.0+, install `faraday-retry` gem
+To use multipart middleware with Faraday v2.0+, install `faraday-multipart` gem; note: this is used by the ManageGHES client for uploading licenses
+To use retry middleware with Faraday v2.0+, install `faraday-retry` gem
+To use multipart middleware with Faraday v2.0+, install `faraday-multipart` gem; note: this is used by the ManageGHES client for uploading licenses
+/Users/kleinen/mine/current/htw/courses/project-makerspace/code/concerto-new/concerto2/config/initializers/02-concerto_config.rb:5: warning: Socket.gethostbyname is deprecated; use Addrinfo.getaddrinfo instead.
+       apply  /Users/kleinen/.rvm/gems/ruby-3.3.3@concerto-new/gems/dartsass-rails-0.5.0/lib/install/dartsass.rb
+  Build into app/assets/builds
+      create    app/assets/builds
+      create    app/assets/builds/.keep
+      append    app/assets/config/manifest.js
+  Stop linking stylesheets automatically
+        gsub    app/assets/config/manifest.js
+      append    .gitignore
+  Add default app/assets/stylesheets/application.scss
+      create    app/assets/stylesheets/application.scss
+  Add default Procfile.dev
+      create    Procfile.dev
+  Ensure foreman is installed
+         run    gem install foreman from "."
+Fetching foreman-0.88.1.gem
+Successfully installed foreman-0.88.1
+Parsing documentation for foreman-0.88.1
+Installing ri documentation for foreman-0.88.1
+Done installing documentation for foreman after 0 seconds
+1 gem installed
+  Add bin/dev to start foreman
+      create    bin/dev
+  Compile initial Dart Sass build
+         run    rails dartsass:build from "."
+To use retry middleware with Faraday v2.0+, install `faraday-retry` gem
+To use multipart middleware with Faraday v2.0+, install `faraday-multipart` gem; note: this is used by the ManageGHES client for uploading licenses
+/Users/kleinen/mine/current/htw/courses/project-makerspace/code/concerto-new/concerto2/config/initializers/02-concerto_config.rb:5: warning: Socket.gethostbyname is deprecated; use Addrinfo.getaddrinfo instead.
+         run  bundle install
+Bundle complete! 21 Gemfile dependencies, 107 gems now installed.
+Use `bundle info [gemname]` to see where a bundled gem is installed.
+1 installed gem you directly depend on is looking for funding.
+  Run `bundle fund` for details
