@@ -63,6 +63,10 @@ class TemplatesController < ApplicationController
 
     # set key based on file extension
     @template.media.each do |media|
+      # todo: adapt for active_storage
+      # active_storage
+      media.attached_file.attach(params[:avatar])
+
       extension = (media.file_name.blank? ? nil : media.file_name.split('.')[-1].downcase)
       media.key = (extension == "css" ? "css" : "original") unless extension.nil?
     end
@@ -231,7 +235,7 @@ private
 
   def template_params
     # :template_css and :template_file are two bogus fields used for file uploads when editing a template
-    params.require(:template).permit(:name, :author, :descriptor, :image, :is_hidden, :template_css, :template_image, :owner_id, :owner_type, positions_attributes: [:field_id, :style, :top, :left, :bottom, :right, :id, :_destroy], media_attributes: [:file])
+    params.require(:template).permit(:name, :author, :descriptor, :image, :is_hidden, :template_css, :template_image, :owner_id, :owner_type, positions_attributes: [:field_id, :style, :top, :left, :bottom, :right, :id, :_destroy], media_attributes: [:file, :attached_file])
   end
 
   def sanitize_filename(filename)

@@ -1,3 +1,10 @@
+# Todos
+adapt all places where Media is handled, e.g. in the views
+<%= media.file_field :attached_file %>
+look for: 
+
+    # todo: adapt for active_storage
+
 
 # gem attachable is > 12 years old
 https://github.com/bamnet/attachable

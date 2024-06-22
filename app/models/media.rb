@@ -4,6 +4,8 @@ class Media < ActiveRecord::Base
   # templates and content
   belongs_to :attachable, polymorphic: true
 
+  # switch to active_storage
+  has_one_attached :attached_file
   # attachable
 
   PREVIEW_MEDIA_VALID_MINS = 3
