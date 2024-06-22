@@ -12,6 +12,9 @@ db/migrate/20150512235521_add_front_end_plugin.rb
 in 01-db_create_load... wtf?
 - # is_manual_migration = File.split($0).last == 'rake' && $*.first == 'db:migrate'
 
+
+
+
 # Major changes
 
 # initialization

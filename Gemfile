@@ -91,3 +91,15 @@ group :test do
 end
 
 gem 'devise'
+
+
+
+
+# extra gems in concerto
+
+# https://github.com/rails/dartsass-rails
+gem "dartsass-rails", "~> 0.5.0"
+
+gem "delayed_job", "~> 4.1"
+
+gem "kaminari", "~> 1.2"
