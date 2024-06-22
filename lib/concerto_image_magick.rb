@@ -1,7 +1,7 @@
 #ImageMagick-specfic image manipulation calls for Concerto 2
 module ConcertoImageMagick
 
-  def self.load_image(file_contents)
+  def self.load_image(file_contents)x
     return Magick::Image.from_blob(file_contents).first
   end
   

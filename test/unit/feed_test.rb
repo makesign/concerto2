@@ -1,6 +1,17 @@
 require 'test_helper'
 
 class FeedTest < ActiveSupport::TestCase
+
+  test "valid_fixtures" do
+    # , :pending_ticker
+    [:service, :root].each do |fixture_name|
+      resource = feeds( fixture_name )
+      valid = resource.valid?
+      errors = resource.errors.full_messages
+      assert_equal [], errors, "#{fixture_name} is not valid"
+    end
+  end
+
   def setup
     @public = feeds(:service)
     @hidden = feeds(:secret_announcements)

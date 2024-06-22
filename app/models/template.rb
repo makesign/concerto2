@@ -101,7 +101,9 @@ class Template < ActiveRecord::Base
     if self.media.blank?
       image = ConcertoImageMagick.new_image(1024, 768);
     else
-      image = ConcertoImageMagick.load_image(self.media.preferred.first.file_contents)
+      # active_storage
+      # image = ConcertoImageMagick.load_image(self.media.preferred.first.attached_file)
+      image = self.media.preferred.first.attached_file
     end
 
     height = image.rows

@@ -1,16 +1,19 @@
 # Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
 
 one:
-  name: MyString
-  author: MyString
+  name: "First Template"
+  author: "Makerspace"
+  owner: admin (User)
   is_hidden: false
 
 two:
   name: MyString2
   author: MyString2
+  owner: kristen (User)
   is_hidden: false
 
 hidden:
   name: Hidden Template
   author: No one
+  owner: katie (User)
   is_hidden: true

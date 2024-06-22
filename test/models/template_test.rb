@@ -1,17 +1,15 @@
 # frozen_string_literal: true
+#
+require "test_helper"
 
-require 'minitest/autorun'
+class TemplateModelTest < ActiveSupport::TestCase
 
-class TemplateTest < Minitest::Test
-  def setup
-    # Do nothing
-  end
-
-  def teardown
-    # Do nothing
-  end
-
-  def test
-    skip 'Not implemented'
+  test "valid_fixtures" do
+    [:one, :two, :hidden].each do |fixture_name|
+      template = templates( fixture_name )
+      valid = template.valid?
+      errors = template.errors.full_messages
+      assert_equal [], errors
+    end
   end
 end

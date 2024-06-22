@@ -125,3 +125,9 @@ gem "bootstrap", "~> 5.3"
 
 
 gem "faraday-retry", "~> 2.2"
+
+gem "rmagick", "~> 6.0"
+
+gem "faraday-multipart", "~> 1.0"
+
+gem "rails-controller-testing", "~> 1.0"
