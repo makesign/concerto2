@@ -1,8 +1,8 @@
-# Edit this Gemfile to bundle your application's dependencies.
 source 'https://rubygems.org'
 
 # Lock the ruby version for now. We don't work on Ruby 2.7, so stick with Ruby 2.6
 ruby '~> 2.6.0'
+
 
 gem 'nokogiri', '~> 1.13', '>= 1.13.10' # pin while on ruby < 2.7
 gem 'rails', '~> 5.0.7', '>= 5.0.7.2'
@@ -10,7 +10,10 @@ gem 'rails', '~> 5.0.7', '>= 5.0.7.2'
 # Get the absolute path of this Gemfile so the includes below still work
 # when the current directory for a bundler command isn't the application's
 # root directory.
+
 basedir = File.dirname(__FILE__)
+
+# ConcertoPlugins start
 
 # The Gemfile-plugins gem list is managed by Concerto itself,
 # through the ConcertoPlugins controller.
@@ -20,6 +23,77 @@ end
 
 # Load a local Gemfile if it exists
 eval File.read("#{basedir}/Gemfile.local") if File.exist?("#{basedir}/Gemfile.local")
+
+# ConcertoPlugins end
+
+
+
+
+# Use sqlite3 as the database for Active Record
+gem 'sqlite3', '~> 1.3.6', group: %i[development test]
+
+# new rails gems (somewhere between rails 3 and rails 7)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# Web console
+gem 'web-console', group: :development
+
+
+
+
+
+
+
+
+
+# Test Coverage
+gem 'simplecov', require: false, group: :test
+
+
+
+
+
+gem 'devise'
+gem 'cancancan'
+
+# extra gems in concerto
 
 gem 'coffee-rails'
 gem 'execjs'
@@ -44,8 +118,7 @@ gem 'rmagick', require: 'rmagick', platforms: :ruby
 # Attachable does all the file work.
 gem 'attachable'
 
-gem 'cancancan'
-gem 'devise'
+
 
 gem 'json'
 gem 'rubyzip', '~> 1.3.0'
@@ -55,8 +128,6 @@ gem 'clockwork'
 gem 'delayed_job_active_record'
 gem 'foreman', group: :development
 
-# Test Coverage
-gem 'simplecov', require: false, group: :test
 
 # Gem Auditing
 gem 'bundler-audit', require: false, group: :test
@@ -67,7 +138,6 @@ gem 'rails-controller-testing'
 
 gem 'kaminari'
 
-gem 'sqlite3', '~> 1.3.6', group: %i[development test]
 
 gem 'mysql2', group: :mysql
 gem 'pg', '~> 0.18', group: :postgres
@@ -97,5 +167,4 @@ gem 'octokit', '~>4.2.0'
 
 gem 'font-awesome-sass'
 
-# Web console
-gem 'web-console', group: :development
+

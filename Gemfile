@@ -1,15 +1,38 @@
 source "https://rubygems.org"
 
+
 ruby "3.3.3"
 
-# Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
+# TBD: is nokogiri still needed in rails 7?
+# gem 'nokogiri', '~> 1.13', '>= 1.13.10' # pin while on ruby < 2.7
 gem "rails", "~> 7.1.3", ">= 7.1.3.4"
+
+# Get the absolute path of this Gemfile so the includes below still work
+# when the current directory for a bundler command isn't the application's
+# root directory.
+# TBD: still needed?
+basedir = File.dirname(__FILE__)
+
+# ConcertoPlugins start
+
+# The Gemfile-plugins gem list is managed by Concerto itself,
+# through the ConcertoPlugins controller.
+group :concerto_plugins do
+  eval File.read("#{basedir}/Gemfile-plugins") if File.exist?("#{basedir}/Gemfile-plugins")
+end
+
+# Load a local Gemfile if it exists
+eval File.read("#{basedir}/Gemfile.local") if File.exist?("#{basedir}/Gemfile.local")
+
+# ConcertoPlugins end
 
 # The original asset pipeline for Rails [https://github.com/rails/sprockets-rails]
 gem "sprockets-rails"
 
 # Use sqlite3 as the database for Active Record
 gem "sqlite3", "~> 1.4"
+
+# new rails gems (somewhere between rails 3 and rails 7)
 
 # Use the Puma web server [https://github.com/puma/puma]
 gem "puma", ">= 5.0"

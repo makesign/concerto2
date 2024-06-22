@@ -18,6 +18,17 @@ in 01-db_create_load... wtf?
 
 ## config/initializers/01-db_create_load_or_migrate.rb
 
+
+# Notes
+
+## there is a whole own plugin mechanism....
+in Gemfile:
+    # The Gemfile-plugins gem list is managed by Concerto itself,
+    # through the ConcertoPlugins controller.
+    group :concerto_plugins do
+      eval File.read("#{basedir}/Gemfile-plugins") if     File.exist?("#{basedir}/Gemfile-plugins")
+    end
+
 contained a self-knit db migration logic.
 ## references to model in initialization
 There were many references to Concerto Model classes in the initialization process
