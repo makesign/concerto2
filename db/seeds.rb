@@ -39,7 +39,7 @@ FieldConfig.default.where(:field_id => time_field.id, :key => 'exit_transition')
 #Create an initial group
 Group.where(:name => "Concerto Admins").first_or_create
 
-#Determine installed content types for enabling them in the inital feed
+#Determine installed content types for enabling them in the initial feed
 #This is not the ideal way but unfortunately they're not registered yet at this point
 installed_content_types = { "Graphic"=>"1", "Ticker"=>"1" } # these are native
 # enables the content types if the gems are found (even if they aren't going to be registered, unfortunately)
