@@ -1,4 +1,4 @@
-class ChangeLevelInMembership < ActiveRecord::Migration
+class ChangeLevelInMembership < ActiveRecord::Migration[7.1]
   def up
     change_column :memberships, :level, :integer, :default => 1
   end

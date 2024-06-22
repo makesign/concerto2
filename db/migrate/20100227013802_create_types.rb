@@ -1,4 +1,4 @@
-class CreateTypes < ActiveRecord::Migration
+class CreateTypes < ActiveRecord::Migration[7.1]
   def self.up
     create_table :types do |t|
       t.string :name

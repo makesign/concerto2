@@ -1,4 +1,4 @@
-class CreatePositions < ActiveRecord::Migration
+class CreatePositions < ActiveRecord::Migration[7.1]
   def self.up
     create_table :positions do |t|
       t.text :style

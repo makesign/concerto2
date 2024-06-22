@@ -1,4 +1,4 @@
-class AddContentTypesToFeeds < ActiveRecord::Migration
+class AddContentTypesToFeeds < ActiveRecord::Migration[7.1]
   def change
     add_column :feeds, :content_types, :text
   end

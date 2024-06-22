@@ -1,4 +1,4 @@
-class CreateMedias < ActiveRecord::Migration
+class CreateMedias < ActiveRecord::Migration[7.1]
   def self.up
     create_table :medias do |t|
       t.references :attachable, :polymorphic => true

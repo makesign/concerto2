@@ -1,4 +1,4 @@
-class SetDefaultsForPosition < ActiveRecord::Migration
+class SetDefaultsForPosition < ActiveRecord::Migration[7.1]
   def up
     change_column_default :positions, :top, 0
     change_column_default :positions, :left, 0

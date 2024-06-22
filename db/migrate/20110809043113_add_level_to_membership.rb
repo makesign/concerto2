@@ -1,4 +1,4 @@
-class AddLevelToMembership < ActiveRecord::Migration
+class AddLevelToMembership < ActiveRecord::Migration[7.1]
   def up
     remove_column :memberships, :is_leader
     add_column :memberships, :level, :integer, :default => 0

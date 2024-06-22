@@ -1,4 +1,4 @@
-class CreateFields < ActiveRecord::Migration
+class CreateFields < ActiveRecord::Migration[7.1]
   def self.up
     create_table :fields do |t|
       t.string :name

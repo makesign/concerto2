@@ -1,4 +1,4 @@
-class ChangeConcertoConfigAddMetadata < ActiveRecord::Migration
+class ChangeConcertoConfigAddMetadata < ActiveRecord::Migration[7.1]
   def up
     add_column :concerto_configs, :name, :string
     add_column :concerto_configs, :group, :string

@@ -1,4 +1,4 @@
-class AddResolutionToScreens < ActiveRecord::Migration
+class AddResolutionToScreens < ActiveRecord::Migration[7.1]
   def self.up
     add_column :screens, :width, :int
     add_column :screens, :height, :int

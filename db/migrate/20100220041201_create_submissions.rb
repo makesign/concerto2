@@ -1,4 +1,4 @@
-class CreateSubmissions < ActiveRecord::Migration
+class CreateSubmissions < ActiveRecord::Migration[7.1]
   def self.up
     create_table :submissions do |t|
       t.references :content

@@ -1,4 +1,4 @@
-class AddLocaleToScreen < ActiveRecord::Migration
+class AddLocaleToScreen < ActiveRecord::Migration[7.1]
   def change
     add_column :screens, :locale, :string
   end

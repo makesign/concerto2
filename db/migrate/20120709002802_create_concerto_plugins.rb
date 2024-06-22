@@ -1,4 +1,4 @@
-class CreateConcertoPlugins < ActiveRecord::Migration
+class CreateConcertoPlugins < ActiveRecord::Migration[7.1]
   def change
     create_table :concerto_plugins do |t|
       t.string :name

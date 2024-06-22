@@ -1,4 +1,4 @@
-class AddTemplateOwner < ActiveRecord::Migration
+class AddTemplateOwner < ActiveRecord::Migration[7.1]
   def change
     add_column :templates, :owner_id, :integer
     add_column :templates, :owner_type, :string

@@ -1,4 +1,4 @@
-class AddPluginConfigs < ActiveRecord::Migration
+class AddPluginConfigs < ActiveRecord::Migration[7.1]
   def up
     add_column :concerto_configs, :plugin_config, :boolean
     add_column :concerto_configs, :plugin_id, :integer

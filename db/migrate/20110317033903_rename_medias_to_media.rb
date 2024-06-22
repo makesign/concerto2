@@ -1,4 +1,4 @@
-class RenameMediasToMedia < ActiveRecord::Migration
+class RenameMediasToMedia < ActiveRecord::Migration[7.1]
   def self.up
     rename_table :medias, :media
   end

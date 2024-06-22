@@ -1,5 +1,5 @@
 # This migration comes from hardware (originally 20121220000000)
-class CreateConcertoHardwarePlayers < ActiveRecord::Migration
+class CreateConcertoHardwarePlayers < ActiveRecord::Migration[7.1]
   def change
     create_table :concerto_hardware_players do |t|
       t.string :secret

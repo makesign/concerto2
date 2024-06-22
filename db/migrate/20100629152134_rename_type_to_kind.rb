@@ -1,4 +1,4 @@
-class RenameTypeToKind < ActiveRecord::Migration
+class RenameTypeToKind < ActiveRecord::Migration[7.1]
   def self.up
     rename_table :types, :kinds
     rename_column :contents, :type_id, :kind_id

@@ -1,4 +1,4 @@
-class ScreenTimeZone < ActiveRecord::Migration
+class ScreenTimeZone < ActiveRecord::Migration[7.1]
   def change
     rename_column :screens, :locale, :time_zone
   end

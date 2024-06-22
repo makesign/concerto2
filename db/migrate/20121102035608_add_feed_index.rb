@@ -1,4 +1,4 @@
-class AddFeedIndex < ActiveRecord::Migration
+class AddFeedIndex < ActiveRecord::Migration[7.1]
   def up
     add_index :feeds, :parent_id
   end

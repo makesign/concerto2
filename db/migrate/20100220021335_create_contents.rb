@@ -1,4 +1,4 @@
-class CreateContents < ActiveRecord::Migration
+class CreateContents < ActiveRecord::Migration[7.1]
   def self.up
     create_table :contents do |t|
       t.string :name
