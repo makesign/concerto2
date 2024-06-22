@@ -1,0 +1,30 @@
+<%
+def binary_fixture_data(filename)
+  data = File.open(filename,'rb').read
+  "!binary |-\n    #{[data].pack('m').gsub(/\n/,"\n    ")}\n"
+end
+%>
+
+template_one:
+  attachable: one (Template)
+  key: original
+  file_name: file.jpg
+  file_type: image/jpg
+  file_size: 147266
+  file_data: <%= binary_fixture_data('test/fixtures/files/concerto_background.jpg') %>
+
+template_one_processed:
+  attachable: one (Template)
+  key: processed
+  file_name: file.png
+  file_type: image/png
+  file_size: 5091
+  file_data: <%= binary_fixture_data('test/fixtures/files/smpte_color_bars.png') %>
+
+content_one:
+  attachable: sample_image (Content)
+  key: original
+  file_name: smpte_color_bars.png
+  file_type: image/png
+  file_size: 5091
+  file_data: <%= binary_fixture_data('test/fixtures/files/smpte_color_bars.png') %>

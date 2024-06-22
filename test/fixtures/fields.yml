@@ -1,0 +1,13 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  name: MyString
+  kind: ticker
+
+two:
+  name: MyString
+  kind: text
+
+graphics:
+  name: Graphics
+  kind: graphics

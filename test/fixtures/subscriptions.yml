@@ -1,0 +1,25 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  feed: service
+  field: one
+  screen: one
+  weight: 1
+
+two:
+  feed: announcements
+  field: one
+  screen: one
+  weight: 1
+
+three:
+  feed: service
+  field: one
+  screen: two
+  weight: 1
+
+four:
+  feed: service2
+  field: one
+  screen: one
+  weight: 2

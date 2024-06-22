@@ -1,0 +1,11 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+wtg:
+  name: WTG
+
+rpitv:
+  name: RPITV
+
+unused:
+  name: abandoned
+  
