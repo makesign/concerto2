@@ -20,7 +20,7 @@ module VersionCheck
       return version
     rescue Octokit::TooManyRequests => e
       Rails.logger.error 'Exceeded Github API quota when trying to fetch Concerto version.'
-      return Concerto::VERSION::STRING
+      return Concerto::Version::STRING
     end
   end
 end

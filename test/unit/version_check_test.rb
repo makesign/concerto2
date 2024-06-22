@@ -5,7 +5,7 @@ class VersionCheckTest < ActiveSupport::TestCase
   PATTERN=/^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$/
 
   test 'STRING should match pattern' do
-    assert PATTERN =~ Concerto::VERSION::STRING
+    assert PATTERN =~ Concerto::Version::STRING
   end
   
   test 'version check latest version should match pattern' do
