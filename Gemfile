@@ -103,3 +103,7 @@ gem "dartsass-rails", "~> 0.5.0"
 gem "delayed_job", "~> 4.1"
 
 gem "kaminari", "~> 1.2"
+
+gem "octokit", "~> 9.1"
+
+gem "cancancan", "~> 3.6"
