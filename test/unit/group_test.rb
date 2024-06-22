@@ -58,8 +58,12 @@ class GroupTest < ActiveSupport::TestCase
   end
 
   test "can't delete if group owns screens" do
-    Feed.delete_all
-    assert !groups(:wtg).is_deletable?
+    group = Group.new
+    assert_equal true, group.is_deletable?
+    screen = Screen.new
+    group.screens << screen
+    assert_equal 1, group.screens.size
+    assert_equal false, group.is_deletable?
   end
 
   test "can't delete if group owns feeds" do
