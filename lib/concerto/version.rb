@@ -1,5 +1,5 @@
 module Concerto
-  module VERSION
+  module Version
     MAJOR = 2
     MINOR = 4
     PATCH = 0
@@ -10,7 +10,7 @@ module Concerto
     STRING = [[[MAJOR, MINOR, PATCH].compact.join('.'), PRE].compact.join('-'), BUILD].compact.join('+')
 
     def self.dynamic
-      Rails.cache.fetch('VERSION::dynamic') do
+      Rails.cache.fetch('Version::dynamic') do
         `git describe --always --tags`.strip rescue ""
       end
     end
