@@ -107,3 +107,5 @@ gem "kaminari", "~> 1.2"
 gem "octokit", "~> 9.1"
 
 gem "cancancan", "~> 3.6"
+
+gem "font-awesome-sass", "~> 6.5"
