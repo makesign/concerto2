@@ -5,7 +5,7 @@ class LegacyRouteMatcher
   end
 end
 
-Concerto::Application.routes.draw do
+Rails.application.routes.draw do
   v1_router = LegacyRouteMatcher.new
   get '/' => 'frontend/screens#index', constraints: v1_router
   get '/screen' => 'frontend/screens#index', constraints: v1_router, as: 'legacy_frontend'

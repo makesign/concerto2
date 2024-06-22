@@ -6,7 +6,7 @@ module FieldConfigsHelper
   # @param [Field] field The current field.
   # @returns [Array<Symbol>] An array of unused keys.
   def get_available_keys(screen, field)
-    available_keys = Concerto::Application.config.field_configs.keys
+    available_keys = Rails.application.config.field_configs.keys
     used_keys = FieldConfig.where(field_id: field.id, screen_id: screen.id).select('field_configs.key').collect{ |field_config| field_config.key.to_sym }
     return available_keys - used_keys
   end

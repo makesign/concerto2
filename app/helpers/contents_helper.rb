@@ -2,7 +2,7 @@ module ContentsHelper
 
   # Expose a copy of the available content subclasses.
   def content_types
-    Concerto::Application.config.content_types.dup
+    Rails.application.config.content_types.dup
   end
   
   def get_available_types

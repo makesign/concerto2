@@ -60,7 +60,7 @@ class FeedsController < ApplicationController
     auth!
     
     #populate the checkboxes for content types by default when creating a new feed
-    Concerto::Application.config.content_types.each do |type|
+    Rails.application.config.content_types.each do |type|
       @feed.content_types[type.name] = "1"
     end
 
@@ -119,7 +119,7 @@ class FeedsController < ApplicationController
 private
 
   def feed_params
-    types = Concerto::Application.config.content_types.map{|t| t.name.to_sym}
+    types = Rails.application.config.content_types.map{|t| t.name.to_sym}
     params.require(:feed).permit(:name, :description, :parent_id, :group_id, :is_viewable, :is_submittable, content_types: types)
   end
 

@@ -20,8 +20,8 @@ if secret_token.blank?
 end
 
 # Secret key for verifying the integrity of signed cookies.
-Concerto::Application.config.secret_token = secret_token
-Concerto::Application.config.secret_key_base = secret_token
+Rails.application.config.secret_token = secret_token
+Rails.application.config.secret_key_base = secret_token
 ENV["SECRET_KEY_BASE"] = secret_token
 
 Rails.logger.debug "Completed #{File.basename(__FILE__)} at #{Time.now.to_s}"

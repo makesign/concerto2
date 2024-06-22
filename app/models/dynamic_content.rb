@@ -229,7 +229,7 @@ class DynamicContent < Content
   # Find all the DynamicContent classes, find all the active content they have,
   # and then #{refresh} them.  Primarily invoked by our rake task.
   def self.refresh
-    dynamic_types = Concerto::Application.config.content_types.select do |t|
+    dynamic_types = Rails.application.config.content_types.select do |t|
       t.ancestors.include?(DynamicContent)
     end
     dynamic_types.each do |content_type|

@@ -152,8 +152,8 @@ class Content < ActiveRecord::Base
     self.subclasses.each do |subklass|
       sub.concat(subklass.all_subclasses)
     end
-    sub.concat(Concerto::Application.config.content_types)
-    sub.concat(Concerto::Application.config._unused_content_types_)
+    sub.concat(Rails.application.config.content_types)
+    sub.concat(Rails.application.config._unused_content_types_)
     return sub.uniq { |klass| klass.name }
   end
 

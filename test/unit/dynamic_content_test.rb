@@ -118,7 +118,7 @@ class DynamicContentTest < ActiveSupport::TestCase
       :duration => 5, :moderator => users(:katie), :moderation_flag => true)
 
     assert dynamic.config['last_refresh_attempt'].nil?
-    Concerto::Application.config.content_types.push(TestHarness)
+    Rails.application.config.content_types.push(TestHarness)
     DynamicContent::refresh
     dynamic = TestHarness.find(dynamic.id)
 

@@ -67,18 +67,18 @@ if concerto_base_config['automatic_database_installation'] == true && !is_manual
       Rails.logger.debug("initializer reports db at #{current_version} and highest migration at #{highest_version}")
       if current_version == 0
         require 'rake'
-        Concerto::Application.load_tasks
+        Rails.application.load_tasks
         Rake::Task["db:create"].invoke
         Rake::Task["db:migrate"].invoke
         Rake::Task["db:seed"].invoke
       elsif ActiveRecord::Migrator.needs_migration?
         require 'rake'
-        Concerto::Application.load_tasks
+        Rails.application.load_tasks
         Rake::Task["db:migrate"].invoke
       end
     rescue
       require 'rake'
-      Concerto::Application.load_tasks
+      Rails.application.load_tasks
       Rake::Task["db:create"].invoke
       Rake::Task["db:migrate"].invoke
       Rake::Task["db:seed"].invoke

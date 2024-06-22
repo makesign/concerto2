@@ -11,7 +11,7 @@ transitions = ['replace', 'fade-in-animation', 'fade-out-animation',
                'slide-left-animation', 'slide-right-animation',
                'slide-from-left-animation', 'slide-from-right-animation']
 
-Concerto::Application.config.field_configs = {
+Rails.application.config.field_configs = {
   entry_transition: { type: :select, values: transitions },
   exit_transition: { type: :select, values: transitions },
   time_format: { type: :string },

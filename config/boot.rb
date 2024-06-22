@@ -45,7 +45,7 @@ require 'yaml'
   #   end
   #   raise "Bundler error: #{bundle_output}"
   # end
-end
+# end
 
 # >>> End of concerto-specific mods. Proceed with booting app. <<<
 
