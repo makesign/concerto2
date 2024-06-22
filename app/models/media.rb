@@ -1,9 +1,12 @@
 class Media < ActiveRecord::Base
   include ActiveModel::ForbiddenAttributesProtection
 
+  # templates and content
   belongs_to :attachable, polymorphic: true
 
-  attachable
+  # switch to active_storage
+  has_one_attached :attached_file
+  # attachable
 
   PREVIEW_MEDIA_VALID_MINS = 3
   PREVIEW_MEDIA_PURGE_MINS = 15
