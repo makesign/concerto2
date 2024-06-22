@@ -1,24 +1,13 @@
 # README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
 
-Things you may want to cover:
 
-* Ruby version
+## git diff app/assets/config/manifest.js
 
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+@@ -1,4 +1,6 @@
+ //= link_tree ../images
++//= link_directory ../javascripts .js
+ //= link_directory ../stylesheets .css
+ //= link_tree ../../javascript .js
+ //= link_tree ../../../vendor/javascript .js
++//= link_directory ../fonts
