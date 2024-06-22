@@ -14,10 +14,19 @@ in 01-db_create_load... wtf?
 
 # Major changes
 
+# initialization
 
-# config/initializers/01-db_create_load_or_migrate.rb
+## config/initializers/01-db_create_load_or_migrate.rb
 
 contained a self-knit db migration logic.
+## references to model in initialization
+There were many references to Concerto Model classes in the initialization process
+-> surrounded with
+Rails.configuration.after_initialize do
+
+see https://guides.rubyonrails.org/configuring.html#config-after-initialize
+
+tbd: this will have changed the order of init steps - order ok?
 
 
 ### Issues

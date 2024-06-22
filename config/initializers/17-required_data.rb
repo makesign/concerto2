@@ -1,5 +1,5 @@
 Rails.logger.debug "Starting #{File.basename(__FILE__)} at #{Time.now.to_s}"
-
+Rails.configuration.after_initialize do
 if ActiveRecord::Base.connection.data_source_exists?('kinds')
   if !Kind.any?
     Rails.logger.error('All kinds are missing, creating some.')
@@ -20,5 +20,5 @@ if ActiveRecord::Base.connection.data_source_exists?('fields') && ActiveRecord::
     Field.where(name: 'Time').first_or_create(kind: Kind.where(name: 'Text').first)
   end
 end
-
+end
 Rails.logger.debug "Completed #{File.basename(__FILE__)} at #{Time.now.to_s}"

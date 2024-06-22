@@ -1,5 +1,5 @@
 Rails.logger.debug "Starting #{File.basename(__FILE__)} at #{Time.now.to_s}"
-
+Rails.configuration.after_initialize do
 # Concerto user analytics configuration
 if ActiveRecord::Base.connection.data_source_exists? 'concerto_configs'
   if ConcertoConfig.columns_hash.has_key?("plugin_id")
@@ -9,5 +9,5 @@ if ActiveRecord::Base.connection.data_source_exists? 'concerto_configs'
       description: "The Web Property ID provided by Google Analytics.")
   end
 end
-
+end
 Rails.logger.debug "Completed #{File.basename(__FILE__)} at #{Time.now.to_s}"
