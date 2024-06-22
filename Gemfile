@@ -91,12 +91,17 @@ group :test do
 end
 
 gem 'devise'
-
-
-
+gem "cancancan", "~> 3.6"
 
 # extra gems in concerto
 
+
+
+
+
+
+
+gem "mime-types", "~> 3.5"
 # https://github.com/rails/dartsass-rails
 gem "dartsass-rails", "~> 0.5.0"
 
@@ -106,8 +111,8 @@ gem "kaminari", "~> 1.2"
 
 gem "octokit", "~> 9.1"
 
-gem "cancancan", "~> 3.6"
+
 
 gem "font-awesome-sass", "~> 6.5"
 
-gem "mime-types", "~> 3.5"
+
