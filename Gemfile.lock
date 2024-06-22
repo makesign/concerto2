@@ -79,12 +79,17 @@ GEM
       public_suffix (>= 2.0.2, < 7.0)
     ansi (1.5.0)
     ast (2.4.2)
+    autoprefixer-rails (10.4.16.0)
+      execjs (~> 2)
     base64 (0.2.0)
     bcrypt (3.1.20)
     bigdecimal (3.1.8)
     bindex (0.8.1)
     bootsnap (1.18.3)
       msgpack (~> 1.2)
+    bootstrap (5.3.3)
+      autoprefixer-rails (>= 9.1.0)
+      popper_js (>= 2.11.8, < 3)
     builder (3.3.0)
     cancancan (3.6.1)
     capybara (3.40.0)
@@ -134,6 +139,7 @@ GEM
     drb (2.2.1)
     encryptor (3.0.0)
     erubi (1.13.0)
+    execjs (2.9.1)
     faraday (2.9.2)
       faraday-net_http (>= 2.0, < 3.2)
     faraday-net_http (3.1.0)
@@ -249,6 +255,7 @@ GEM
     open_uri_redirections (0.2.1)
     orm_adapter (0.5.0)
     os (1.1.4)
+    popper_js (2.11.8)
     psych (5.1.2)
       stringio
     public_suffix (6.0.0)
@@ -388,6 +395,7 @@ PLATFORMS
 
 DEPENDENCIES
   bootsnap
+  bootstrap (~> 5.3)
   cancancan (~> 3.6)
   capybara
   concerto_calendar

@@ -33,3 +33,6 @@ import "controllers"
 //= require nprogress-turbolinks
 //= require google-analytics-turbolinks
 //= require_tree .
+
+import "popper"
+import "bootstrap"
