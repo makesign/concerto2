@@ -1,0 +1,12 @@
+//= require i18n/translations
+//= require bootstrap-datepicker
+//= require bootstrap-alert.js
+//= require bootstrap-modal.js
+//= require bootstrap-tab.js
+//= require twitter/bootstrap/rails/confirm
+//= require rangeinput.js
+//= require turbolinks
+//= require nprogress
+//= require nprogress-turbolinks
+//= require google-analytics-turbolinks
+//= require_tree .

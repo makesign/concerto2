@@ -6,6 +6,7 @@ class LegacyRouteMatcher
 end
 
 Rails.application.routes.draw do
+  resources :bookings
   v1_router = LegacyRouteMatcher.new
   get '/' => 'frontend/screens#index', constraints: v1_router
   get '/screen' => 'frontend/screens#index', constraints: v1_router, as: 'legacy_frontend'

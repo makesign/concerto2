@@ -19,5 +19,6 @@ Rails.application.config.assets.version = "1.0"
 # TBD: some can probably be removed?
 Rails.application.config.assets.precompile += %w( application.css application.js frontend/application.css frontend/application.js **/*.js **/*.css)
 
+Rails.application.config.assets.precompile += %w( bootstrap.min.js popper.js)
 
 Rails.logger.debug "Completed #{File.basename(__FILE__)} at #{Time.now.to_s}"
