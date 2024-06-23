@@ -10,7 +10,7 @@ WORKDIR /concerto2
 COPY Gemfile Gemfile.lock ./
 
 ENV GENERAL_DEPS bash gcompat libpq tzdata nodejs imagemagick vips sqlite curl
-ENV BUILD_DEPS git linux-headers libpq libxml2-dev libxslt-dev build-base postgresql-dev pkg-config 
+ENV BUILD_DEPS git linux-headers libpq libxml2-dev libxslt-dev build-base postgresql-dev pkgconf 
 
 ENV NOKOGIRI_SYSTEM_LIBS build-base libxml2-dev libxslt-dev
 ENV AO --no-install-recommends --no-cache

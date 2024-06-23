@@ -9,6 +9,9 @@ bash:
 run-bash:
 - docker run -it concerto2 /bin/bash
 
+build-alpine:
+- docker build -f Dockerfile -t concerto-alpine .
+
 build:
 - docker build -f Dockerfile.rails7 -t concerto2 .
 
@@ -26,6 +29,8 @@ docker-cleanup:
 - docker rmi $(shell docker images -qa)
 
 
+run:
+- docker run -p 127.0.0.1:3210:3210/tcp concerto-stage3
 
 mini-build:
 - docker build -f Dockerfile.mini -t mini .
@@ -61,5 +66,3 @@ build-stage3:
 quick:
 - docker build -f Dockerfile.stage1.quick -t concerto-stage1-quick .
 
-run:
-- docker run -it concerto-stage1-quick /bin/bash

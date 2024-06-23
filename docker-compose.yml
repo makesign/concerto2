@@ -1,0 +1,9 @@
+version: '3.4'
+services:
+  concerto:
+    image: concerto-stage3
+    container_name: concerto3
+    environment:
+      - RAILS_ENV=development
+    ports:
+      - "3210:3210"
