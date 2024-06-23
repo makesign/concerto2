@@ -10,7 +10,7 @@ run-bash:
 - docker run -it concerto2 /bin/bash
 
 build:
-- docker build -f Dockerfile -t concerto2 .
+- docker build -f Dockerfile.rails7 -t concerto2 .
 
 ruby_version=$(shell cat .ruby-version)
 ruby_gemset=$(shell cat .ruby-gemset)
@@ -22,5 +22,44 @@ rvm-info:
 - rvm gemset list
 
 docker-cleanup:
-- docker rmi $(docker images -qa)
-- docker rm $(docker ps -aq)
+- docker rm $(shell docker ps -aq)
+- docker rmi $(shell docker images -qa)
+
+
+
+mini-build:
+- docker build -f Dockerfile.mini -t mini .
+
+mini-run:
+- docker run -it mini /bin/bash
+
+run-stage1:
+- docker run -it concerto-stage1 /bin/bash
+
+run-stage2:
+- docker run -it concerto-stage2 /bin/bash
+
+run-stage3:
+- docker run -it concerto-stage3 /bin/bash
+
+
+build-stage0:
+- docker build -f Dockerfile.stage0 -t concerto-stage0 .
+
+build-stage1:
+- docker build -f Dockerfile.stage1 -t concerto-stage1 .
+
+
+
+build-stage2:
+- docker build -f Dockerfile.stage2 -t concerto-stage2 .
+
+build-stage3:
+- docker build -f Dockerfile.stage3 -t concerto-stage3 .
+
+
+quick:
+- docker build -f Dockerfile.stage1.quick -t concerto-stage1-quick .
+
+run:
+- docker run -it concerto-stage1-quick /bin/bash

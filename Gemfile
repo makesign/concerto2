@@ -20,8 +20,15 @@ basedir = File.dirname(__FILE__)
 
 # The Gemfile-plugins gem list is managed by Concerto itself,
 # through the ConcertoPlugins controller.
+
 group :concerto_plugins do
-  eval File.read("#{basedir}/Gemfile-plugins") if File.exist?("#{basedir}/Gemfile-plugins")
+  gem "concerto_calendar"
+  gem "concerto_frontend"
+  gem "concerto_hardware"
+  # gem "concerto_iframe"
+  gem "concerto_remote_video"
+  gem "concerto_simple_rss"
+# gem "concerto_weather", :git => 'https://github.com/concerto/concerto-weather.git', :branch => 'rails5'
 end
 
 # Load a local Gemfile if it exists

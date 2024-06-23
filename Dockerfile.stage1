@@ -1,0 +1,29 @@
+# syntax = docker/dockerfile:1
+
+# Throw-away build stage to reduce size of final image
+FROM concerto-stage0 as concerto-stage1
+
+# Set production environment
+# ENV RAILS_ENV="production" \
+#     BUNDLE_DEPLOYMENT="1" \
+#     BUNDLE_PATH="/usr/local/bundle" \
+#     BUNDLE_WITHOUT="development"
+
+ENV RAILS_ENV="development" \
+    GEM_HOME="/usr/local/bundle" \
+    PATH=$GEM_HOME/bin:$GEM_HOME/gems/bin:$PATH
+
+# Install packages needed to build gems
+RUN apt-get update -qq && \
+    apt-get install --no-install-recommends -y \
+    git libvips pkg-config nodejs\
+    libmagickwand-dev
+
+# Install application gems
+WORKDIR /rails
+COPY Gemfile Gemfile.lock ./
+
+RUN bundle config set frozen true && \
+    bundle install && \
+    rm -rf ~/.bundle/ "${BUNDLE_PATH}"/ruby/*/cache  "${BUNDLE_PATH}"/ruby/*/bundler/gems/*/.git && \
+    bundle exec bootsnap precompile --gemfile

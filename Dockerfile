@@ -1,16 +1,17 @@
-FROM ruby:3.3.3-alpine AS modhand-base
+FROM ruby:3.3.3-alpine AS concerto2-base
 
-ENV MODHAND_IMAGE=modhand-base
+ENV MODHAND_IMAGE=concerto2-base
 ENV BUNDLER_VERSION=2.5.11
 
 ENV RAILS_ENV production
 ENV NODE_ENV production
 
-WORKDIR /module-handbook
+WORKDIR /concerto2
 COPY Gemfile Gemfile.lock ./
 
-ENV GENERAL_DEPS bash gcompat libpq tzdata nodejs
-ENV BUILD_DEPS git linux-headers libpq libxml2-dev libxslt-dev build-base postgresql-dev
+ENV GENERAL_DEPS bash gcompat libpq tzdata nodejs imagemagick vips sqlite curl
+ENV BUILD_DEPS git linux-headers libpq libxml2-dev libxslt-dev build-base postgresql-dev pkg-config 
+
 ENV NOKOGIRI_SYSTEM_LIBS build-base libxml2-dev libxslt-dev
 ENV AO --no-install-recommends --no-cache
 # general dependencies
@@ -33,8 +34,8 @@ ENTRYPOINT ["./entrypoints/docker-entrypoint.sh"]
 # Production without assets (for Pull Requests)
 # -------------------------------------------------------------------
 
-FROM modhand-base AS modhand-prod-no-assets
-ENV MODHAND_IMAGE=modhand-prod-no-assets
+FROM concerto2-base AS concerto2-prod-no-assets
+ENV MODHAND_IMAGE=concerto2-prod-no-assets
 
 COPY . ./
 
@@ -42,8 +43,8 @@ COPY . ./
 # Production
 # -------------------------------------------------------------------
 
-FROM modhand-prod-no-assets AS modhand-prod
-ENV MODHAND_IMAGE=modhand-prod
+FROM concerto2-prod-no-assets AS concerto2-prod
+ENV MODHAND_IMAGE=concerto2-prod
 ARG RAILS_MASTER_KEY
 ENV RAILS_MASTER_KEY $RAILS_MASTER_KEY
 
@@ -54,8 +55,8 @@ RUN set -ex  \
 # Development
 # -------------------------------------------------------------------
 
-FROM modhand-base AS modhand-dev
-ENV MODHAND_IMAGE=modhand-dev
+FROM concerto2-base AS concerto2-dev
+ENV MODHAND_IMAGE=concerto2-dev
 
 ENV RAILS_ENV development
 ENV NODE_ENV development

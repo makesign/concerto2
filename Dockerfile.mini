@@ -1,0 +1,16 @@
+ARG RUBY_VERSION=3.3.3
+FROM registry.docker.com/library/ruby:$RUBY_VERSION-bookworm as mini-base
+
+ENV GEM_PATH="/usr/local/bundle" 
+
+WORKDIR /rails
+RUN echo "hello world " >> $GEM_PATH/hallo.txt
+RUN echo "hello world " >> hallo.txt
+
+
+FROM mini-base as mini-second
+ENV GEM_PATH="/usr/local/bundle" 
+
+# COPY --from=mini-base $GEM_PATH $GEM_PATH
+
+CMD ["bash"]
