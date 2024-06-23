@@ -32,7 +32,7 @@ class Feed < ActiveRecord::Base
   end
 
   # Feed Hierarchy
-  has_one :parent, class_name: "Feed"
+  belongs_to :parent, optional: true, class_name: "Feed"
   has_many :children, class_name: "Feed", foreign_key: "parent_id"
 
   default_scope { order 'LOWER(feeds.name)' }

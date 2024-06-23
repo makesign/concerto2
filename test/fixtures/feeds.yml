@@ -3,7 +3,6 @@ root:
   id: 1
   name: Root of all Service Events
   description: This feed is for community service related announcements
-  parent_id: 1
   group: wtg
   is_submittable: true
   is_viewable: true
