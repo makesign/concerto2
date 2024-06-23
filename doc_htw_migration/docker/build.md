@@ -2,6 +2,12 @@
 
 ## Sunday, 23.June 2024 16:10
 
+
+ > [build 5/6] RUN bundle exec bootsnap precompile app/ lib/:
+#17 0.234 bundler: failed to load command: bootsnap (/usr/local/bundle/ruby/3.3.0/bin/bootsnap)
+
+
+
 https://github.com/docker-library/ruby/blob/b8b0053a92b4f7232fe28c45e44a469c032affe2/3.3/slim-bookworm/Dockerfile
 
 

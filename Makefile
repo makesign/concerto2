@@ -2,14 +2,15 @@
 
 open:
 - open http://localhost:3000
+
 bash:
-- docker-compose exec concerto bash
+- docker-compose exec concerto2 bash
+
+run-bash:
+- docker run -it concerto2 /bin/bash
 
 build:
-- docker build -t concerto .
-
-build-new:
-- docker build -f Dockerfile.new_from_mh -t concerto_new .
+- docker build -f Dockerfile -t concerto2 .
 
 ruby_version=$(shell cat .ruby-version)
 ruby_gemset=$(shell cat .ruby-gemset)
@@ -19,3 +20,7 @@ rvm-info:
 - @echo "rvm gemset use ${ruby_version}@${ruby_gemset}"
 - @echo
 - rvm gemset list
+
+docker-cleanup:
+- docker rmi $(docker images -qa)
+- docker rm $(docker ps -aq)
