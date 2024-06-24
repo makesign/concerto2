@@ -1,5 +1,19 @@
 require 'test_helper'
 
+class SubmissionFixtureTest < ActiveSupport::TestCase
+  def setup
+    @feed = feeds(:one)
+  end
+  test "valid_fixtures" do
+    # , :pending_ticker
+    [:approved_ticker].each do |fixture_name|
+      resource = submissions( fixture_name )
+      valid = resource.valid?
+      errors = resource.errors.full_messages
+      assert_equal [], errors, "#{fixture_name} is not valid"
+    end
+  end
+end
 class SubmissionTest < ActiveSupport::TestCase
   def setup
     @public_submission = Submission.new({:feed => feeds(:service)})

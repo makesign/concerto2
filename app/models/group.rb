@@ -53,7 +53,9 @@ class Group < ActiveRecord::Base
   end
 
   def is_deletable?
-    self.screens.size == 0 && self.feeds.size == 0
+    no_screens = (screens.size == 0)
+    no_feeds = (feeds.size == 0)
+    no_screens and no_feeds
   end
 
   # Test if a user is part of this group
