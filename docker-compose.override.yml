@@ -12,5 +12,6 @@ services:
       - .:/rails  # use app files from host
       - /rails/node_modules # but not the node_modules!
       - ./docker-container-mounts/tmp:/rails/tmp
+      - ./docker-container-mounts/log:/rails/log
       - ./docker-container-mounts/storage:/rails/storage
     restart: "no"
