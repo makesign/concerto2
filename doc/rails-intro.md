@@ -22,11 +22,17 @@ https://guides.rubyonrails.org/getting_started.html
 
 ## Links 
 
-- [Ruby on Rails — A web-app framework that includes everything needed to create database-backed web applications according to the Model-View-Controller \(MVC\) pattern.](https://rubyonrails.org/)~
-- [Getting Started with Rails — Ruby on Rails Guides](https://guides.rubyonrails.org/getting_started.html)~
-- [RVM: Ruby Version Manager - RVM Ruby Version Manager - Documentation](https://rvm.io/)~
-- [modulehandbook/modulehandbook](https://github.com/modulehandbook/modulehandbook)~
-- [Bundler: The best way to manage a Ruby application's gems](https://bundler.io/)~
-- [Repositories](https://github.com/orgs/makesign/repositories)~
-- [makesign/rails7-tryout-with-devise](https://github.com/makesign/rails7-tryout-with-devise)~
-- [makesign/concerto2: New Rails 7 version of concerto - WIP WORK IN PROGRESS!](https://github.com/makesign/concerto2)~
+- [Ruby on Rails — A web-app framework that includes everything needed to create database-backed web applications according to the Model-View-Controller \(MVC\) pattern.](https://rubyonrails.org/)
+- [Getting Started with Rails — Ruby on Rails Guides](https://guides.rubyonrails.org/getting_started.html)
+- [RVM: Ruby Version Manager - RVM Ruby Version Manager - Documentation](https://rvm.io/)
+- [modulehandbook/modulehandbook](https://github.com/modulehandbook/modulehandbook)
+- [Bundler: The best way to manage a Ruby application's gems](https://bundler.io/)
+- [Repositories](https://github.com/orgs/makesign/repositories)
+- [makesign/rails7-tryout-with-devise](https://github.com/makesign/rails7-tryout-with-devise)
+- [makesign/concerto2: New Rails 7 version of concerto - WIP WORK IN PROGRESS!](https://github.com/makesign/concerto2)
+
+### ActiveRecord / Associations
+- [Active Record Associations — Ruby on Rails Guides](https://guides.rubyonrails.org/association_basics.html)
+- [Catalog of Patterns of Enterprise Application Architecture](https://martinfowler.com/eaaCatalog/)
+- [P of EAA](https://martinfowler.com/books/eaa.html)
+- [P of EAA: Active Record](https://martinfowler.com/eaaCatalog/activeRecord.html)
