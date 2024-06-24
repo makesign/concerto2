@@ -1,5 +1,8 @@
 .RECIPEPREFIX = -
 
+rails: open
+- rails server
+
 open:
 - open http://localhost:3000
 
@@ -23,6 +26,11 @@ rvm-info:
 - @echo "rvm gemset use ${ruby_version}@${ruby_gemset}"
 - @echo
 - rvm gemset list
+
+
+# -------------------------------------------------------------------
+#  Docker
+# -------------------------------------------------------------------
 
 docker-cleanup:
 - docker rm $(shell docker ps -aq)
@@ -61,7 +69,43 @@ build-stage2:
 build-stage3:
 - docker build -f Dockerfile.rails7 --target concerto-stage3 -t concerto-stage3 .
 
+build-prod:
+- docker build -f Dockerfile.rails7 --target concerto-production -t concerto-production .
 
-quick:
-- docker build -f Dockerfile.stage1.quick -t concerto-stage1-quick .
+build-dev:
+- docker build -f Dockerfile.rails7 --target concerto-development -t concerto-development .
+
+
+
+# -------------------------------------------------------------------
+#  docker-compose
+# -------------------------------------------------------------------
+
+output:
+- docker-compose up > tmp/output/docker-std.txt 2> tmp/output/docker-err.txt
+- docker logs concerto-dev -f > tmp/output/docker-std-log.txt 2> tmp/output/docker-err-log.txt
+
+
+create-container-files:
+- mkdir docker-container-mounts
+- touch docker-container-mounts/.keep
+- mkdir docker-container-mounts/storage
+- mkdir docker-container-mounts/tmp
+- touch docker-container-mounts/storage/.keep
+- touch docker-container-mounts/tmp/.keep
+
+dc:
+- docker-compose up -d
+- docker logs concerto-dev -f
+
+dd:
+- docker-compose down
+
+dc-bash:
+- docker-compose run concerto bash
+
+# the container db is located in docker-container-mounts/storage
+dc-db:
+- docker-compose run concerto bin/rails db:migrate
+- docker-compose run concerto bin/rails db:seed
 

@@ -2,6 +2,8 @@ class Feed < ActiveRecord::Base
   include ActiveModel::ForbiddenAttributesProtection
 
   belongs_to :group
+  validates :group, presence: true, associated: true
+
   has_many :submissions, dependent: :destroy
   has_many :contents, through: :submissions
   has_many :subscriptions, dependent: :destroy
@@ -14,7 +16,7 @@ class Feed < ActiveRecord::Base
 
   # Validations
   validates :name, presence: true, uniqueness: true
-  validates :group, presence: true, associated: true
+
   validate :parent_id_cannot_be_this_feed
 
   #Newsfeed

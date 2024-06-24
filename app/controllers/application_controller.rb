@@ -1,13 +1,13 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery
-  before_action :set_locale
+  # before_action :set_locale
   before_action :check_for_initial_install
-  before_action :set_version
-  before_action :compute_pending_moderation
-  before_action :apply_relative_root
-  around_action :set_time_zone
-  helper_method :webserver_supports_restart?
-  helper_method :current_screen
+  # before_action :set_version
+  # before_action :compute_pending_moderation
+  # before_action :apply_relative_root
+  # around_action :set_time_zone
+  # helper_method :webserver_supports_restart?
+  # helper_method :current_screen
   # define_callbacks :auth_plugin
   # ConcertoPlugin.install_callbacks(self)
 

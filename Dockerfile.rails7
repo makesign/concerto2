@@ -24,8 +24,11 @@ RUN apt-get update -qq && \
     apt-get install --no-install-recommends -y \
     nodejs
 
-# ----------------------------------------------------------------------------------------------------------------------------------------
+
+# -------------------------------------------------------------------
 # Throw-away build stage to reduce size of final image
+# -------------------------------------------------------------------
+
 FROM concerto-stage0 as concerto-stage1
 
 
@@ -44,8 +47,12 @@ RUN bundle config set frozen true && \
     rm -rf ~/.bundle/ "${BUNDLE_PATH}"/ruby/*/cache  "${BUNDLE_PATH}"/ruby/*/bundler/gems/*/.git && \
     bundle exec bootsnap precompile --gemfile
 
-# ----------------------------------------------------------------------------------------------------------------------------------------
+
+
+# -------------------------------------------------------------------
 # Throw-away build stage to reduce size of final image
+# -------------------------------------------------------------------
+
 FROM concerto-stage1 as concerto-stage2
 
 # Copy application code
@@ -62,14 +69,13 @@ RUN SECRET_KEY_BASE_DUMMY=1 ./bin/rails assets:precompile && \
     # bin/rails db:migrate && \
     # bin/rails db:seed
 
-# ----------------------------------------------------------------------------------------------------------------------------------------
 
-# -------------------------------------------------------------------------------------------
-# Final stage for app image
-# skip the two build stages!!!
+# -------------------------------------------------------------------
+# Add Runtime dependencies
+# skips the two build stages!!!
+# -------------------------------------------------------------------
 FROM concerto-stage0 as concerto-stage3
 ENV RAILS_ENV="development"
-# -------------------------------------------------------------------------------------------
 
 # Install packages needed for deployment
 RUN apt-get update -qq && \
@@ -81,12 +87,21 @@ RUN apt-get update -qq && \
 
 # Copy built artifacts: gems, application
 COPY --from=concerto-stage1 /usr/local/bundle /usr/local/bundle
+
+
+# -------------------------------------------------------------------
+# production
+# -------------------------------------------------------------------
+FROM concerto-stage3 as concerto-production
+ENV RAILS_ENV="production"
+
+# copy the app
 COPY --from=concerto-stage2 /rails /rails
 
 # Run and own only the runtime files as a non-root user for security
 RUN useradd rails --create-home --shell /bin/bash && \
     chown -R rails:rails db log storage tmp
-#USER rails:rails
+USER rails:rails
 
 # Entrypoint prepares the database.
 ENTRYPOINT ["/rails/bin/docker-entrypoint"]
@@ -96,3 +111,17 @@ EXPOSE 3000
 CMD ["./bin/rails", "server"]
 # CMD ["bash"]
 
+
+# -------------------------------------------------------------------
+# development
+# -------------------------------------------------------------------
+FROM concerto-stage3 as concerto-development
+ENV RAILS_ENV="development"
+
+# Entrypoint prepares the database.
+ENTRYPOINT ["/rails/bin/docker-entrypoint"]
+
+# Start the server by default, this can be overwritten at runtime
+EXPOSE 3000
+CMD ["./bin/rails", "server"]
+# CMD ["bash"]
