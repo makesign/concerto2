@@ -25,7 +25,6 @@ RUN apt-get update -qq && \
     nodejs
 
 # ----------------------------------------------------------------------------------------------------------------------------------------
-
 # Throw-away build stage to reduce size of final image
 FROM concerto-stage0 as concerto-stage1
 
@@ -46,8 +45,9 @@ RUN bundle config set frozen true && \
     bundle exec bootsnap precompile --gemfile
 
 # ----------------------------------------------------------------------------------------------------------------------------------------
-
+# Throw-away build stage to reduce size of final image
 FROM concerto-stage1 as concerto-stage2
+
 # Copy application code
 COPY . .
 
@@ -61,7 +61,6 @@ RUN SECRET_KEY_BASE_DUMMY=1 ./bin/rails assets:precompile && \
 
 # ----------------------------------------------------------------------------------------------------------------------------------------
 
-# syntax = docker/dockerfile:1
 # -------------------------------------------------------------------------------------------
 # Final stage for app image
 # skip the two build stages!!!
@@ -84,7 +83,7 @@ COPY --from=concerto-stage2 /rails /rails
 # Run and own only the runtime files as a non-root user for security
 RUN useradd rails --create-home --shell /bin/bash && \
     chown -R rails:rails db log storage tmp
-# USER rails:rails
+USER rails:rails
 
 # Entrypoint prepares the database.
 ENTRYPOINT ["/rails/bin/docker-entrypoint"]

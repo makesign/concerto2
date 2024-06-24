@@ -30,7 +30,7 @@ docker-cleanup:
 
 
 run:
-- docker run -p 127.0.0.1:3210:3210/tcp concerto-stage3
+- docker run -p 3001:3000 concerto-stage3
 
 mini-build:
 - docker build -f Dockerfile.mini -t mini .
@@ -52,14 +52,14 @@ build-stage0:
 - docker build -f Dockerfile.rails7 --target concerto-stage0 -t concerto-stage0 .
 
 build-stage1:
-- docker build -f Dockerfile.stage1 --target concerto-stage1 -t concerto-stage1 .
+- docker build -f Dockerfile.rails7 --target concerto-stage1 -t concerto-stage1 .
 
 
 build-stage2:
-- docker build -f Dockerfile.stage2 --target concerto-stage2 -t concerto-stage2 .
+- docker build -f Dockerfile.rails7 --target concerto-stage2 -t concerto-stage2 .
 
 build-stage3:
-- docker build -f Dockerfile.stage3 --target concerto-stage3 -t concerto-stage3 .
+- docker build -f Dockerfile.rails7 --target concerto-stage3 -t concerto-stage3 .
 
 
 quick:
