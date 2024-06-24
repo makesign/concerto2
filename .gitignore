@@ -36,3 +36,11 @@
 
 /app/assets/builds/*
 !/app/assets/builds/.keep
+
+# Ignore log, tmp and storage from docker container
+docker-container-mounts/tmp/*
+!docker-container-mounts/tmp/.keep
+docker-container-mounts/log/*
+!docker-container-mounts/log/.keep
+docker-container-mounts/storage/*
+!docker-container-mounts/storage/.keep
