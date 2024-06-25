@@ -2,7 +2,9 @@ class Content < ActiveRecord::Base
   include ActiveModel::ForbiddenAttributesProtection
 
   belongs_to :user
+  validates :user, presence: true, associated: true
   belongs_to :kind
+  validates :kind, presence: true, associated: true
   has_many :submissions, dependent: :destroy, after_add: :after_add_callback
   has_many :feeds, through: :submissions
   has_many :media, as: :attachable, dependent: :destroy
@@ -12,8 +14,8 @@ class Content < ActiveRecord::Base
 
   # Validations
   validates :name, presence: true
-  #validates :kind, presence: true, associated: true
-  validates :user, presence: true, associated: true
+
+
   validate :cannot_be_own_parent
 
   def cannot_be_own_parent

@@ -29,7 +29,7 @@ class TemplatesControllerTest < ActionController::TestCase
     #Ruby 1.8.7 and lower can't convert Rack::Test::UploadedFile into String
     if RUBY_VERSION > "1.8.7"
 	    sign_in users(:admin)
-	    archive = fixture_file_upload("/files/Archive.zip", 'application/zip')    
+	    archive = fixture_file_upload("Archive.zip", 'application/zip')
 	    assert_difference('Template.count', 1) do
 	      put :import, params: { :template => { :is_hidden => false }, :package => archive }
 	    end
@@ -45,7 +45,7 @@ class TemplatesControllerTest < ActionController::TestCase
     #Ruby 1.8.7 and lower can't convert Rack::Test::UploadedFile into String
     if RUBY_VERSION > "1.8.7"
       sign_in users(:admin)
-      archive = fixture_file_upload("/files/ArchiveWithCss.zip", 'application/zip')    
+      archive = fixture_file_upload("ArchiveWithCss.zip", 'application/zip')
       assert_difference('Template.count', 1) do
         put :import, params: { :template => { :is_hidden => false }, :package => archive }
       end

@@ -34,15 +34,16 @@ class Membership < ActiveRecord::Base
   before_save :compact_permissions
 
   belongs_to :user
+  validates :user, presence: true, associated: true
   belongs_to :group
+  validates :group, presence: true, associated: true
+
 
   #Newsfeed
   include PublicActivity::Common if defined? PublicActivity::Common
 
   # Validations
-  validates :user, presence: true, associated: true
-  validates :group, presence: true, associated: true
-  validates_uniqueness_of :user_id, scope: :group_id
+ validates_uniqueness_of :user_id, scope: :group_id
 
   # Scoping shortcuts for leaders/regular
   scope :leader, -> { where level: Membership::LEVELS[:leader] }

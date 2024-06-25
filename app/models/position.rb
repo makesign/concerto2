@@ -2,12 +2,14 @@ class Position < ActiveRecord::Base
   include ActiveModel::ForbiddenAttributesProtection
 
   belongs_to :field
-  belongs_to :template
+  validates :field, presence: true, associated: true
+
+  belongs_to :template, optional: true
 
   before_save :clean_styles
   
   # Validations
-  validates :field, presence: true, associated: true
+
   validates :right, numericality: {greater_than_or_equal_to: -1, less_than_or_equal_to: 1}
   validates :left, numericality: {greater_than_or_equal_to: -1, less_than_or_equal_to: 1}
   validates :top, numericality: {greater_than_or_equal_to: -1, less_than_or_equal_to: 1}

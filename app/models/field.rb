@@ -2,6 +2,8 @@ class Field < ActiveRecord::Base
   include ActiveModel::ForbiddenAttributesProtection
 
   belongs_to :kind
+  validates :kind_id, presence: true
+
   has_many :subscriptions, dependent: :destroy
   has_many :positions, dependent: :destroy
   has_many :field_configs, dependent: :destroy
@@ -11,5 +13,5 @@ class Field < ActiveRecord::Base
 
   # Validations
   validates :name, presence: true
-  validates :kind_id, presence: true
+
 end

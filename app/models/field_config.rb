@@ -4,9 +4,10 @@ class FieldConfig < ActiveRecord::Base
   include PublicActivity::Common if defined? PublicActivity::Common
 
   belongs_to :field
+  validates_presence_of :field_id
   belongs_to :screen, optional: true
 
-  validates_presence_of :key, :field_id
+  validates_presence_of :key
   # each combination of screen & field can only have one fieldconfig
   validates_uniqueness_of :key, scope: [:screen_id, :field_id]
   validates :value, numericality: { only_integer: true }, if: proc { |r| r.key_type == :integer }

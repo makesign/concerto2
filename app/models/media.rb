@@ -2,7 +2,7 @@ class Media < ActiveRecord::Base
   include ActiveModel::ForbiddenAttributesProtection
 
   # templates and content
-  belongs_to :attachable, polymorphic: true
+  belongs_to :attachable, polymorphic: true, optional: true
 
   # switch to active_storage
   has_one_attached :attached_file
