@@ -1,30 +1,44 @@
+started this to make sense of how the model classes are connected.
+
+as both Group and User can be the owner of various things, theres a 
+hidden common supertype ("Duck Type") "Owner", I added it here for clarity.
+
+```mermaid
+
 classDiagram
-     ApplicationRecord
+
+    Feed *-- Screen
+    Feed *-- Owner: owner
+    Feed *-- Feed :parent
+    Template *-- Owner: owner
+    Screen *-- Owner: owner
+    <<DuckType>>Owner
+      Group --|> Owner
+      User --|> Owner
 
 
-     Content
-     ConcertoConfig
+      Content
+      ConcertoConfig
+      Feed
+      Field
+      FieldConfig
 
-     Feed
-     Field
-     FieldConfig
-     Group
-     Kind
-     Media
-     Membership
-     Page
-     Position
-     Screen
-     Submission
-     Subscription
-     Template
-     User
-
+      Kind
+      Media
+      Membership
+      Page
+      Position
+      Screen
+      Submission
+      Subscription
+      
+      
+      Booking
+      ConcertoPlugin
+  
     ActiveModelValidator  <|-- GraphicValidator
 
-     Booking
-     ConcertoPlugin
-
+    
 
     Content <|-- DynamicContent
     Content <|-- Graphic
@@ -35,5 +49,4 @@ classDiagram
     TextContent <|-- HtmlText
     TextContent <|-- Ticker
 
-    
-   
+```

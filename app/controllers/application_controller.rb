@@ -339,7 +339,14 @@ class ApplicationController < ActionController::Base
         object.delete_if {|o| cannot?(test_action, o)}
         if new_exception && object.empty?
           # Parent will be Object for Concerto, or the module for Plugins.
-          new_parent = self.class.parent
+          # BK ## Tuesday, 25.June 2024 18:03
+          # .parent was removed in rails7
+          # Object is correct for Concerto itself
+          # what is the "correct" way to determine if this is called from a plugin controller?
+          # remove for now
+          # TBD_HTW
+          # new_parent = self.class.parent
+          new_parent = Object
           class_name =  controller_name.singularize.classify
           new_class = new_parent.const_get(class_name) if new_parent.const_defined?(class_name)
           new_object = new_class.new if !new_class.nil?

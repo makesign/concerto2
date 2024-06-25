@@ -1,7 +1,11 @@
 version: '3.4'
 services:
   concerto:
-    image: concerto-development
+    #image: concerto-development
+    build: 
+      context: .
+      dockerfile: Dockerfile.rails7
+      target: concerto-development
     container_name: concerto-dev
     command: bin/rails server --port=3000 --binding=0.0.0.0
     environment:

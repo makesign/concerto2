@@ -32,6 +32,7 @@ rvm-info:
 #  Docker
 # -------------------------------------------------------------------
 
+# this is quite radical! 
 docker-cleanup:
 - docker rm $(shell docker ps -aq)
 - docker rmi $(shell docker images -qa)
