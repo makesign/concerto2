@@ -138,28 +138,28 @@ class Membership < ActiveRecord::Base
     case action
     when "approve"
       # Can only approve if current level is pending
-      if self.level == Membership::LEVELS[:pending] && update_attributes({level: Membership::LEVELS[:regular]})
+      if self.level == Membership::LEVELS[:pending] && update({level: Membership::LEVELS[:regular]})
         return true, :membership_approved
       else
         return false, :membership_approved_failure
       end
     when "deny"
       # Can only deny if current level is pending
-      if self.level == Membership::LEVELS[:pending] && update_attributes({level: Membership::LEVELS[:denied]})
+      if self.level == Membership::LEVELS[:pending] && update({level: Membership::LEVELS[:denied]})
         return true, :membership_denied
       else
         return false, :membership_denied_failure
       end
     when "promote"
       # Can only promote regular members
-      if self.level == Membership::LEVELS[:regular] && update_attributes({level: Membership::LEVELS[:leader]})
+      if self.level == Membership::LEVELS[:regular] && update({level: Membership::LEVELS[:leader]})
         return true, :membership_promoted
       else
         return false, :membership_promoted_failure
       end
     when "demote"
       # Only Leaders can be demoted, but only when there is more than one.
-      if can_resign_leadership? && update_attributes({level: Membership::LEVELS[:regular]})
+      if can_resign_leadership? && update({level: Membership::LEVELS[:regular]})
         return true, :membership_demoted
         true
       else
@@ -167,7 +167,7 @@ class Membership < ActiveRecord::Base
         false
       end
     when "unblock"
-      if self.level == Membership::LEVELS[:denied] && update_attributes({level: Membership::LEVELS[:regular]})
+      if self.level == Membership::LEVELS[:denied] && update({level: Membership::LEVELS[:regular]})
         return true, :membership_approved
       else
         return false, :membership_approved_failure

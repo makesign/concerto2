@@ -25,6 +25,6 @@ https://github.com/kaminari/kaminari
 
 # More Changes
 
-- rename update_attributes to update in ActiveRecord
+- done: rename update_attributes to update in ActiveRecord
 
 https://stackoverflow.com/questions/21605186/undefined-method-update-attributes-in-rails

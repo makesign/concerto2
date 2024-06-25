@@ -78,7 +78,7 @@ class Submission < ActiveRecord::Base
       self.content.children.each do |child|
         similiar_submissions = Submission.where(content_id: child.id, feed_id: self.feed_id, moderation_flag: self.moderation_flag_was)
         similiar_submissions.each do |child_submission|
-          child_submission.update_attributes({moderation_flag: self.moderation_flag, moderator_id: self.moderator_id})
+          child_submission.update({moderation_flag: self.moderation_flag, moderator_id: self.moderator_id})
         end
       end
     end
@@ -110,7 +110,7 @@ class Submission < ActiveRecord::Base
     
       # indicate that we sent a notification so we dont repeat emails for the same content
       items.each do |s|
-        s.update_attributes(pending_notification_sent: DateTime.now)
+        s.update(pending_notification_sent: DateTime.now)
       end
     end
   end
