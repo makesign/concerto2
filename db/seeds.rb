@@ -23,13 +23,14 @@ user.receive_moderation_notifications = true
 user.save
 
 #Default plugins
-ConcertoPlugin.where(:gem_name => "concerto_weather").first_or_create!(:enabled => true, :source => "rubygems")
-ConcertoPlugin.where(:gem_name => "concerto_remote_video").first_or_create!(:enabled => true, :source => "rubygems")
-ConcertoPlugin.where(:gem_name => "concerto_simple_rss").first_or_create!(:enabled => true, :source => "rubygems")
-ConcertoPlugin.where(:gem_name => "concerto_iframe").first_or_create!(:enabled => true, :source => "rubygems")
-ConcertoPlugin.where(:gem_name => "concerto_calendar").first_or_create!(:enabled => true, :source => "rubygems")
-ConcertoPlugin.where(:gem_name => "concerto_hardware").first_or_create!(:enabled => true, :source => "rubygems")
-ConcertoPlugin.where(:gem_name => "concerto_frontend").first_or_create!(:enabled => true, :source => "rubygems")
+enable_plugins = false
+ConcertoPlugin.where(:gem_name => "concerto_weather").first_or_create!(:enabled => enable_plugins, :source => "rubygems")
+ConcertoPlugin.where(:gem_name => "concerto_remote_video").first_or_create!(:enabled => enable_plugins, :source => "rubygems")
+ConcertoPlugin.where(:gem_name => "concerto_simple_rss").first_or_create!(:enabled => enable_plugins, :source => "rubygems")
+ConcertoPlugin.where(:gem_name => "concerto_iframe").first_or_create!(:enabled => enable_plugins, :source => "rubygems")
+ConcertoPlugin.where(:gem_name => "concerto_calendar").first_or_create!(:enabled => enable_plugins, :source => "rubygems")
+ConcertoPlugin.where(:gem_name => "concerto_hardware").first_or_create!(:enabled => enable_plugins, :source => "rubygems")
+ConcertoPlugin.where(:gem_name => "concerto_frontend").first_or_create!(:enabled => enable_plugins, :source => "rubygems")
 
 # Establish the 4 major display areas a template usually has.
 # In my quick sample, this code will make 68% of the Concerto 1 fields match
