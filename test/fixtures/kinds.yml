@@ -10,4 +10,4 @@ graphics:
   name: Graphics
 
 fof_kind:
-  name: FigureOutFixtures_Kind
+  name: <%= trace 'FigureOutFixtures_Kind' %>

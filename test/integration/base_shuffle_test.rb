@@ -1,7 +1,7 @@
 require 'test_helper'
 
 class ShuffleIntegrationTest < ActionDispatch::IntegrationTest
-  fixtures :all
+  #fixtures :all
 
   test 'returns expected content in expected order' do
     screen = screens(:one)
