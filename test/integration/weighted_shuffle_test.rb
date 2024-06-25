@@ -1,7 +1,7 @@
 require 'test_helper'
 
 class WeightedShuffleIntegrationTest < ActionDispatch::IntegrationTest
-  fixtures :all
+  # fixtures :all
 
   test 'returns expected content' do
     screen = screens(:one)

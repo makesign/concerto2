@@ -1,7 +1,7 @@
 require 'test_helper'
 
 class RoutesTest < ActionDispatch::IntegrationTest
-  fixtures :all
+  # fixtures :all
   
   test "non plural content route" do
     assert_recognizes({:controller => 'feeds', :action => 'index'}, "content")

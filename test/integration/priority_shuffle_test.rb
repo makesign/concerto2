@@ -1,7 +1,7 @@
 require 'test_helper'
 
 class PriorityShuffleIntegrationTest < ActionDispatch::IntegrationTest
-  fixtures :all
+  # fixtures :all
 
   test 'returns level 2 priority content' do
     screen = screens(:one)

@@ -2,7 +2,7 @@ require 'test_helper'
 
 class Frontend::ScreensControllerTest < ActionController::TestCase
   include Devise::Test::ControllerHelpers
-  fixtures :screens
+  # fixtures :screens
 
   test "should get screen frontend" do
     @request.cookies['concerto_screen_token'] = screens(:one).screen_token

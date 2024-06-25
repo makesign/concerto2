@@ -1,7 +1,7 @@
 require 'test_helper'
 
 class ContentIntegrationTest < ActionDispatch::IntegrationTest
-  fixtures :all
+  # fixtures :all
 
   test "signed in root urls load" do
     post "/users/sign_in", params: { :user => {:email => users(:katie).email, :password => 'katie'} }
