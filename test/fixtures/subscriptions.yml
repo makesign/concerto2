@@ -1,25 +1,25 @@
 # Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
 
 one:
-  feed: service
-  field: one
-  screen: one
+  feed: service(Feed)
+  field: one(Field)
+  screen: one(Screen)
   weight: 1
 
 two:
-  feed: announcements
-  field: one
-  screen: one
+  feed: announcements(Feed)
+  field: one(Field)
+  screen: one(Screen)
   weight: 1
 
 three:
-  feed: service
-  field: one
-  screen: two
+  feed: service(Feed)
+  field: one(Field)
+  screen: two(Screen)
   weight: 1
 
 four:
-  feed: service2
-  field: one
-  screen: one
+  feed: service2(Feed)
+  field: one(Field)
+  screen: one(Screen)
   weight: 2

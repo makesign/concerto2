@@ -2,12 +2,12 @@
 
 one:
   name: MyString
-  kind: ticker
+  kind: ticker (Kind)
 
 two:
   name: MyString
-  kind: text
+  kind: text (Kind)
 
 graphics:
   name: Graphics
-  kind: graphics
+  kind: graphics (Kind)

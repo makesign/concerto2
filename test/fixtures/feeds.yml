@@ -3,7 +3,7 @@ root:
   id: 1
   name: Root of all Service Events
   description: This feed is for community service related announcements
-  group: wtg
+  group: wtg (Group)
   is_submittable: true
   is_viewable: true
   content_types:
@@ -14,8 +14,8 @@ service:
   id: 2
   name: Service Events
   description: This feed is for community service related announcements
-  parent_id: 1
-  group: wtg
+  parent: root (Feed)
+  group: wtg (Group)
   is_submittable: true
   is_viewable: true
   content_types:
@@ -26,7 +26,7 @@ service2:
   name: Service Events2
   description: same as service feed but for stuff subscribed at weight of 2
   parent_id:
-  group: wtg
+  group: wtg (Group)
   is_submittable: true
   is_viewable: true
   content_types:
@@ -37,7 +37,7 @@ announcements:
   name: Announcements
   description: Important Organizational Announcements
   parent_id:
-  group: wtg
+  group: wtg (Group)
   content_types:
     "Graphic": "1"
     "Ticker": "1"
@@ -45,8 +45,8 @@ announcements:
 boring_announcements:
   name: Boring Announcements
   description: Not so exciting organizational announcements
-  parent: announcements
-  group: wtg
+  parent: announcements (Feed)
+  group: wtg (Group)
   content_types:
     "Graphic": "0"
     "Ticker": "1"
@@ -54,26 +54,26 @@ boring_announcements:
 important_announcements:
   name: Important Announcements
   description: Really important stuff
-  parent: announcements
-  group: wtg
+  parent: announcements (Feed)
+  group: wtg (Group)
   is_submittable: false
 
 sleepy_announcements:
   name: zZzZzZ
   description: Announcements that will put you to sleep
-  parent: boring_announcements
-  group: wtg
+  parent: boring_announcements (Feed)
+  group: wtg (Group)
   is_viewable: false
 
 secret_announcements:
   name: Secret Stuff
   description: RPI TV enjoys secret meetings
-  group: rpitv
+  group: rpitv (Group)
   is_submittable: false
   is_viewable: false
 
 invisible_feed:
   name: Invisible
-  group: wtg
+  group: wtg (Group)
   is_submittable: false
   is_viewable: false

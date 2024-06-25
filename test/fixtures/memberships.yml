@@ -1,27 +1,28 @@
 # Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
 
 katie_wtg:
-  user: katie
-  group: wtg
+  user: katie (User)
+  group: wtg (Group)
   level: <%= Membership::LEVELS[:leader] %>
 
 katie_rpitv:
-  user: katie
-  group: rpitv
+  user: katie (User)
+  group: rpitv (Group)
   level: <%= Membership::LEVELS[:regular] %>
 
 karen_wtg:
-  user: karen
-  group: wtg
+  user: karen (User)
+  group: wtg (Group)
   level: <%= Membership::LEVELS[:regular] %>
   permissions: 0
 
 kristen_rpitv:
-  user: kristen
-  group: rpitv
+  user: kristen (User)
+  user: kristen (User)
+  group: rpitv (Group)
   level: <%= Membership::LEVELS[:denied] %>
 
 kristen_unused:
-  user: kristen
-  group: unused
+  user: kristen (User)
+  group: unused (Group)
   level: <%= Membership::LEVELS[:pending] %>
