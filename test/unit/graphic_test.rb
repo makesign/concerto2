@@ -24,7 +24,7 @@ class GraphicTest < ActiveSupport::TestCase
     graphic = Graphic.new(:name => "Sample Graphic",
                           :duration => 15,
                           :user => users(:katie))
-    file = fixture_file_upload("/files/concerto_background.jpg", 'image/jpeg', :binary)
+    file = fixture_file_upload("concerto_background.jpg", 'image/jpeg', :binary)
     graphic.media.build({:key => "original"})
     graphic.media.first.file = file
 
@@ -37,7 +37,7 @@ class GraphicTest < ActiveSupport::TestCase
     graphic = Graphic.new(:name => "Sample Graphic",
                       :duration => 15,
                       :user => users(:katie))
-    file = fixture_file_upload("/files/concerto_background.jpg", 'text/plain', :binary)
+    file = fixture_file_upload("concerto_background.jpg", 'text/plain', :binary)
     graphic.media.build({:key => "original"})
     graphic.media.first.file = file
 
@@ -61,7 +61,7 @@ class GraphicTest < ActiveSupport::TestCase
     graphic = Graphic.new(:name => "Sample Graphic",
                           :duration => 15,
                           :user => users(:katie))
-    file = fixture_file_upload("/files/concerto_background.jpg", 'image/jpeg', :binary)
+    file = fixture_file_upload("concerto_background.jpg", 'image/jpeg', :binary)
     graphic.media.build({:key => "original"})
     graphic.media.first.file = file
     graphic.save
