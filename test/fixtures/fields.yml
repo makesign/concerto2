@@ -11,3 +11,7 @@ two:
 graphics:
   name: Graphics
   kind: graphics (Kind)
+
+fof_field:
+  name: FoF_Field
+  kind: fof_kind (Kind)

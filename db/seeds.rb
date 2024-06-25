@@ -23,7 +23,7 @@ user.receive_moderation_notifications = true
 user.save
 
 #Default plugins
-enable_plugins = false
+enable_plugins = true
 ConcertoPlugin.where(:gem_name => "concerto_weather").first_or_create!(:enabled => enable_plugins, :source => "rubygems")
 ConcertoPlugin.where(:gem_name => "concerto_remote_video").first_or_create!(:enabled => enable_plugins, :source => "rubygems")
 ConcertoPlugin.where(:gem_name => "concerto_simple_rss").first_or_create!(:enabled => enable_plugins, :source => "rubygems")

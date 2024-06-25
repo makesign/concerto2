@@ -57,7 +57,7 @@ class ConcertoConfig < ActiveRecord::Base
 
     setting = ConcertoConfig.where(key: key).first
     if setting.nil?
-      raise "Concerto Config key #{key} not found!"
+            raise "Concerto Config key #{key} not found!"
     end    
     if setting.value_type == "boolean"
       ["true", "t", "1"].include?(setting.value) ? (return true) : (return false)
