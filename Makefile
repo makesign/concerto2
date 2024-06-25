@@ -18,6 +18,9 @@ build-alpine:
 build:
 - docker build -f Dockerfile.rails7 -t concerto2 .
 
+mermaid:
+- bin/rails mermaid_erd
+
 ruby_version=$(shell cat .ruby-version)
 ruby_gemset=$(shell cat .ruby-gemset)
 rvm-info:

@@ -1,5 +1,5 @@
 Rails.logger.debug "Starting #{File.basename(__FILE__)} at #{Time.now.to_s}"
-Rails.logger.debug "---- SKIPPED! -----"
+Rails.logger.debug "---- SKIP 00-inflections which was basically a db:migrate from the app... -----"
 # ## Saturday, 22.June 2024 09:39
 
 
