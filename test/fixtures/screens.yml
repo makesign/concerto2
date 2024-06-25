@@ -11,6 +11,16 @@ one:
   authentication_token: auth:0123456789abcdef
   locale: en
 
+one_without_fields:
+  name: Like the first Screen but without fields
+  location: Katie's Room
+  is_public: false
+  owner: katie (User)
+  template: two ( Template )
+  width: 1920
+  height: 1080
+  authentication_token: auth:0123456asfdabcdef
+  locale: en
 two:
   name: SGS Screen
   location: SGS

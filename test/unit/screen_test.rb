@@ -1,6 +1,7 @@
 require 'test_helper'
 
 class ScreenTest < ActiveSupport::TestCase
+
   #Test the fields that should be required
   test "name cannot be blank" do
     s = screens(:one)
@@ -33,9 +34,11 @@ class ScreenTest < ActiveSupport::TestCase
 
   test "owner must be group or user" do
     s = screens(:one)
+    s.template = templates(:two)
     s.owner = users(:katie)
-    assert s.valid?, "Screen owned by user"
-    s.owner_type = "Pants"
+    s.valid?
+    assert_equal [], s.errors.full_messages, "Screen owned by user"
+    s.owner_type = "Media"
     assert !s.valid?, "Screen cannot be owner by pants"
     s.owner_type = "User"
     assert s.valid?, "Screen can be owner by user"
@@ -75,12 +78,14 @@ class ScreenTest < ActiveSupport::TestCase
 
   test "a screen has positions" do
     s = screens(:one)
-    assert !s.positions.empty?
+    assert s.positions.any?
   end
 
   test "a screen has fields" do
+    field_config = field_configs(:one)
     s = screens(:one)
-    assert !s.fields.empty?
+    field_config.screen = s
+    assert s.fields.any?
   end
 
   test "screen offline online toggle" do

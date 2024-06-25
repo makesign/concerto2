@@ -1,6 +1,8 @@
 class Ability
   include CanCan::Ability
 
+  # https://github.com/CanCanCommunity/cancancan
+  # https://github.com/CanCanCommunity/cancancan/blob/develop/docs/README.md
   def initialize(accessor)
     # By default we assume we're working with an user
     # that doesn't have an account or anything.
