@@ -3,7 +3,7 @@ include ActionDispatch::TestProcess
 
 class TemplateTest < ActiveSupport::TestCase
 
-  fixtures :all
+  # fixtures :all
 
   # Test the ability to import a simple xml descriptor
   test "importing a simple template" do

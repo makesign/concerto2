@@ -138,3 +138,7 @@ gem "rmagick", "~> 6.0"
 gem "faraday-multipart", "~> 1.0"
 
 gem "rails-controller-testing", "~> 1.0"
+
+gem "rails-mermaid_erd", "~> 0.5.0"
+
+gem "redcarpet", "~> 3.6"

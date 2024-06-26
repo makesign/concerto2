@@ -2,7 +2,7 @@ require "active_support/core_ext/integer/time"
 
 Rails.application.configure do
   config.logger = Logger.new(STDOUT)
-  config.log_level = :debug
+  config.log_level = :warn
   # see  doc_tryout/devise.md
   config.action_mailer.default_url_options = { host: 'localhost', port: 3000 }
 

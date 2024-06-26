@@ -2,9 +2,9 @@ require 'test_helper'
 
 class Frontend::ContentsControllerTest < ActionController::TestCase
   include Devise::Test::ControllerHelpers
-  fixtures :screens
-  fixtures :fields
-  fixtures :contents
+  # fixtures :screens
+  # fixtures :fields
+  # fixtures :contents
 
   test "should get content for field" do
     get(:index, params: { :screen_id => screens(:one).id, :field_id => fields(:one).id, :format => :json })

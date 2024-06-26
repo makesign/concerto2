@@ -1,4 +1,8 @@
 class Field < ActiveRecord::Base
+  def initialize(*args, &block)
+    puts "------- field initialize ------"
+    super(*args, &block)
+  end
   include ActiveModel::ForbiddenAttributesProtection
 
   belongs_to :kind

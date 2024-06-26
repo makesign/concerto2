@@ -24,3 +24,18 @@ class ActiveSupport::TestCase
   end
 
 end
+
+require 'set'
+ALREADY_TRACED = [].to_set
+module FixtureFileHelpers
+
+  def trace(a_string)
+    if ALREADY_TRACED.include?(a_string)
+      logger.warn("already traced: #{a_string}")
+    else
+      ALREADY_TRACED.add(a_string)
+    end
+    a_string
+  end
+end
+ActiveRecord::FixtureSet.context_class.include FixtureFileHelpers

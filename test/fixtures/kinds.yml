@@ -8,3 +8,6 @@ ticker:
 
 graphics:
   name: Graphics
+
+fof_kind:
+  name: <%= trace 'FigureOutFixtures_Kind' %>

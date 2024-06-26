@@ -1,9 +1,9 @@
-# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+# as feeds have a recursive tree structure, this yaml map needs to be ordered:
+--- !omap
 root:
-  id: 1
   name: Root of all Service Events
   description: This feed is for community service related announcements
-  group: wtg (Group)
+  group: wtg
   is_submittable: true
   is_viewable: true
   content_types:
@@ -11,11 +11,10 @@ root:
     "Ticker": "1"
 
 service:
-  id: 2
   name: Service Events
   description: This feed is for community service related announcements
   parent: root (Feed)
-  group: wtg (Group)
+  group: wtg
   is_submittable: true
   is_viewable: true
   content_types:
@@ -26,7 +25,7 @@ service2:
   name: Service Events2
   description: same as service feed but for stuff subscribed at weight of 2
   parent_id:
-  group: wtg (Group)
+  group: wtg
   is_submittable: true
   is_viewable: true
   content_types:
@@ -37,7 +36,7 @@ announcements:
   name: Announcements
   description: Important Organizational Announcements
   parent_id:
-  group: wtg (Group)
+  group: wtg
   content_types:
     "Graphic": "1"
     "Ticker": "1"
@@ -46,7 +45,7 @@ boring_announcements:
   name: Boring Announcements
   description: Not so exciting organizational announcements
   parent: announcements (Feed)
-  group: wtg (Group)
+  group: wtg
   content_types:
     "Graphic": "0"
     "Ticker": "1"
@@ -55,25 +54,25 @@ important_announcements:
   name: Important Announcements
   description: Really important stuff
   parent: announcements (Feed)
-  group: wtg (Group)
+  group: wtg
   is_submittable: false
 
 sleepy_announcements:
   name: zZzZzZ
   description: Announcements that will put you to sleep
   parent: boring_announcements (Feed)
-  group: wtg (Group)
+  group: wtg
   is_viewable: false
 
 secret_announcements:
   name: Secret Stuff
   description: RPI TV enjoys secret meetings
-  group: rpitv (Group)
+  group: rpitv
   is_submittable: false
   is_viewable: false
 
 invisible_feed:
   name: Invisible
-  group: wtg (Group)
+  group: wtg
   is_submittable: false
   is_viewable: false

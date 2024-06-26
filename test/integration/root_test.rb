@@ -1,7 +1,7 @@
 require 'test_helper'
 
 class RootTest < ActionDispatch::IntegrationTest
-  fixtures :all
+  # fixtures :all
 
   test "root url loads" do
     get "/", params: {}

@@ -7,6 +7,11 @@ class Media < ActiveRecord::Base
   # switch to active_storage
   has_one_attached :attached_file
   # attachable
+  #  has_one_attached :image do |attachable|
+  #     attachable.variant( :thumb , resize_to_limit: [80, 80])
+  #   end
+  # <%= image_tag @picture.image.variant(:thumb) %>
+
 
   PREVIEW_MEDIA_VALID_MINS = 3
   PREVIEW_MEDIA_PURGE_MINS = 15

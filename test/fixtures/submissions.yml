@@ -1,15 +1,15 @@
 # Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
 
 approved_ticker:
-  content: old_ticker(Content)
-  feed: service (Feed)
+  content: old_ticker
+  feed: service
   moderation_flag: true
-  moderator: katie (User)
+  moderator: katie
   duration: 1
 
 pending_ticker:
   content: sample_ticker
-  feed: service (Feed)
+  feed: service
   moderation_flag:
   moderator:
   duration: 1

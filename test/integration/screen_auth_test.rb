@@ -2,7 +2,7 @@ require 'test_helper'
 
 class ScreenAuthTest < ActionDispatch::IntegrationTest
   #fixtures :all
-  fixtures :users, :screens, :groups, :templates
+  # fixtures :users, :screens, :groups, :templates
 
   test "screen authorization flow" do
     #ConcertoConfig.set(:allow_user_screen_creation, true)

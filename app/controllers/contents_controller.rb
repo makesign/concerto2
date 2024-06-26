@@ -267,7 +267,7 @@ class ContentsController < ApplicationController
 
     auth!(action: :read)
     # if handling graphic preview (the content id is 0), force a render
-    if params[:id] == "preview" || stale?(etag: params, last_modified: @content.updated_at.utc, public: true)
+    if params[:id] == "preview" || stale?(etag: @content, last_modified: @content.updated_at.utc, public: true)
       @file = nil
       data = nil
       benchmark("Content#render") do
@@ -353,6 +353,7 @@ class ContentsController < ApplicationController
 
     # Reach into the model and grab the attributes to accept.
     params.require(content_sym).permit(*attributes)
+
   end
 
   # Use an extra restrictive list of params for content updates.

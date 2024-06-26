@@ -80,7 +80,8 @@ class Graphic < Content
 
       require 'concerto_image_magick'
       image = ConcertoImageMagick.graphic_transform(preferred_media, options)
-      
+
+
       file = Media.new(
         attachable: self,
         file_data: image.to_blob,

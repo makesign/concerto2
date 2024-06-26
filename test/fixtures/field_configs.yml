@@ -5,8 +5,8 @@
 # below each fixture, per the syntax in the comments below
 #
 one:
-  screen: one (Screen)
-  field: one (Field)
+  screen: one
+  field: one
   key: keyname
   value: valuehere
 
@@ -14,13 +14,13 @@ two: {}
 #  column: value
 
 three:
-  screen: two (Screen)
-  field: one (Field)
+  screen: two
+  field: one
   key: entry_transition
   value: valuehere
 
 four: 
-  screen: two (Screen)
-  field: one (Field)
+  screen: two
+  field: one
   key: exit_transition
   value: valuehere
