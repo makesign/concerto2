@@ -1,17 +1,17 @@
 # Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
 
 one:
-  name:  <%= trace 'TickerField' %>
+  name: 'TickerField'
   kind: ticker
 
 two:
-  name: <%= trace 'MyString' %>
+  name: 'MyString'
   kind: text
 
 graphics:
-  name: <%= trace 'Graphics' %>
+  name: 'Graphics'
   kind: graphics
 
 fof_field:
-  name: <%= trace 'FoF_Field' %>
+  name: 'FoF_Field'
   kind: fof_kind
