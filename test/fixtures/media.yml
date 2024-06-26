@@ -24,7 +24,7 @@ template_one_processed:
 content_one:
   attachable: sample_image (Content)
   key: original
-  attached_file: smpte_color_bars.png
+  #attached_file: smpte_color_bars.png
   file_name: smpte_color_bars.png
   file_type: image/png
   file_size: 5091
