@@ -1,8 +1,9 @@
 #ImageMagick-specfic image manipulation calls for Concerto 2
 module ConcertoImageMagick
 
-  def self.load_image(file_contents)x
-    return Magick::Image.from_blob(file_contents).first
+  def self.load_image(file_contents)
+    return file_contents
+    #return Magick::Image.from_blob(file_contents).first
   end
   
   def self.image_info(img)
@@ -39,7 +40,10 @@ module ConcertoImageMagick
   end
 
   def self.graphic_transform(original_media, options={})
-    image = load_image(original_media.file_contents)
+    ## BK Wednesday, 26.June 2024: rewritten to action_storage
+    # Todo: Imagemagick may be unnecessary?
+    # Todo: Move to media
+    # action_storage rewrite / image = load_image(original_media.file_contents)
 
     # Resize the image to a height and width if they are both being set.
     # Round these numbers up to ensure the image will at least fill
@@ -47,10 +51,13 @@ module ConcertoImageMagick
     height = options[:height].nil? ? nil : options[:height].to_f.ceil
     width = options[:width].nil? ? nil : options[:width].to_f.ceil
 
-    image = resize(image, width, height, true, options[:crop])
+    # action_storage rewrite / image = resize(image, width, height, true, options[:crop])
 
+    # see https://guides.rubyonrails.org/active_storage_overview.html
     if options[:crop]
-      image = crop(image, width, height)
+      image = original_media.attached_file.variant(resize_to_fill: [width, height])
+    else
+      image = original_media.attached_file.variant(resize_to_limit: [width, height])
     end  
     
     return image
