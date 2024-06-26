@@ -144,6 +144,7 @@
     <orderEntry type="library" scope="PROVIDED" name="railties (v7.1.3.4, RVM: ruby-3.3.3 [concerto-new]) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="rake (v13.2.1, RVM: ruby-3.3.3 [concerto-new]) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="rdoc (v6.7.0, RVM: ruby-3.3.3 [concerto-new]) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="redcarpet (v3.6.0, RVM: ruby-3.3.3 [concerto-new]) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="regexp_parser (v2.9.2, RVM: ruby-3.3.3 [concerto-new]) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="reline (v0.5.9, RVM: ruby-3.3.3 [concerto-new]) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="representable (v3.2.0, RVM: ruby-3.3.3 [concerto-new]) [gem]" level="application" />

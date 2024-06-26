@@ -3,7 +3,7 @@ require 'concerto_image_magick'
 
 class ConcertoImageMagickTest < ActiveSupport::TestCase
   def setup
-    @graphic_data = fixture_file_upload('/files/concerto_background.jpg', 'image/jpeg').read
+    @graphic_data = fixture_file_upload('concerto_background.jpg', 'image/jpeg').read
   end
 
   def teardown

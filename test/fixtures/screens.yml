@@ -25,7 +25,7 @@ two:
   name: SGS Screen
   location: SGS
   is_public: true
-  owner: wtg ( Group )
+  owner: wtg (Group)
   template: one
   authentication_token: mac:a1b2c3
   locale: es
