@@ -2,16 +2,6 @@
 require "test_helper"
 
 class FigureOutFixturesTest < ActiveSupport::TestCase
-  test "counts" do
-    assert_equal 1, Kind.count
-  end
-  test "one" do
-    skip
-    fc = field_configs(:one)
-    assert_equal "", fc.screen
-  end
-
-
 
   test "kind.name" do
     kind = kinds(:fof_kind)
@@ -31,7 +21,7 @@ class FigureOutFixturesTest < ActiveSupport::TestCase
     fields = kind.fields
     assert_not_nil kind_found
     assert_not_nil field.kind
-    assert_equal "", field.kind.name
+    assert_equal "FigureOutFixtures_Kind", field.kind.name
   end
 
 end

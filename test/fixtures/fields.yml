@@ -2,16 +2,16 @@
 
 one:
   name:  <%= trace 'TickerField' %>
-  kind: ticker (Kind)
+  kind: ticker
 
 two:
   name: <%= trace 'MyString' %>
-  kind: text (Kind)
+  kind: text
 
 graphics:
   name: <%= trace 'Graphics' %>
-  kind: graphics (Kind)
+  kind: graphics
 
 fof_field:
   name: <%= trace 'FoF_Field' %>
-  kind: fof_kind (Kind)
+  kind: fof_kind

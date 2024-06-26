@@ -4,8 +4,8 @@ one:
   name: The first screen
   location: Katie's Room
   is_public: false
-  owner: katie (User)
-  template: two ( Template )
+  owner: katie
+  template: two
   width: 1920
   height: 1080
   authentication_token: auth:0123456789abcdef
@@ -15,8 +15,8 @@ one_without_fields:
   name: Like the first Screen but without fields
   location: Katie's Room
   is_public: false
-  owner: katie (User)
-  template: two ( Template )
+  owner: katie
+  template: two
   width: 1920
   height: 1080
   authentication_token: auth:0123456asfdabcdef
@@ -26,7 +26,7 @@ two:
   location: SGS
   is_public: true
   owner: wtg ( Group )
-  template: one ( Template )
+  template: one
   authentication_token: mac:a1b2c3
   locale: es
 
@@ -35,7 +35,7 @@ rpitv:
   location: Sharp Hall
   is_public: false
   owner: rpitv (Group)
-  template: two ( Template )
+  template: two
   authentication_token: mac:deadbeef
 
 
@@ -44,5 +44,5 @@ three:
   location: SGS
   is_public: false
   owner: rpitv (Group)
-  template: one (Template)
+  template: one
   authentication_token: auth:0123456789

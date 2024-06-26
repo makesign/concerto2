@@ -6,8 +6,8 @@ sample_ticker:
   start_time: 200-02-19 21:13:35
   end_time: 2100-02-19 21:13:35
   data: Welcome to Concerto Digital Signage!
-  user: katie (User)
-  kind: ticker (Kind)
+  user: katie
+  kind: ticker
   type: Ticker
 
 old_ticker:
@@ -16,8 +16,8 @@ old_ticker:
   start_time: 2000-02-19 21:13:35
   end_time: 2001-02-19 21:13:35
   data: Enjoy the new connected digital eco-system
-  user: kristen (User)
-  kind: ticker (Kind)
+  user: kristen
+  kind: ticker
   type: Ticker
 
 futuristic_ticker:
@@ -26,8 +26,8 @@ futuristic_ticker:
   start_time: 2100-02-19 21:13:35
   end_time: 2101-02-19 21:13:35
   data: Enjoy Concerto 5!
-  user: katie (User)
-  kind: ticker (Kind)
+  user: katie
+  kind: ticker
   type: Ticker
 
 active_ticker:
@@ -36,8 +36,8 @@ active_ticker:
   start_time: 2000-02-19 21:13:35
   end_time: 2100-02-19 21:13:35
   data: Welcome to Concerto Digital Signage!
-  user: katie (User)
-  kind: ticker (Kind)
+  user: katie
+  kind: ticker
   type: Ticker
 
 active_ticker2:
@@ -46,8 +46,8 @@ active_ticker2:
   start_time: 2000-02-19 21:13:35
   end_time: 2100-02-19 21:13:35
   data: Welcome to Concerto Digital Signage!
-  user: katie (User)
-  kind: ticker (Kind)
+  user: katie
+  kind: ticker
   type: Ticker
 
 parent_content:
@@ -56,8 +56,8 @@ parent_content:
   start_time: 2000-02-19 21:13:35
   end_time: 2100-02-19 21:13:35
   data: Welcome to Concerto Digital Signage!
-  user: katie (User)
-  kind: ticker (Kind)
+  user: katie
+  kind: ticker
   type: Ticker
   children_count: 3
 
@@ -67,8 +67,8 @@ child_content:
   start_time: 2000-02-19 21:13:35
   end_time: 2100-02-19 21:13:35
   data: Welcome to Concerto Digital Signage!
-  user: katie (User)
-  kind: ticker (Kind)
+  user: katie
+  kind: ticker
   type: Ticker
   parent: parent_content
 
@@ -78,8 +78,8 @@ bad_child_content:
   start_time: 2000-02-19 21:13:35
   end_time: 2100-02-19 21:13:35
   data: Welcome to Carousel!
-  user: katie (User)
-  kind: ticker (Kind)
+  user: katie
+  kind: ticker
   type: Ticker
   parent: parent_content
 
@@ -89,8 +89,8 @@ distant_child_content:
   start_time: 2000-02-19 21:13:35
   end_time: 2100-02-19 21:13:35
   data: Welcome to Concerto Digital Signage!
-  user: katie (User)
-  kind: ticker (Kind)
+  user: katie
+  kind: ticker
   type: Ticker
   parent: parent_content
 
@@ -99,8 +99,8 @@ sample_dynamic_content:
   duration: 5
   start_time: 2000-02-19 21:13:35
   end_time: 2100-02-19 21:13:35
-  user: katie (User)
-  kind: dynamic (Kind)
+  user: katie
+  kind: dynamic
   type: DynamicContent
   children_count: 1
 
@@ -110,8 +110,8 @@ dynamic_child_content:
   start_time: 2000-02-19 21:13:35
   end_time: 2100-02-19 21:13:35
   data: Concerto TV now available in the Google Play Store!
-  user: katie (User)
-  kind: ticker (Kind)
+  user: katie
+  kind: ticker
   type: Ticker
   parent: sample_dynamic_content
 
@@ -120,6 +120,6 @@ sample_image:
   duration: 5
   start_time: 2000-02-19 21:13:35
   end_time: 2100-02-19 21:13:35
-  user: katie (User)
-  kind: graphic (Kind)
+  user: katie
+  kind: graphic
   type: Graphic
