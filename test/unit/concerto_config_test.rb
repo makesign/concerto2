@@ -47,8 +47,7 @@ class ConcertoConfigTest < ActiveSupport::TestCase
     ConcertoConfig.make_concerto_config('whitelisted_key', 'foo')
     ConcertoConfig.make_concerto_config('nonwhitelisted_key', 'bar')
 
-    ConcertoConfig::CONFIG_ITEMS.clear
-    ConcertoConfig::CONFIG_ITEMS << 'whitelisted_key'
+    ConcertoConfig.set_config_items(['whitelisted_key'])
 
     ConcertoConfig.delete_unused_configs
 

@@ -22,7 +22,7 @@ class ConcertoConfig < ActiveRecord::Base
   after_destroy :cache_expire
 
   # a whitelist of valid ConcertoConfigs that is populated when make_concerto_config is called
-  CONFIG_ITEMS = []
+  @@config_items = []
 
   # Enable hash-like access to table for ease of use
   # Shortcut for self.get(key)
@@ -86,7 +86,7 @@ class ConcertoConfig < ActiveRecord::Base
     }
     options = defaults.merge(options)
 
-    CONFIG_ITEMS.push(config_key)
+    @@config_items.push(config_key)
 
     # push the key and value into the options set so we can pass them implicitly to the first_or_create
     options[:key] = config_key
@@ -161,10 +161,13 @@ class ConcertoConfig < ActiveRecord::Base
     Rails.cache.write('ConcertoConfig', data)
   end
 
+  def self.set_config_items(keys)
+    @@config_items = keys
+  end
   def self.delete_unused_configs
     # remove any config items not in the whitelist on the ConcertoConfig class
     ConcertoConfig.all.each do |config|
-      config.destroy unless CONFIG_ITEMS.include?(config.key)
+      config.destroy unless @@config_items.include?(config.key)
     end
   end
 end
