@@ -28,7 +28,8 @@ group :concerto_plugins do
   gem 'concerto_hardware'
   # gem "concerto_iframe"
   gem 'concerto_remote_video'
-  gem 'concerto_simple_rss'
+  #TODO see https://github.com/makesign/concerto2/issues/4
+  # gem 'concerto_simple_rss'
   # gem "concerto_weather", :git => 'https://github.com/concerto/concerto-weather.git', :branch => 'rails5'
 end
 
