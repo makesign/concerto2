@@ -22,7 +22,7 @@ class ConcertoConfig < ActiveRecord::Base
   after_destroy :cache_expire
 
   # a whitelist of valid ConcertoConfigs that is populated when make_concerto_config is called
-  CONFIG_ITEMS = [].freeze
+  CONFIG_ITEMS = []
 
   # Enable hash-like access to table for ease of use
   # Shortcut for self.get(key)
