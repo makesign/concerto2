@@ -63,7 +63,6 @@ class FeedTest < ActiveSupport::TestCase
 
   test 'root fixture is root' do
     assert feeds(:root).is_root?
-    assert !feeds(:boring_announcements).is_root?
   end
 
   test 'boring_announcements fixture is not root' do

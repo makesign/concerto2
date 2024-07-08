@@ -44,3 +44,4 @@ docker-container-mounts/log/*
 !docker-container-mounts/log/.keep
 docker-container-mounts/storage/*
 !docker-container-mounts/storage/.keep
+coverage/
