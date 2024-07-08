@@ -1,0 +1,20 @@
+#inherit_from: ../.rubocop.yml
+AllCops:
+  NewCops: enable
+
+Style/Encoding:
+  Enabled: false
+
+Layout/LineLength:
+  Max: 194
+
+Metrics/ClassLength:
+  Enabled: true
+  Max: 152
+
+Lint/NonAtomicFileOperation:
+  Enabled: false
+
+Metrics/MethodLength:
+  Enabled: false
+
