@@ -142,3 +142,9 @@ gem "rails-controller-testing", "~> 1.0"
 gem "rails-mermaid_erd", "~> 0.5.0"
 
 gem "redcarpet", "~> 3.6"
+
+gem "bundler-audit", "~> 0.9.1"
+
+gem "brakeman", "~> 6.1"
+
+gem "rubocop", "~> 1.64"
