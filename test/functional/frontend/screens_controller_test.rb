@@ -32,6 +32,10 @@ class Frontend::ScreensControllerTest < ActionController::TestCase
     get(:setup, params: { :id => screens(:one).id, :format => :json })
     data = ActiveSupport::JSON.decode(@response.body)
     assert_equal data['name'], screens(:one).name
+    #TODO: The data['template']['path'] is Nil, but should not be Nil. So the test fails.
+    #assert_not_nil data['template']['path']&.length
+    #assert data['template']['path']&.length > 0
+
     assert_equal data['template']['positions'].length,
                  screens(:one).template.positions.length
     assert data['template']['path'].length > 0

@@ -70,7 +70,8 @@ class TemplatesControllerTest < ActionController::TestCase
     assert_equal 750, image.rows
     assert_equal 1000, image.columns
   end
-
+  # TODO: rendering resized template error due to multiplication being attempted on Nil variable,
+  # TODO: could happen if the code expects an object or a numeric value but instead receives nil, possibly due to an uninitialized variable or a missing attribute.
   test "render resized (fixed width) template preview" do
     t = templates(:one)
     sign_in users(:admin)

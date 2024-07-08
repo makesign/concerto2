@@ -1,7 +1,11 @@
 require 'test_helper'
 
 class ScreenTest < ActiveSupport::TestCase
-
+  #TODO: even after setting the screen name to "Blah", the screen object is still not considered valid.
+  # Check all validations in the Screen model to ensure no other validation is causing the screen object to be invalid.
+  # Inspect the errors object after setting the name to "Blah" to identify any other validation errors.
+  # Ensure that all required attributes and associations for a Screen object to be valid are correctly set up in the test.
+  #
   #Test the fields that should be required
   test "name cannot be blank" do
     s = screens(:one)

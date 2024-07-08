@@ -13,7 +13,7 @@ class CommandCheckTest < ActiveSupport::TestCase
   test 'command? should not find bogus file' do
     assert_not command?('completelybogusfile123')
   end
-
+  #TODO: why do we need mysql and postgres to, what is stored in the database?
   test 'system should have mysql' do
     assert system_has_mysql? && mysql_location.present?
   end

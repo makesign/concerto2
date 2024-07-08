@@ -1,9 +1,11 @@
 require 'test_helper'
 
+#TODO: Media class has no method file_contents (all three tests fail because of that)
 class Frontend::TemplatesControllerTest < ActionController::TestCase
   include Devise::Test::ControllerHelpers
   # fixtures :screens
   # fixtures :templates
+
 
   test "0x0 template fails gracefully" do
     get(:show, params: { :id => templates(:one).id, :screen_id => screens(:one).id, :width => 0, :height => 0, :format => :png })

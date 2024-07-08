@@ -64,7 +64,7 @@ class UserScreenAbilityTest < ActiveSupport::TestCase
     assert ability.cannot?(:read, @kt)
     assert ability.cannot?(:read, @rpitv)
   end
-
+  #TODO: User Katie does not seem to have the permission to read the screen. The test fails.
   test "Owning user can read private screen" do
     ability = Ability.new(users(:katie))
     assert ability.can?(:read, @kt)
@@ -74,7 +74,7 @@ class UserScreenAbilityTest < ActiveSupport::TestCase
     ability = Ability.new(users(:katie))
     assert ability.can?(:read, @rpitv)
   end
-
+  #TODO: User Karen does not seem to have the permission to update and delete the screen. The test fails.
   test "Owning user can update and delete screen" do
     ability = Ability.new(users(:katie))
     assert ability.can?(:update, @kt)
