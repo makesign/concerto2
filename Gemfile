@@ -28,7 +28,7 @@ group :concerto_plugins do
   gem 'concerto_hardware'
   # gem "concerto_iframe"
   gem 'concerto_remote_video'
-  #TODO see https://github.com/makesign/concerto2/issues/4
+  # TODO: see https://github.com/makesign/concerto2/issues/4
   # gem 'concerto_simple_rss'
   # gem "concerto_weather", :git => 'https://github.com/concerto/concerto-weather.git', :branch => 'rails5'
 end
@@ -139,4 +139,4 @@ gem 'brakeman', '~> 6.1'
 
 gem 'rubocop', '~> 1.64'
 
-gem "pg", "~> 1.5"
+gem 'pg', '~> 1.5'
