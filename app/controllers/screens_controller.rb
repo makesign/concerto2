@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ScreensController < ApplicationController
   # Define integration hooks for Concerto Plugins
   define_callbacks :destroy # controller callback for 'show' action
@@ -11,8 +13,14 @@ class ScreensController < ApplicationController
   # GET /screens.xml
   def index
     @screens = Screen.order_by_name.accessible_by(current_ability)
-    @my_screens = current_user.nil? ? [] : @screens.select{|s| s.owner == current_user || current_user.groups.include?(s.owner)}
-    @templates = Template.where(is_hidden: false).sort_by{|t| t.screens.count}.reverse
+    @my_screens = if current_user.nil?
+                    []
+                  else
+                    @screens.select do |s|
+                      s.owner == current_user || current_user.groups.include?(s.owner)
+                    end
+                  end
+    @templates = Template.where(is_hidden: false).sort_by { |t| t.screens.count }.reverse
     respond_with(@screens)
   end
 
@@ -47,7 +55,7 @@ class ScreensController < ApplicationController
     auth!
 
     if @screen.save
-      process_notification(@screen, {}, process_notification_options({params: {screen_name: @screen.name}}))
+      process_notification(@screen, {}, process_notification_options({ params: { screen_name: @screen.name } }))
       run_callbacks :change # Run plugin hooks
       flash[:notice] = t(:screen_created)
     else
@@ -66,7 +74,7 @@ class ScreensController < ApplicationController
     auth!
 
     if @screen.update(screen_params)
-      process_notification(@screen, {}, process_notification_options({params: {screen_name: @screen.name}}))
+      process_notification(@screen, {}, process_notification_options({ params: { screen_name: @screen.name } }))
 
       run_callbacks :change # Run plugin hooks
       flash[:notice] = t(:screen_updated)
@@ -79,7 +87,7 @@ class ScreensController < ApplicationController
   def destroy
     @screen = Screen.find(params[:id])
     auth!
-    process_notification(@screen, {}, process_notification_options({params: {screen_name: @screen.name}}))
+    process_notification(@screen, {}, process_notification_options({ params: { screen_name: @screen.name } }))
     run_callbacks :destroy do
       @screen.destroy
     end
@@ -87,19 +95,19 @@ class ScreensController < ApplicationController
     respond_with(@screen)
   end
 
- def update_owners
-   if params[:owner] == "User"
-     @owners = User.all
-   elsif params[:owner] == "Group"
-     @owners = Group.all
-   end
-   render layout: false
- end
-
-private
-
-  def screen_params
-    params.require(:screen).permit(:name, :location, :locale, :time_zone, :owner_id, :owner_type, :width, :height, :template_id, :is_public, :new_temp_token, :auth_action)
+  def update_owners
+    if params[:owner] == 'User'
+      @owners = User.all
+    elsif params[:owner] == 'Group'
+      @owners = Group.all
+    end
+    render layout: false
   end
 
+  private
+
+  def screen_params
+    params.require(:screen).permit(:name, :location, :locale, :time_zone, :owner_id, :owner_type, :width, :height,
+                                   :template_id, :is_public, :new_temp_token, :auth_action)
+  end
 end

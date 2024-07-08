@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Group < ActiveRecord::Base
   include ActiveModel::ForbiddenAttributesProtection
 
@@ -7,16 +9,20 @@ class Group < ActiveRecord::Base
   has_many :memberships, dependent: :destroy
   accepts_nested_attributes_for :memberships
 
-  has_many :users, -> { where ["memberships.level > ?", Membership::LEVELS[:pending]] }, through: :memberships
+  has_many :users, -> { where ['memberships.level > ?', Membership::LEVELS[:pending]] }, through: :memberships
   has_many :screens, as: :owner, dependent: :restrict_with_error
 
   has_many :templates, as: :owner
 
   # Scoped relation for members and pending members
-  has_many :all_users, -> { where ["memberships.level != ?", Membership::LEVELS[:denied]] }, through: :memberships, source: :user
+  has_many :all_users, lambda {
+                         where ['memberships.level != ?', Membership::LEVELS[:denied]]
+                       }, through: :memberships, source: :user
 
   # Scoped relation for leaders
-  has_many :leaders, -> { where "memberships.level" => Membership::LEVELS[:leader] }, through: :memberships, source: :user
+  has_many :leaders, lambda {
+                       where 'memberships.level' => Membership::LEVELS[:leader]
+                     }, through: :memberships, source: :user
 
   # Validations
   validates :name, presence: true, uniqueness: true
@@ -25,36 +31,39 @@ class Group < ActiveRecord::Base
 
   default_scope { order 'LOWER(groups.name)' }
 
-  #Newsfeed
+  # Newsfeed
   include PublicActivity::Common if defined? PublicActivity::Common
 
-  #have getters and setters for a new_leader virtual attribute
+  # have getters and setters for a new_leader virtual attribute
   attr_accessor :new_leader
 
   # Manually cascade the callbacks for membership permissions.
   def update_membership_perms
-    self.memberships.each do |m|
+    memberships.each do |m|
       m.run_callbacks(:save)
     end
   end
 
   def create_leader
-    self.new_leader = Membership.create(user_id: new_leader, group_id: self.id, level: Membership::LEVELS[:leader]) if new_leader.present?
+    return unless new_leader.present?
+
+    self.new_leader = Membership.create(user_id: new_leader, group_id: id,
+                                        level: Membership::LEVELS[:leader])
   end
 
   # Deliver a list of only users not currently in the group
   # Used for adding new users to a group and avoiding duplication
   def users_not_in_group
     users = User.all.to_a
-    self.memberships.each do |m|
-      users.delete_if { |key, value| key.id == m.user_id }
+    memberships.each do |m|
+      users.delete_if { |key, _value| key.id == m.user_id }
     end
-    return users
+    users
   end
 
   def is_deletable?
-    no_screens = (screens.size == 0)
-    no_feeds = (feeds.size == 0)
+    no_screens = screens.empty?
+    no_feeds = feeds.empty?
     no_screens and no_feeds
   end
 
@@ -74,7 +83,7 @@ class Group < ActiveRecord::Base
 
   # Test if a user can be demoted to regular member or removed from a group
   def can_resign_leadership?(membership)
-    return self.leaders.count > 1 || !membership.is_leader?
+    leaders.count > 1 || !membership.is_leader?
   end
 
   # Test if a user has a certain permission at a level within a group.
@@ -92,6 +101,6 @@ class Group < ActiveRecord::Base
     permissions.each do |p|
       return true if m.perms[type] == p
     end
-    return false
+    false
   end
 end

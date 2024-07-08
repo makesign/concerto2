@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class RemoveUsersTable < ActiveRecord::Migration[7.1]
   def up
     drop_table :users

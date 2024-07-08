@@ -1,8 +1,10 @@
+# frozen_string_literal: true
+
 class TemplatesController < ApplicationController
   define_callbacks :show # controller callback for 'show' action
   ConcertoPlugin.install_callbacks(self) # Get the callbacks from plugins
 
-  before_action :get_type, only: [:new, :create, :import]
+  before_action :get_type, only: %i[new create import]
   respond_to :html, :json, :xml, :js
   responders :flash
 
@@ -23,7 +25,7 @@ class TemplatesController < ApplicationController
     run_callbacks :show # Run plugin hooks
     auth!
     respond_with(@template) do |format|
-      format.xml { render xml: @template.to_xml(include: [:positions])  }
+      format.xml { render xml: @template.to_xml(include: [:positions]) }
     end
   end
 
@@ -33,8 +35,8 @@ class TemplatesController < ApplicationController
     @template = Template.new(owner: current_user)
     auth!
     # one for the graphic background and one for the css file
-    @template.media.build()
-    @template.media.build()
+    @template.media.build
+    @template.media.build
     respond_with(@template)
   end
 
@@ -44,10 +46,10 @@ class TemplatesController < ApplicationController
     auth!
     # the form contains two bogus fields used for file uploads -- :template_css, :template_image
 
-    css_media = @template.media.where({key: 'css'})
-    if !css_media.empty?
-      @template_css = css_media.first.file_contents
-    end
+    css_media = @template.media.where({ key: 'css' })
+    return if css_media.empty?
+
+    @template_css = css_media.first.file_contents
   end
 
   # POST /templates
@@ -57,30 +59,28 @@ class TemplatesController < ApplicationController
     auth!
 
     owner = params[:owner]
-    if owner.present? and owner.split('-').size == 2
-      @template.owner_type, @template.owner_id = owner.split('-')
-    end
+    @template.owner_type, @template.owner_id = owner.split('-') if owner.present? && (owner.split('-').size == 2)
 
     # set key based on file extension
     @template.media.each do |media|
-      # todo: adapt for active_storage
+      # TODO: adapt for active_storage
       # active_storage
       media.attached_file.attach(params[:avatar])
 
       extension = (media.file_name.blank? ? nil : media.file_name.split('.')[-1].downcase)
-      media.key = (extension == "css" ? "css" : "original") unless extension.nil?
+      media.key = (extension == 'css' ? 'css' : 'original') unless extension.nil?
     end
 
     # reject any empty media (key wont be set)
-    @template.media.to_a.reject! {|i| i.key.blank?}
+    @template.media.to_a.reject! { |i| i.key.blank? }
 
     respond_to do |format|
       if @template.save
-        process_notification(@template, {}, process_notification_options({params: {template_name: @template.name}}))
+        process_notification(@template, {}, process_notification_options({ params: { template_name: @template.name } }))
         format.html { redirect_to(edit_template_path(@template), notice: t(:template_created)) }
         format.xml  { render xml: @template, status: :created, location: @template }
       else
-        @type = "create"
+        @type = 'create'
         format.html { render :new }
         format.xml  { render xml: @template.errors, status: :unprocessable_entity }
       end
@@ -96,20 +96,18 @@ class TemplatesController < ApplicationController
     # get a copy of the params and remove the bogus file fields as we process them
     template_parameters = template_params
     owner = params[:owner]
-    if owner.present? and owner.split('-').size == 2
-      template_parameters[:owner_type], template_parameters[:owner_id] = owner.split('-')
-    end
+    template_parameters[:owner_type], template_parameters[:owner_id] = owner.split('-') if owner.present? && (owner.split('-').size == 2)
     # doens't matter which file is in which field because the file type is inspected for each
-    [:template_css, :template_image].each do |file|
-      if !template_parameters[file].nil?
+    %i[template_css template_image].each do |file|
+      unless template_parameters[file].nil?
         # for the files that were uploaded, determine their media key based on their extension
-        new_media = @template.media.build({file: template_parameters[file]})
+        new_media = @template.media.build({ file: template_parameters[file] })
         extension = (new_media.file_name.blank? ? nil : new_media.file_name.split('.')[-1].downcase)
-        new_media.key = (extension == "css" ? "css" : "original") unless extension.nil?
+        new_media.key = (extension == 'css' ? 'css' : 'original') unless extension.nil?
 
         # mark any existing @template.media with this same key as replaced (obsolete)
         @template.media.each do |m|
-          m.key = 'replaced_' + m.key if m.key == new_media.key and m != new_media
+          m.key = "replaced_#{m.key}" if (m.key == new_media.key) && (m != new_media)
         end
       end
       # remove the bogus file field from the collection so activemodel doesn't complain about it
@@ -117,7 +115,7 @@ class TemplatesController < ApplicationController
     end
 
     if @template.update(template_parameters)
-      process_notification(@template, {}, process_notification_options({params: {template_name: @template.name}}))
+      process_notification(@template, {}, process_notification_options({ params: { template_name: @template.name } }))
       flash[:notice] = t(:template_updated)
     end
 
@@ -131,11 +129,13 @@ class TemplatesController < ApplicationController
     auth!
 
     unless @template.is_deletable?
-      redirect_to(@template, notice: t(:cannot_delete_template, screens: @template.screens.collect { |s| s.name if can? :read, s}.join(", ")))
+      redirect_to(@template, notice: t(:cannot_delete_template, screens: @template.screens.collect do |s|
+                                                                           s.name if can? :read, s
+                                                                         end.join(', ')))
       return
     end
 
-    process_notification(@template, {}, process_notification_options({params: {template_name: @template.name}}))
+    process_notification(@template, {}, process_notification_options({ params: { template_name: @template.name } }))
     @template.destroy
     respond_with(@template)
   end
@@ -146,56 +146,46 @@ class TemplatesController < ApplicationController
     @template = Template.find(params[:id])
     auth!(action: :preview)
 
-    if stale?(last_modified: @template.last_modified.utc, etag: @template, public: true)
-      # Hide the fields if the hide_fields param is set,
-      # show them by default though.
-      @hide_fields = false
-      if !params[:hide_fields].nil?
-        @hide_fields = [true, "true", 1, "1"].include?(params[:hide_fields])
+    return unless stale?(last_modified: @template.last_modified.utc, etag: @template, public: true)
+
+    # Hide the fields if the hide_fields param is set,
+    # show them by default though.
+    @hide_fields = false
+    @hide_fields = [true, 'true', 1, '1'].include?(params[:hide_fields]) unless params[:hide_fields].nil?
+
+    # Hide the field names if the hide_text param is set,
+    # show them by default though.
+    @hide_text = false
+    @hide_text = [true, 'true', 1, '1'].include?(params[:hide_text]) unless params[:hide_text].nil?
+
+    @only_fields = []
+    @only_fields = params[:fields].split(',').map(&:to_i) unless params[:fields].nil?
+
+    jpg = Mime::Type.lookup_by_extension(:jpg) # JPG is getting defined elsewhere.
+    if [jpg, Mime[:png], Mime[:html]].include?(request.format)
+      @image = nil
+      @image = @template.preview_image(@hide_fields, @hide_text, @only_fields)
+
+      # Resize the image if needed.
+      # We do this post-field drawing because RMagick seems to struggle with small font sizes.
+      if !params[:height].nil? || !params[:width].nil?
+        require 'concerto_image_magick'
+        @image = ConcertoImageMagick.resize(@image, params[:width].to_i, params[:height].to_i)
       end
 
-      # Hide the field names if the hide_text param is set,
-      # show them by default though.
-      @hide_text = false
-      if !params[:hide_text].nil?
-        @hide_text = [true, "true", 1, "1"].include?(params[:hide_text])
+      case request.format
+      when jpg
+        @image.format = 'JPG'
+      when Mime[:png]
+        @image.format = 'PNG'
       end
+      data = @image.to_blob
 
-      @only_fields = []
-      if !params[:fields].nil?
-        @only_fields = params[:fields].split(',').map{|i| i.to_i}
-      end
-
-      jpg =  Mime::Type.lookup_by_extension(:jpg)  #JPG is getting defined elsewhere.
-      if([jpg, Mime[:png], Mime[:html]].include?(request.format))
-        @image = nil
-        @image = @template.preview_image(@hide_fields, @hide_text, @only_fields)
-
-        # Resize the image if needed.
-        # We do this post-field drawing because RMagick seems to struggle with small font sizes.
-        if  !params[:height].nil? || !params[:width].nil?
-          require 'concerto_image_magick'
-          @image = ConcertoImageMagick.resize(@image, params[:width].to_i, params[:height].to_i)
-        end
-
-        case request.format
-          when jpg
-            @image.format = "JPG"
-          when Mime[:png]
-            @image.format = "PNG"
-        end
-
-        data = nil
-        data = @image.to_blob
-
-        send_data data,
-                  filename: "#{@template.name.underscore}.#{@image.format.downcase}_preview",
-                  type: @image.mime_type, disposition: 'inline'
-      else
-        respond_to do |format|
-          format.svg
-        end
-      end
+      send_data data,
+                filename: "#{@template.name.underscore}.#{@image.format.downcase}_preview",
+                type: @image.mime_type, disposition: 'inline'
+    else
+      respond_to(&:svg)
     end
   end
 
@@ -211,7 +201,7 @@ class TemplatesController < ApplicationController
       # is_hidden checkbox supercedes xml
       @template.is_hidden = template_params[:is_hidden]
       if @template.save
-        process_notification(@template, {}, process_notification_options({params: {template_name: @template.name}}))
+        process_notification(@template, {}, process_notification_options({ params: { template_name: @template.name } }))
         flash[:notice] = t(:template_created)
       end
     end
@@ -222,10 +212,10 @@ class TemplatesController < ApplicationController
   def export
     @template = Template.find(params[:id])
     auth!
-    send_file @template.export_archive, filename: sanitize_filename(@template.name + ".zip")
+    send_file @template.export_archive, filename: sanitize_filename("#{@template.name}.zip")
   end
 
-private
+  private
 
   # Grab the method of template
   # creation we're working with.
@@ -235,7 +225,8 @@ private
 
   def template_params
     # :template_css and :template_file are two bogus fields used for file uploads when editing a template
-    params.require(:template).permit(:name, :author, :descriptor, :image, :is_hidden, :template_css, :template_image, :owner_id, :owner_type, positions_attributes: [:field_id, :style, :top, :left, :bottom, :right, :id, :_destroy], media_attributes: [:file, :attached_file])
+    params.require(:template).permit(:name, :author, :descriptor, :image, :is_hidden, :template_css, :template_image,
+                                     :owner_id, :owner_type, positions_attributes: %i[field_id style top left bottom right id _destroy], media_attributes: %i[file attached_file])
   end
 
   def sanitize_filename(filename)
@@ -243,14 +234,14 @@ private
     # character, and is followed by some character other than a period,
     # if there is no following period that is followed by something
     # other than a period (yeah, confusing, I know)
-    fn = filename.split /(?<=.)\.(?=[^.])(?!.*\.[^.])/m
+    fn = filename.split(/(?<=.)\.(?=[^.])(?!.*\.[^.])/m)
 
     # We now have one or two parts (depending on whether we could find
     # a suitable period). For each of these parts, replace any unwanted
     # sequence of characters with an underscore
-    fn.map! { |s| s.gsub /[^a-z0-9\-]+/i, '_' }
+    fn.map! { |s| s.gsub(/[^a-z0-9-]+/i, '_') }
 
     # Finally, join the parts with a period and return the result
-    return fn.join '.'
-  end  
+    fn.join '.'
+  end
 end

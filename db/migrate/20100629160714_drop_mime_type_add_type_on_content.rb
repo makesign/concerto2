@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class DropMimeTypeAddTypeOnContent < ActiveRecord::Migration[7.1]
   def self.up
     remove_column :contents, :mime_type

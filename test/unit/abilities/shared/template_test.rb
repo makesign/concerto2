@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'test_helper'
 
 class SharedTemplateAbilityTest < ActiveSupport::TestCase
@@ -7,7 +9,7 @@ class SharedTemplateAbilityTest < ActiveSupport::TestCase
     @template = templates(:one)
   end
 
-  test "anyone can read public templates" do
+  test 'anyone can read public templates' do
     [@user, @screen].each do |thing|
       ability = Ability.new(thing)
       assert ability.can?(:read, @template)
@@ -15,7 +17,7 @@ class SharedTemplateAbilityTest < ActiveSupport::TestCase
     end
   end
 
-  test "noone can read hidden templates" do
+  test 'noone can read hidden templates' do
     template = templates(:hidden)
     [@user, @screen].each do |thing|
       ability = Ability.new(thing)
@@ -24,7 +26,7 @@ class SharedTemplateAbilityTest < ActiveSupport::TestCase
     end
   end
 
-  test "no one can update / delete templates" do
+  test 'no one can update / delete templates' do
     [@user, @screen].each do |thing|
       ability = Ability.new(thing)
       assert ability.cannot?(:update, @template)
@@ -32,4 +34,3 @@ class SharedTemplateAbilityTest < ActiveSupport::TestCase
     end
   end
 end
-

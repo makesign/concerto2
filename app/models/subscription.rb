@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Subscription < ActiveRecord::Base
   include ActiveModel::ForbiddenAttributesProtection
 
@@ -7,17 +9,17 @@ class Subscription < ActiveRecord::Base
   # Weight Levels
   WEIGHTS = {
     # A very frequent chance of content showing up.
-    :"very frequently" => 5,
+    'very frequently': 5,
     # A frequent chance of content showing up.
     frequently: 4,
     # Neither a frequent, nor an infrequent chance of
     # content showing up.
-    :"no preference" => 3,
+    'no preference': 3,
     # An infrequent chance of content showing up.
     rarely: 2,
     # A very infrequent chance of content showing up.
-    :"very rarely" => 1,
-  }
+    'very rarely': 1
+  }.freeze
 
   # Associations
   belongs_to :feed
@@ -28,20 +30,20 @@ class Subscription < ActiveRecord::Base
   validates :feed, presence: true, associated: true
   validates :screen, presence: true, associated: true
   validates :field, presence: true, associated: true
-  validates_uniqueness_of :feed_id, scope: [:screen_id, :field_id]
+  validates_uniqueness_of :feed_id, scope: %i[screen_id field_id]
 
   # Get weight name of a subscription
   def weight_name
-    name = (Subscription::WEIGHTS.respond_to?(:key) ? Subscription::WEIGHTS.key(weight) :  Subscription::WEIGHTS.index(weight)).to_s
+    (Subscription::WEIGHTS.respond_to?(:key) ? Subscription::WEIGHTS.key(weight) : Subscription::WEIGHTS.index(weight)).to_s
   end
 
   # Get an array of all the approved active content to be shown in a screen's field.
   def contents
-    @contents = self.feed.approved_contents.active.all.reorder('submissions.seq_no, contents.start_time').to_a
+    @contents = feed.approved_contents.active.all.reorder('submissions.seq_no, contents.start_time').to_a
     run_callbacks :filter_contents do
-      @contents.reject!{|c| !c.can_display_in?(self.screen, self.field)}
+      @contents.select! { |c| c.can_display_in?(screen, field) }
     end
 
-    return @contents
+    @contents
   end
 end

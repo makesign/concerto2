@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # This migration comes from hardware (originally 20121220000000)
 class CreateConcertoHardwarePlayers < ActiveRecord::Migration[7.1]
   def change

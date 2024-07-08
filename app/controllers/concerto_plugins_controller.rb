@@ -1,3 +1,6 @@
+# frozen_string_literal: true
+
+require 'English'
 class ConcertoPluginsController < ApplicationController
   respond_to :html, :json
 
@@ -53,17 +56,15 @@ class ConcertoPluginsController < ApplicationController
     auth!
     if @concerto_plugin.save
       process_plugin_notification
-      #if boot.rb found a "frozen" bundler environment, don't try to write the Gemfile or bundle install
-      if ENV['FROZEN'] == "1"
+      # if boot.rb found a "frozen" bundler environment, don't try to write the Gemfile or bundle install
+      if ENV['FROZEN'] == '1'
         flash[:notice] = t(:plugin_created_frozen_env)
       else
-        write_Gemfile()
-        rake_precompile()
-        restarted = restart_webserver()
+        write_Gemfile
+        rake_precompile
+        restarted = restart_webserver
       end
-      if restarted
-        flash[:notice] = t(:plugin_created)
-      end
+      flash[:notice] = t(:plugin_created) if restarted
       redirect_to concerto_plugins_path
     else
       respond_with(@concerto_plugin)
@@ -77,7 +78,7 @@ class ConcertoPluginsController < ApplicationController
     auth!
     if @concerto_plugin.update(concerto_plugin_params)
       process_plugin_notification
-      if ENV['FROZEN'] == "1"
+      if ENV['FROZEN'] == '1'
         flash[:notice] = t :plugin_updated_frozen_env
       else
         write_Gemfile
@@ -91,10 +92,10 @@ class ConcertoPluginsController < ApplicationController
 
   def process_plugin_notification
     process_notification(@content, {}, process_notification_options({
-      params: {
-        concerto_plugin_gem_name: @concerto_plugin.gem_name
-      }
-    }))
+                                                                      params: {
+                                                                        concerto_plugin_gem_name: @concerto_plugin.gem_name
+                                                                      }
+                                                                    }))
   end
 
   # DELETE /concerto_plugins/1
@@ -105,28 +106,27 @@ class ConcertoPluginsController < ApplicationController
 
     process_plugin_notification
     @concerto_plugin.destroy
-    if ENV['FROZEN'] == "1"
+    if ENV['FROZEN'] == '1'
       flash[:notice] = t(:plugin_removed_frozen_env)
     else
-      write_Gemfile()
-      restarted = restart_webserver()
+      write_Gemfile
+      restarted = restart_webserver
     end
-    if restarted
-      flash[:notice] = t(:plugin_removed)
-    end
+    flash[:notice] = t(:plugin_removed) if restarted
     redirect_to concerto_plugins_path
   end
 
   def update_gem
     results = {}
     plugin = ConcertoPlugin.find(params[:id])
-    results[:bundle_output] = `bundle update --source #{plugin.gem_name} 2>&1`
-    results[:bundle_success] = $?.success?
+    # Todo (see issue #) - das machen wir mal einfach nicht.
+    # results[:bundle_output] = `bundle update --source #{plugin.gem_name} 2>&1`
+    results[:bundle_success] = $CHILD_STATUS.success?
 
     if results[:bundle_success]
-      results[:rake_output] = `bundle exec rake assets:precompile 2>&1`#rake_precompile()
-      results[:rake_success] = $?.success?
-      restarted = restart_webserver()
+      results[:rake_output] = `bundle exec rake assets:precompile 2>&1` # rake_precompile()
+      results[:rake_success] = $CHILD_STATUS.success?
+      restarted = restart_webserver
       if restarted
         results[:notice] = t(:plugin_updated)
         flash[:notice] = t(:plugin_updated)
@@ -137,40 +137,32 @@ class ConcertoPluginsController < ApplicationController
   end
 
   def write_Gemfile
-    #slurp in the old Gemfile and write it to a backup file for use in config.ru
-    old_gemfile = IO.read("Gemfile-plugins")
-    File.open("Gemfile-plugins.bak", 'w') {|f| f.write(old_gemfile) }
+    # slurp in the old Gemfile and write it to a backup file for use in config.ru
+    old_gemfile = File.read('Gemfile-plugins')
+    File.write('Gemfile-plugins.bak', old_gemfile)
 
-    #start a big string to put the Gemfile contents in until it's written to the filesystem
-    gemfile_content = ""
+    # start a big string to put the Gemfile contents in until it's written to the filesystem
+    gemfile_content = ''
     ConcertoPlugin.all.each do |plugin|
-      gem_args = Array.new
+      gem_args = []
       gem_args << "\"#{plugin.gem_name}\""
 
-      unless plugin.gem_version.blank?
-        gem_args << "\"#{plugin.gem_version}\""
-      end
+      gem_args << "\"#{plugin.gem_version}\"" unless plugin.gem_version.blank?
 
-      if plugin.source == "git" and not plugin.source_url.blank?
-        gem_args << "git: \"#{plugin.source_url}\""
-      end
+      gem_args << "git: \"#{plugin.source_url}\"" if (plugin.source == 'git') && !plugin.source_url.blank?
 
-      if plugin.source == "path" and not plugin.source_url.blank?
-        gem_args << "path: \"#{plugin.source_url}\""
-      end
+      gem_args << "path: \"#{plugin.source_url}\"" if (plugin.source == 'path') && !plugin.source_url.blank?
 
-      gemfile_content = gemfile_content + "\ngem " + gem_args.join(", ") + "\n"
+      gemfile_content = "#{gemfile_content}\ngem #{gem_args.join(', ')}\n"
     end
 
-    File.open("Gemfile-plugins", 'w') {|f| f.write(gemfile_content) }
-
+    File.write('Gemfile-plugins', gemfile_content)
   end
 
-private
+  private
 
   # Restrict the allowed parameters to a select set defined in the model.
   def concerto_plugin_params
     params.require(:concerto_plugin).permit(:source, :gem_name, :source_url, :enabled, :gem_version)
   end
-
 end

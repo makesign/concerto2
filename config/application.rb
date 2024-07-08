@@ -1,14 +1,15 @@
-require_relative "boot"
+# frozen_string_literal: true
 
-require "rails/all"
+require_relative 'boot'
+
+require 'rails/all'
 
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
 
-module Concerto 
+module Concerto
   class Application < Rails::Application
-
     # rails 7
 
     # Initialize configuration defaults for originally generated Rails version.
@@ -17,7 +18,7 @@ module Concerto
     # Please, add to the `ignore` list any other `lib` subdirectories that do
     # not contain `.rb` files, or that should not be reloaded or eager loaded.
     # Common ones are `templates`, `generators`, or `middleware`, for example.
-    config.autoload_lib(ignore: %w(assets tasks))
+    config.autoload_lib(ignore: %w[assets tasks])
 
     # Configuration for the application, engines, and railties goes here.
     #
@@ -48,15 +49,15 @@ module Concerto
     # config.time_zone = 'Eastern Time (US & Canada)'
 
     # The default locale is :en and all translations from config/locales/*.rb,yml are auto loaded.
-    #config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}').to_s]
+    # config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}').to_s]
     config.i18n.load_path += Dir[Rails.root.join('config', 'locales', '{controllers,views/*}', '*.{rb,yml}')]
     config.i18n.default_locale = :en
 
     # Configure the default encoding used in templates for Ruby 1.9.
-    config.encoding = "utf-8"
+    config.encoding = 'utf-8'
 
     # Configure sensitive parameters which will be filtered from the log file.
-    config.filter_parameters += [:password, :file_data]
+    config.filter_parameters += %i[password file_data]
 
     # Enable escaping HTML in JSON.
     config.active_support.escape_html_entities_in_json = true
@@ -71,12 +72,14 @@ module Concerto
 
     config.before_configuration do
       env_file = File.join(Rails.root, 'config', 'concerto_env.yml')
-      YAML.load(File.open(env_file)).each do |key, value|
-        ENV[key.to_s] = value
-      end if File.exist?(env_file)
+      if File.exist?(env_file)
+        YAML.load(File.open(env_file)).each do |key, value|
+          ENV[key.to_s] = value
+        end
+      end
     end
 
-    #exempt these methods from the initial install check to prevent redirect loops
+    # exempt these methods from the initial install check to prevent redirect loops
     config.to_prepare do
       Devise::RegistrationsController.skip_before_action :check_for_initial_install
       ConcertoDevise::RegistrationsController.skip_before_action :check_for_initial_install, raise: false
@@ -87,9 +90,8 @@ module Concerto
     # sees to a controller within Concerto so we can render a nice error. This
     # will catch all exceptions not caught by ApplicationController. They will
     # be routed as /404, /500, etc.
-  #   config.exceptions_app = lambda do |env|
-  #     ErrorsController.action(:render_error).call(env)
-  #  end
-
+    #   config.exceptions_app = lambda do |env|
+    #     ErrorsController.action(:render_error).call(env)
+    #  end
   end
 end

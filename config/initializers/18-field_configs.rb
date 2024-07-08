@@ -1,15 +1,17 @@
-Rails.logger.debug "Starting #{File.basename(__FILE__)} at #{Time.now.to_s}"
+# frozen_string_literal: true
+
+Rails.logger.debug "Starting #{File.basename(__FILE__)} at #{Time.now}"
 
 # A hashes of some of the possible field configs.
 # Each hash entry represents a possible field config.
 # The entries must contain a Hash with :type set.
 # :type must be set to one of :string, :select, or :boolean.
 # If :type is set to :select. :values may also be provided.
-transitions = ['replace', 'fade-in-animation', 'fade-out-animation',
-               'scale-down-animation', 'scale-up-animation',
-               'slide-down-animation', 'slide-up-animation',
-               'slide-left-animation', 'slide-right-animation',
-               'slide-from-left-animation', 'slide-from-right-animation']
+transitions = %w[replace fade-in-animation fade-out-animation
+                 scale-down-animation scale-up-animation
+                 slide-down-animation slide-up-animation
+                 slide-left-animation slide-right-animation
+                 slide-from-left-animation slide-from-right-animation]
 
 Rails.application.config.field_configs = {
   entry_transition: { type: :select, values: transitions },
@@ -17,8 +19,8 @@ Rails.application.config.field_configs = {
   time_format: { type: :string },
   disable_text_autosize: { type: :boolean },
   max_text_autosize: { type: :integer },
-  shuffler: { type: :select, values: ['BaseShuffle', 'WeightedShuffle', 'StrictPriorityShuffle'] },
-  repeat_content: { type: :select, values: ['Suppress', 'Reload'] }
+  shuffler: { type: :select, values: %w[BaseShuffle WeightedShuffle StrictPriorityShuffle] },
+  repeat_content: { type: :select, values: %w[Suppress Reload] }
 }
 
-Rails.logger.debug "Completed #{File.basename(__FILE__)} at #{Time.now.to_s}"
+Rails.logger.debug "Completed #{File.basename(__FILE__)} at #{Time.now}"

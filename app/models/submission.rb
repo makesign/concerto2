@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Submission < ActiveRecord::Base
   include ActiveModel::ForbiddenAttributesProtection
 
@@ -7,22 +9,22 @@ class Submission < ActiveRecord::Base
   belongs_to :feed
   validates :feed, presence: true, associated: true
 
-  belongs_to :moderator, class_name: "User", optional: true
-  validates :moderator, presence: { unless: Proc.new { |s| s.is_pending? || ( s.content && s.content.is_expired?) }},
-            associated: true
+  belongs_to :moderator, class_name: 'User', optional: true
+  validates :moderator, presence: { unless: proc { |s| s.is_pending? || (s.content && s.content.is_expired?) } },
+                        associated: true
 
   after_save :update_child_moderation
 
   # Validations
 
   validates :duration, numericality: { greater_than: 0 }
-  validates_uniqueness_of :content_id, scope: :feed_id  #Enforce content can only be submitted to a feed once
+  validates_uniqueness_of :content_id, scope: :feed_id # Enforce content can only be submitted to a feed once
 
   # Scoping shortcuts for approved/denied/pending
   scope :approved, -> { where moderation_flag: true }
   scope :denied, -> { where moderation_flag: false }
-  scope :pending, -> { where "moderation_flag IS NULL" }
-  scope :unsent, -> { where "pending_notification_sent IS NULL" }
+  scope :pending, -> { where 'moderation_flag IS NULL' }
+  scope :unsent, -> { where 'pending_notification_sent IS NULL' }
 
   # Scoping shortcuts for active/expired/future
   def self.active
@@ -37,17 +39,17 @@ class Submission < ActiveRecord::Base
     joins(:content).merge(Content.future)
   end
 
-  #Newsfeed
+  # Newsfeed
   include PublicActivity::Common if defined? PublicActivity::Common
 
   def moderation_text
-    case self.moderation_flag
-      when true
-        return I18n.t(:approved)
-      when false
-        return I18n.t(:rejected)
-      else
-        return I18n.t(:pending)
+    case moderation_flag
+    when true
+      I18n.t(:approved)
+    when false
+      I18n.t(:rejected)
+    else
+      I18n.t(:pending)
     end
   end
 
@@ -60,7 +62,8 @@ class Submission < ActiveRecord::Base
   # Test if the submission has been denied.
   # (moderation flag is false)
   def is_denied?
-    return false if moderation_flag || moderation_flag == nil
+    return false if moderation_flag || moderation_flag.nil?
+
     true
   end
 
@@ -74,12 +77,13 @@ class Submission < ActiveRecord::Base
   # Child content submitted to the same feed will receive the same moderation
   # as a parent content.
   def update_child_moderation
-    if self.changed.include?('moderation_flag') and self.content.has_children?
-      self.content.children.each do |child|
-        similiar_submissions = Submission.where(content_id: child.id, feed_id: self.feed_id, moderation_flag: self.moderation_flag_was)
-        similiar_submissions.each do |child_submission|
-          child_submission.update({moderation_flag: self.moderation_flag, moderator_id: self.moderator_id})
-        end
+    return unless changed.include?('moderation_flag') && content.has_children?
+
+    content.children.each do |child|
+      similiar_submissions = Submission.where(content_id: child.id, feed_id:,
+                                              moderation_flag: moderation_flag_was)
+      similiar_submissions.each do |child_submission|
+        child_submission.update({ moderation_flag:, moderator_id: })
       end
     end
   end
@@ -92,9 +96,9 @@ class Submission < ActiveRecord::Base
     Submission.pending.expired.readonly(false).each do |submission|
       submission.moderation_flag = false
       submission.moderation_reason = I18n.t(:content_expired_mod)
-      #Rails.logger.info submission
-      #print submission.to_yaml
-      #print submission.errors.to_yaml
+      # Rails.logger.info submission
+      # print submission.to_yaml
+      # print submission.errors.to_yaml
       submission.save
     end
   end
@@ -102,17 +106,20 @@ class Submission < ActiveRecord::Base
   # if there are any pending submissions, send a notice to the unique list of moderators
   def self.send_moderation_request_notifications
     items = Submission.pending.unsent
-    emails = items.map{|s| s.feed.group.moderators }.flatten.compact.map{|m| m.user.email if m.receive_emails && m.user.receive_moderation_notifications }.compact.sort.uniq
+    emails = items.map do |s|
+               s.feed.group.moderators
+             end.flatten.compact.map do |m|
+      m.user.email if m.receive_emails && m.user.receive_moderation_notifications
+    end.compact.sort.uniq
 
-    if items.present? && emails.present?
-      Rails.logger.info "moderation request email sent to #{emails.join(', ')}"
-      ModeratorMailer.items_pending(emails).deliver_now
-    
-      # indicate that we sent a notification so we dont repeat emails for the same content
-      items.each do |s|
-        s.update(pending_notification_sent: DateTime.now)
-      end
+    return unless items.present? && emails.present?
+
+    Rails.logger.info "moderation request email sent to #{emails.join(', ')}"
+    ModeratorMailer.items_pending(emails).deliver_now
+
+    # indicate that we sent a notification so we dont repeat emails for the same content
+    items.each do |s|
+      s.update(pending_notification_sent: DateTime.now)
     end
   end
-
 end

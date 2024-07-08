@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'test_helper'
 
 class UserSubscriptionAbilityTest < ActiveSupport::TestCase
@@ -7,16 +9,16 @@ class UserSubscriptionAbilityTest < ActiveSupport::TestCase
     @feed = feeds(:service)
     @kt_screen = screens(:one)
     @wtg_screen = screens(:two)
-    @subscription = Subscription.new(:feed => @feed)
+    @subscription = Subscription.new(feed: @feed)
   end
 
-  test "Screen user owner all access" do
-    skip "htw_migration: failing test" if (SKIP_HTW_MIGRATION)
+  test 'Screen user owner all access' do
+    skip 'htw_migration: failing test' if SKIP_HTW_MIGRATION
     ability = Ability.new(@katie)
     @subscription.screen = @kt_screen
     assert ability.can?(:create, @subscription)
 
-    abilities = [:update, :delete, :read]
+    abilities = %i[update delete read]
     abilities.each do |action|
       assert ability.can?(action, @subscription)
     end
@@ -27,12 +29,12 @@ class UserSubscriptionAbilityTest < ActiveSupport::TestCase
     end
   end
 
-  test "Screen group owner all access" do
+  test 'Screen group owner all access' do
     ability = Ability.new(@katie)
     @subscription.screen = @wtg_screen
     assert ability.can?(:create, @subscription)
 
-    abilities = [:update, :delete, :read]
+    abilities = %i[update delete read]
     abilities.each do |action|
       assert ability.can?(action, @subscription)
     end
@@ -50,7 +52,7 @@ class UserSubscriptionAbilityTest < ActiveSupport::TestCase
       assert ability.cannot?(action, @subscription)
     end
 
-    [:subscriptions, :all].each do |p|
+    %i[subscriptions all].each do |p|
       membership.perms[:screen] = p
       membership.save
       ability = Ability.new(users(:karen))
@@ -58,7 +60,5 @@ class UserSubscriptionAbilityTest < ActiveSupport::TestCase
         assert ability.can?(action, @subscription)
       end
     end
-
   end
 end
-

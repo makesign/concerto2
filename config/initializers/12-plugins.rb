@@ -1,4 +1,6 @@
-Rails.logger.debug "Starting #{File.basename(__FILE__)} at #{Time.now.to_s}"
+# frozen_string_literal: true
+
+Rails.logger.debug "Starting #{File.basename(__FILE__)} at #{Time.now}"
 
 Rails.configuration.after_initialize do
   # Concerto Plugins Initializer
@@ -19,7 +21,7 @@ Rails.configuration.after_initialize do
       mount_points = ConcertoPlugin.get_mount_points
       if mount_points.is_a? Array
         mount_points.each do |app|
-          mount app[:rack_app] => "/" + app[:url_string]
+          mount app[:rack_app] => "/#{app[:url_string]}"
           # e.g. mount ConcertoHardware::Engine => "/hardware"
         end
       end
@@ -30,4 +32,4 @@ Rails.configuration.after_initialize do
     end
   end
 end
-Rails.logger.debug "Completed #{File.basename(__FILE__)} at #{Time.now.to_s}"
+Rails.logger.debug "Completed #{File.basename(__FILE__)} at #{Time.now}"

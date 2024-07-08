@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'test_helper'
 
 class SharedPositionAbilityTest < ActiveSupport::TestCase
@@ -7,14 +9,14 @@ class SharedPositionAbilityTest < ActiveSupport::TestCase
     @position = positions(:one)
   end
 
-  test "anyone can read positions" do
+  test 'anyone can read positions' do
     [@user, @screen].each do |thing|
       ability = Ability.new(thing)
       assert ability.can?(:read, @position)
     end
   end
 
-  test "no one can update / delete positions" do
+  test 'no one can update / delete positions' do
     [@user, @screen].each do |thing|
       ability = Ability.new(thing)
       assert ability.cannot?(:update, @position)
@@ -22,4 +24,3 @@ class SharedPositionAbilityTest < ActiveSupport::TestCase
     end
   end
 end
-

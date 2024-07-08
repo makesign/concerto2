@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddWidthAndHeightToTemplates < ActiveRecord::Migration[7.1]
   def change
     add_column :templates, :original_width, :integer

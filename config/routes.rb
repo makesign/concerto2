@@ -1,7 +1,9 @@
+# frozen_string_literal: true
+
 class LegacyRouteMatcher
   # Catch requests that have a 'mac' parameter.
   def matches?(request)
-    return !request.query_parameters[:mac].nil?
+    !request.query_parameters[:mac].nil?
   end
 end
 
@@ -27,21 +29,21 @@ Rails.application.routes.draw do
 
   resources :activities
 
-  #Custom route for the screen creation/admin form JS
-  #TODO(bamnet): Clean this up
-  get "update_owners" => "screens#update_owners"
+  # Custom route for the screen creation/admin form JS
+  # TODO(bamnet): Clean this up
+  get 'update_owners' => 'screens#update_owners'
 
   # These routes control the frontend of Concerto used by screens.
   # You probably should not touch them without thinking very hard
   # about what you are doing because they could break things in
   # a very visible way.
   namespace :frontend do
-    resources :screens, only: [:show, :index], path: '' do
+    resources :screens, only: %i[show index], path: '' do
       member do
         get :setup
       end
       resources :fields, only: [] do
-        resources :contents, only: [:index, :show]
+        resources :contents, only: %i[index show]
       end
       resources :templates, only: [:show]
     end
@@ -51,17 +53,17 @@ Rails.application.routes.draw do
   end
   # End really dangerous routes.
 
-
   devise_for :users,
              controllers: {
-                 registrations: 'concerto_devise/registrations',
-                 sessions: 'concerto_devise/sessions'}
+               registrations: 'concerto_devise/registrations',
+               sessions: 'concerto_devise/sessions'
+             }
 
-  scope "/manage" do
+  scope '/manage' do
     resources :users
   end
 
-  resources :media, only: [:show, :create]
+  resources :media, only: %i[show create]
 
   resources :templates do
     member do
@@ -87,7 +89,7 @@ Rails.application.routes.draw do
       get :manage_members
     end
 
-    resources :memberships, only: [:create, :update, :destroy] do
+    resources :memberships, only: %i[create update destroy] do
     end
   end
 
@@ -97,7 +99,7 @@ Rails.application.routes.draw do
     collection do
       get :moderate
     end
-    resources :submissions, only: [:index, :show, :update] do
+    resources :submissions, only: %i[index show update] do
       member do
         get :reorder
       end
@@ -105,7 +107,7 @@ Rails.application.routes.draw do
   end
 
   get 'content/search' => 'contents#index'
-  resources :contents, except: [:index], path: "content" do
+  resources :contents, except: [:index], path: 'content' do
     member do
       get :display
       put :act
@@ -117,15 +119,15 @@ Rails.application.routes.draw do
   end
 
   # TODO(bamnet): Figure out if these routes mean anything.
-  resources :graphics, controller: :contents, except: [:index, :show], path: "content" do
+  resources :graphics, controller: :contents, except: %i[index show], path: 'content' do
     get :display, on: :member
   end
 
-  resources :tickers, controller: :contents, except: [:index, :show], path: "content"
-  resources :html_texts, controller: :contents, except: [:index, :show], path: "content"
-  resources :client_times, controller: :contents, except: [:index, :show], path: "content"
+  resources :tickers, controller: :contents, except: %i[index show], path: 'content'
+  resources :html_texts, controller: :contents, except: %i[index show], path: 'content'
+  resources :client_times, controller: :contents, except: %i[index show], path: 'content'
 
-  resource :concerto_config, controller: :concerto_config, only: [:show, :update], path: "settings" do
+  resource :concerto_config, controller: :concerto_config, only: %i[show update], path: 'settings' do
     post :initiate_restart
     get :config_check
   end
@@ -136,12 +138,12 @@ Rails.application.routes.draw do
   get 'content/' => 'feeds#index'
   get 'browse/' => 'feeds#index'
 
-  # Note: 404 errors are not handled by the router.
+  # NOTE: 404 errors are not handled by the router.
   # Instead, they are caught by Rails Middleware and then redirected
   # to Concerto's ErrorsController.
 
   resources :pages
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
   # Can be used by load balancers and uptime monitors to verify that the app is live.
-  get "up" => "rails/health#show", as: :rails_health_check
+  get 'up' => 'rails/health#show', as: :rails_health_check
 end

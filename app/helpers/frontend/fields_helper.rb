@@ -1,2 +1,6 @@
-module Frontend::FieldsHelper
+# frozen_string_literal: true
+
+module Frontend
+  module FieldsHelper
+  end
 end

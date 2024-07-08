@@ -3,6 +3,15 @@
 rails: open
 - rails server
 
+ci-test: bundle-audit brakeman rubocop
+
+bundle-audit:
+- bin/bundle-audit --update
+brakeman:
+- bin/brakeman -q -w3
+rubocop:
+- bin/rubocop --parallel
+
 tests-questions:
 - git show --name-only 8dc6d81
 
@@ -122,3 +131,6 @@ dc-db:
 - docker-compose run concerto bin/rails db:migrate
 - docker-compose run concerto bin/rails db:seed
 
+
+quick-push:
+- git commit -am "commit at $(shell date "+%H:%M:%S")" && git push && open https://github.com/htw-imi-showtime/showtime-website/actions

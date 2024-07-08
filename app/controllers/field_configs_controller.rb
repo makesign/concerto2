@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class FieldConfigsController < ApplicationController
   before_action :get_screen, :get_field
 
@@ -24,9 +26,7 @@ class FieldConfigsController < ApplicationController
   # GET /screens/:screen_id/fields/:field_id/field_configs/new.xml
   def new
     @field_config = FieldConfig.new(screen: @screen, field: @field)
-    if params[:key]
-      @field_config.key = params[:key]
-    end
+    @field_config.key = params[:key] if params[:key]
 
     auth!
 
@@ -54,16 +54,18 @@ class FieldConfigsController < ApplicationController
     respond_to do |format|
       if @field_config.save
         process_notification(@field_config, {}, process_notification_options({
-          params: {
-            field_config_name: @field_config.key,
-            screen_name: @screen.name,
-            field_name: @field.name
-            }
-          }))
-        format.html { redirect_to screen_field_field_configs_path(@screen, @field), notice: 'Field config was successfully created.' }
+                                                                               params: {
+                                                                                 field_config_name: @field_config.key,
+                                                                                 screen_name: @screen.name,
+                                                                                 field_name: @field.name
+                                                                               }
+                                                                             }))
+        format.html do
+          redirect_to screen_field_field_configs_path(@screen, @field), notice: 'Field config was successfully created.'
+        end
         format.xml { head :ok }
       else
-        format.html { render action: "new" }
+        format.html { render action: 'new' }
         format.xml { render xml: @field_config.errors, status: :unprocessable_entity }
       end
     end
@@ -78,16 +80,18 @@ class FieldConfigsController < ApplicationController
     respond_to do |format|
       if @field_config.update(field_config_params)
         process_notification(@field_config, {}, process_notification_options({
-          params: {
-            field_config_name: @field_config.key,
-            screen_name: @screen.name,
-            field_name: @field.name
-            }
-          }))
-        format.html { redirect_to screen_field_field_configs_path(@screen, @field), notice: 'Field config was successfully updated.' }
+                                                                               params: {
+                                                                                 field_config_name: @field_config.key,
+                                                                                 screen_name: @screen.name,
+                                                                                 field_name: @field.name
+                                                                               }
+                                                                             }))
+        format.html do
+          redirect_to screen_field_field_configs_path(@screen, @field), notice: 'Field config was successfully updated.'
+        end
         format.xml { head :ok }
       else
-        format.html { render action: "edit" }
+        format.html { render action: 'edit' }
         format.xml { render xml: @field_config.errors, status: :unprocessable_entity }
       end
     end
@@ -100,12 +104,12 @@ class FieldConfigsController < ApplicationController
     auth!
 
     process_notification(@field_config, {}, process_notification_options({
-      params: {
-        field_config_name: @field_config.key,
-        screen_name: @screen.name,
-        field_name: @field.name
-        }
-      }))
+                                                                           params: {
+                                                                             field_config_name: @field_config.key,
+                                                                             screen_name: @screen.name,
+                                                                             field_name: @field.name
+                                                                           }
+                                                                         }))
     @field_config.destroy
 
     respond_to do |format|
@@ -116,10 +120,10 @@ class FieldConfigsController < ApplicationController
 
   private
 
-    # Use this method to whitelist the permissible parameters. Example:
-    # params.require(:person).permit(:name, :age)
-    # Also, you can specialize this method with per-user checking of permissible attributes.
-    def field_config_params
-      params.require(:field_config).permit(:key, :value)
-    end
+  # Use this method to whitelist the permissible parameters. Example:
+  # params.require(:person).permit(:name, :age)
+  # Also, you can specialize this method with per-user checking of permissible attributes.
+  def field_config_params
+    params.require(:field_config).permit(:key, :value)
+  end
 end

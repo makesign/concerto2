@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'test_helper'
 
 class UserScreenAbilityTest < ActiveSupport::TestCase
@@ -7,17 +9,17 @@ class UserScreenAbilityTest < ActiveSupport::TestCase
     @rpitv = screens(:rpitv)
   end
 
-  test "Screens can only be created by admins (by default)" do
+  test 'Screens can only be created by admins (by default)' do
     ability = Ability.new(users(:katie))
     assert ability.cannot?(:create, Screen.new)
   end
 
-  test "Screens cannot be created by unsaved users" do
+  test 'Screens cannot be created by unsaved users' do
     ability = Ability.new(User.new)
     assert ability.cannot?(:create, Screen.new)
   end
 
-  test "Users can sometimes create screen they own" do
+  test 'Users can sometimes create screen they own' do
     ConcertoConfig.set(:allow_user_screen_creation, true)
     ability = Ability.new(users(:katie))
     screen = Screen.new
@@ -28,7 +30,7 @@ class UserScreenAbilityTest < ActiveSupport::TestCase
     assert ability.cannot?(:create, screen)
   end
 
-  test "Users can sometimes create screens for their groups" do
+  test 'Users can sometimes create screens for their groups' do
     ConcertoConfig.set(:allow_user_screen_creation, true)
     ability = Ability.new(users(:katie))
     screen = Screen.new
@@ -48,36 +50,36 @@ class UserScreenAbilityTest < ActiveSupport::TestCase
     assert ability.cannot?(:create, screen)
   end
 
-  test "Anyone can read public screens" do
+  test 'Anyone can read public screens' do
     ability = Ability.new(User.new)
     assert ability.can?(:read, @sgs)
   end
 
-  test "Unauthenticated users cannot read private screens" do
+  test 'Unauthenticated users cannot read private screens' do
     ability = Ability.new(User.new)
     assert ability.cannot?(:read, @kt)
     assert ability.cannot?(:read, @rpitv)
   end
 
-  test "Non members cannot read private screens" do
+  test 'Non members cannot read private screens' do
     ability = Ability.new(users(:kristen))
     assert ability.cannot?(:read, @kt)
     assert ability.cannot?(:read, @rpitv)
   end
-  #TODO: User Katie does not seem to have the permission to read the screen. The test fails.
-  test "Owning user can read private screen" do
-    skip "htw_migration: failing test" if (SKIP_HTW_MIGRATION)
+  # TODO: User Katie does not seem to have the permission to read the screen. The test fails.
+  test 'Owning user can read private screen' do
+    skip 'htw_migration: failing test' if SKIP_HTW_MIGRATION
     ability = Ability.new(users(:katie))
     assert ability.can?(:read, @kt)
   end
 
-  test "Member of owning group can read private screen" do
+  test 'Member of owning group can read private screen' do
     ability = Ability.new(users(:katie))
     assert ability.can?(:read, @rpitv)
   end
-  #TODO: User Karen does not seem to have the permission to update and delete the screen. The test fails.
-  test "Owning user can update and delete screen" do
-    skip "htw_migration: failing test" if (SKIP_HTW_MIGRATION)
+  # TODO: User Karen does not seem to have the permission to update and delete the screen. The test fails.
+  test 'Owning user can update and delete screen' do
+    skip 'htw_migration: failing test' if SKIP_HTW_MIGRATION
     ability = Ability.new(users(:katie))
     assert ability.can?(:update, @kt)
     assert ability.can?(:delete, @kt)
@@ -87,7 +89,7 @@ class UserScreenAbilityTest < ActiveSupport::TestCase
     assert ability.cannot?(:delete, @kt)
   end
 
-  test "Leaders of a group can update and delete screen" do
+  test 'Leaders of a group can update and delete screen' do
     ability = Ability.new(users(:katie))
     assert ability.can?(:update, @sgs)
     assert ability.can?(:delete, @sgs)
@@ -103,7 +105,7 @@ class UserScreenAbilityTest < ActiveSupport::TestCase
     assert ability.can?(:update, @sgs)
     assert ability.can?(:delete, @sgs)
 
-    [:none, :subscriptions].each do |p|
+    %i[none subscriptions].each do |p|
       membership.perms[:screen] = p
       membership.save
       ability = Ability.new(users(:karen))
@@ -112,10 +114,9 @@ class UserScreenAbilityTest < ActiveSupport::TestCase
     end
   end
 
-  test "Regular group  members cannot update or delete a screen" do
+  test 'Regular group  members cannot update or delete a screen' do
     ability = Ability.new(users(:katie))
     assert ability.cannot?(:update, @rpitv)
     assert ability.cannot?(:delete, @rpitv)
   end
 end
-

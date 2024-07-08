@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'test_helper'
 
 class UserFeedAbilityTest < ActiveSupport::TestCase
@@ -6,27 +8,27 @@ class UserFeedAbilityTest < ActiveSupport::TestCase
     @secret = feeds(:secret_announcements)
   end
 
-  test "Anyone can read viewable feed" do
+  test 'Anyone can read viewable feed' do
     ability = Ability.new(User.new)
     assert ability.can?(:read, @service)
   end
 
-  test "Anyone cannot read nonviewable feed" do
+  test 'Anyone cannot read nonviewable feed' do
     ability = Ability.new(User.new)
     assert ability.cannot?(:read, @secret)
   end
 
-  test "Group member can read nonviewable feed" do
+  test 'Group member can read nonviewable feed' do
     ability = Ability.new(users(:katie))
     assert ability.can?(:read, @secret)
   end
 
-  test "Non Group member cannot read nonviewable feed" do
+  test 'Non Group member cannot read nonviewable feed' do
     ability = Ability.new(users(:kristen))
     assert ability.cannot?(:read, @secret)
   end
 
-  test "Only group leaders can delete / update feed" do
+  test 'Only group leaders can delete / update feed' do
     ability = Ability.new(users(:katie))
     assert ability.can?(:update, @service)
     assert ability.can?(:delete, @service)
@@ -50,7 +52,7 @@ class UserFeedAbilityTest < ActiveSupport::TestCase
     assert ability.can?(:delete, @service)
     assert ability.can?(:moderate, @service)
 
-    [:none, :submissions].each do |p|
+    %i[none submissions].each do |p|
       membership.perms[:feed] = p
       membership.save
       ability = Ability.new(users(:karen))
@@ -64,12 +66,12 @@ class UserFeedAbilityTest < ActiveSupport::TestCase
     end
   end
 
-  test "Group leaders and some supporters can create feeds" do
+  test 'Group leaders and some supporters can create feeds' do
     ability = Ability.new(users(:katie))
     assert ability.can?(:create, Feed)
-    can_feed = Feed.new(:group_id => groups(:wtg).id)
+    can_feed = Feed.new(group_id: groups(:wtg).id)
     assert ability.can?(:create, can_feed)
-    cannot_feed = Feed.new(:group_id => groups(:rpitv).id)
+    cannot_feed = Feed.new(group_id: groups(:rpitv).id)
     assert ability.cannot?(:create, cannot_feed)
 
     membership = memberships(:karen_wtg)
@@ -80,7 +82,7 @@ class UserFeedAbilityTest < ActiveSupport::TestCase
     assert ability.can?(:create, can_feed)
     assert ability.cannot?(:create, cannot_feed)
 
-    [:none, :submissions].each do |p|
+    %i[none submissions].each do |p|
       membership.perms[:feed] = p
       membership.save
       ability = Ability.new(users(:karen))
@@ -90,7 +92,7 @@ class UserFeedAbilityTest < ActiveSupport::TestCase
     end
   end
 
-  test "Admin can read all feeds" do
+  test 'Admin can read all feeds' do
     ability = Ability.new(users(:admin))
     assert ability.can?(:create, Feed)
     assert ability.can?(:read, Feed)
@@ -99,42 +101,48 @@ class UserFeedAbilityTest < ActiveSupport::TestCase
     assert ability.can?(:destroy, Feed)
   end
 
-  test "Users have feed submit permission if and only if the have submission creation permission" do
+  test 'Users have feed submit permission if and only if the have submission creation permission' do
     User.find_each do |user|
       ability = Ability.new(user)
       Feed.find_each do |feed|
-        assert_equal ability.can?(:create, Submission.new(:feed => feed)), ability.can?(:submit_content, feed)
+        assert_equal ability.can?(:create, Submission.new(feed:)), ability.can?(:submit_content, feed)
       end
     end
   end
 
-  test "Feed update permission implies feed show permission" do
+  test 'Feed update permission implies feed show permission' do
     User.find_each do |user|
       ability = Ability.new(user)
       Feed.find_each do |feed|
-        assert ability.cannot?(:update, feed) || ability.can?(:show, feed), "Feed update permission does not imply show permission for user '#{user.email}' and feed '#{feed.name}' (Can update? #{ability.can?(:update, feed)}, Can index? #{ability.can?(:show, feed)})"
+        assert ability.cannot?(:update, feed) || ability.can?(:show, feed),
+               "Feed update permission does not imply show permission for user '#{user.email}' and feed '#{feed.name}' (Can update? #{ability.can?(
+                 :update, feed
+               )}, Can index? #{ability.can?(:show, feed)})"
       end
     end
   end
 
-  test "Feed show permission implies feed index permission" do
+  test 'Feed show permission implies feed index permission' do
     User.find_each do |user|
       ability = Ability.new(user)
       Feed.find_each do |feed|
-        assert ability.cannot?(:show, feed) || ability.can?(:index, feed), "Feed show permission does not imply index permission for user '#{user.email}' and feed '#{feed.name}' (Can show? #{ability.can?(:show, feed)}, Can index? #{ability.can?(:index, feed)})"
+        assert ability.cannot?(:show, feed) || ability.can?(:index, feed),
+               "Feed show permission does not imply index permission for user '#{user.email}' and feed '#{feed.name}' (Can show? #{ability.can?(
+                 :show, feed
+               )}, Can index? #{ability.can?(:index, feed)})"
       end
     end
   end
 
-  test "Feed update permission implies feed index permission" do
+  test 'Feed update permission implies feed index permission' do
     User.find_each do |user|
       ability = Ability.new(user)
       Feed.find_each do |feed|
-        assert ability.cannot?(:update, feed) || ability.can?(:index, feed), "Feed update permission does not imply index permission for user '#{user.email}' and feed '#{feed.name}' (Can update? #{ability.can?(:update, feed)}, Can index? #{ability.can?(:index, feed)})"
+        assert ability.cannot?(:update, feed) || ability.can?(:index, feed),
+               "Feed update permission does not imply index permission for user '#{user.email}' and feed '#{feed.name}' (Can update? #{ability.can?(
+                 :update, feed
+               )}, Can index? #{ability.can?(:index, feed)})"
       end
     end
   end
-
-
 end
-

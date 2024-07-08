@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddResolutionToScreens < ActiveRecord::Migration[7.1]
   def self.up
     add_column :screens, :width, :int

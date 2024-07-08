@@ -1,12 +1,10 @@
 # frozen_string_literal: true
 
-Rails.logger.debug "Starting #{File.basename(__FILE__)} at #{Time.now.to_s}"
+Rails.logger.debug "Starting #{File.basename(__FILE__)} at #{Time.now}"
 
 Rails.configuration.after_initialize do
   Devise.setup do |config|
-    if ActiveRecord::Base.connection.data_source_exists? 'concerto_configs'
-      config.mailer_sender = ConcertoConfig[:mailer_from]
-    end
+    config.mailer_sender = ConcertoConfig[:mailer_from] if ActiveRecord::Base.connection.data_source_exists? 'concerto_configs'
   end
 end
 
@@ -26,7 +24,7 @@ Devise.setup do |config|
   # by default. You can change it below and use your own secret key.
   # config.secret_key = 'c92e9fc74fb95778890a2a760240eddb38a4fd0552abd129125a677959ca453bc204b03b02e27cebe3bcfb73bdbfb2ab5690e503602c54fb3279739ac4d08814'
   # from concerto:
-  config.secret_key = ENV["SECRET_KEY_BASE"]
+  config.secret_key = ENV.fetch('SECRET_KEY_BASE', nil)
   # ==> Controller configuration
   # Configure the parent class to the devise controllers.
   # config.parent_controller = 'DeviseController'
@@ -194,11 +192,10 @@ Devise.setup do |config|
   # Email regex used to validate email formats. It simply asserts that
   # one (and only one) @ exists in the given string. This is mainly
   # to give user feedback and not to assert the e-mail validity.
-  # devise original: 
+  # devise original:
   # config.email_regexp = /\A[^@\s]+@[^@\s]+\z/
   # in concerto:
   config.email_regexp = /\A[^@\s]+@([^@\s]+\.)+[^@\W]+\z/
-
 
   # ==> Configuration for :timeoutable
   # The time you want to timeout the user session without activity. After this
@@ -324,7 +321,7 @@ Devise.setup do |config|
 
   # When set to false, does not sign a user in automatically after their password is
   # changed. Defaults to true, so a user is signed in automatically after changing a password.
-  # config.sign_in_after_change_password = true  
+  # config.sign_in_after_change_password = true
 end
 
-Rails.logger.debug "Completed #{File.basename(__FILE__)} at #{Time.now.to_s}"
+Rails.logger.debug "Completed #{File.basename(__FILE__)} at #{Time.now}"

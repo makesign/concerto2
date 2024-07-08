@@ -1,9 +1,10 @@
+# frozen_string_literal: true
+
 # DynamicContent serves as the base class for all Dynamic Content and is
 # responsible for saving the final content entries generated.  Also provided
 # are a handful of default behaviors for refreshing content and managing a
 # configuration datastore (JSON encoded).
 class DynamicContent < Content
-
   # Define integration hooks for Concerto Plugins
   define_callbacks :alter_content
   ConcertoPlugin.install_callbacks(self) # Get the callbacks from plugins
@@ -20,14 +21,15 @@ class DynamicContent < Content
   # render so Dynamic Content meta content never gets displayed.
   def set_kind
     return unless new_record?
+
     self.kind = Kind.where(name: 'Dynamic').first
   end
 
   # Create a new configuration hash if one does not already exist.
   # Called during `after_initialize`, where a config may or may not exist.
   def create_config
-    self.config = {} if !self.config
-    self.config = default_config().merge(self.config)
+    self.config = {} unless config
+    self.config = default_config.merge(config)
   end
 
   # Specify the default configuration hash.
@@ -36,30 +38,28 @@ class DynamicContent < Content
   # @return [Hash{String => String, Number}] configution hash.
   def default_config
     {
-      'interval' => 300,
+      'interval' => 300
     }
   end
 
   def protected_load_config
-    begin
-      load_config
-    rescue StandardError => ex
-      Rails.logger.error("unable to load_config for dynamic content #{id}: #{ex.message}")
-    end
+    load_config
+  rescue StandardError => e
+    Rails.logger.error("unable to load_config for dynamic content #{id}: #{e.message}")
   end
 
   # Load a configuration hash.
   # Converts the JSON data stored for the content into the configuration.
   # Called during `after_find`.
   def load_config
-    self.config = JSON.load(self.data)
+    self.config = JSON.parse(data)
   end
 
   # Prepare the configuration to be saved.
   # Compress the config hash back into JSON to be stored in the database.
   # Called during `before_valication`.
   def save_config
-    self.data = JSON.dump(self.config)
+    self.data = JSON.dump(config)
   end
 
   # Refresh this dynamic content if necessary, as determined by
@@ -73,15 +73,15 @@ class DynamicContent < Content
   # If a refresh succeeds, `last_ok_refresh` will have the time the refresh
   # finished.  If it fails, `last_bad_refresh` will store the time.
   def refresh!
-    self.config['last_refresh_attempt'] = Clock.time.to_i
-    refresh_status = refresh_content()
+    config['last_refresh_attempt'] = Clock.time.to_i
+    refresh_status = refresh_content
     if refresh_status
-      self.config['last_ok_refresh'] = Clock.time.to_i
+      config['last_ok_refresh'] = Clock.time.to_i
     else
-      self.config['last_bad_refresh'] = Clock.time.to_i
-      Rails.logger.error("Trouble refreshing dynamic content")
+      config['last_bad_refresh'] = Clock.time.to_i
+      Rails.logger.error('Trouble refreshing dynamic content')
     end
-    self.save
+    save
   end
 
   # Should we refresh?
@@ -89,15 +89,10 @@ class DynamicContent < Content
   # since the last refresh attempt. If an `interval` config option is not set,
   # assume a refresh is not needed.
   def refresh_needed?
-    if self.config.include? 'interval'
-      if self.config.include? 'last_refresh_attempt'
-        return Clock.time.to_i > (self.config['interval'] + self.config['last_refresh_attempt'])
-      else
-        return true
-      end
-    else
-      return false
-    end
+    return false unless config.include? 'interval'
+    return Clock.time.to_i > (config['interval'] + config['last_refresh_attempt']) if config.include? 'last_refresh_attempt'
+
+    true
   end
 
   # Actually do the refreshing of content entries.
@@ -117,11 +112,11 @@ class DynamicContent < Content
   # @return [Boolean] indicating if the content was sucessfully updated.
   def refresh_content
     # Capture the existing children.
-    old_content = self.children.all.to_a
+    old_content = children.all.to_a
     # Build the new ones
-    new_content = build_content()
-    if !new_content
-      return false  # A nil or false build_content result is bad.
+    new_content = build_content
+    unless new_content
+      return false # A nil or false build_content result is bad.
     end
 
     new_children = []
@@ -134,7 +129,7 @@ class DynamicContent < Content
     new_children.concat(old_content.slice(0, old_reuse_count))
     # Here we add a bunch of empty new contents.  We can't do the traditional Content.new * N because it will
     # create N copies of the same object, not N new objects.
-    (1..new_count).each do |unused_i|
+    (1..new_count).each do |_unused_i|
       new_children << Content.new
     end
     old_children = old_content.slice(old_content.count - leftover_count, leftover_count)
@@ -143,9 +138,9 @@ class DynamicContent < Content
     new_content.each_with_index do |content, index|
       content.transaction do
         content.parent = self
-        content.user ||= self.user
-        content.duration ||= self.duration
-        content.end_time ||= [self.end_time, Clock.time + 1.day].compact.min
+        content.user ||= user
+        content.duration ||= duration
+        content.end_time ||= [end_time, Clock.time + 1.day].compact.min
         content.start_time ||= [content.end_time, Clock.time].compact.min
 
         run_callbacks :alter_content do
@@ -154,7 +149,7 @@ class DynamicContent < Content
           @new_attributes = content.attributes
         end
 
-        locked_attributes = ['id', 'created_at', 'updated_at']
+        locked_attributes = %w[id created_at updated_at]
         locked_attributes.each do |attr|
           @new_attributes.delete(attr)
         end
@@ -162,21 +157,20 @@ class DynamicContent < Content
 
         if new_children[index].save
           # After saving process the submissions.
-          self.submissions.each do |model_submission|
+          submissions.each do |model_submission|
             submission = new_children[index].submissions.where(feed_id: model_submission.feed_id).first
             if submission.nil?
               # The child content doesn't have this submission, create one.
               submission = model_submission.dup
               submission.content = new_children[index]
-              submission.save
             else
               # The child content has a similiar submission, update it to match the content.
               submission.moderation_flag = model_submission.moderation_flag
               submission.moderator_id = model_submission.moderator_id
               submission.duration = model_submission.duration
               submission.moderation_reason = model_submission.moderation_reason
-              submission.save
             end
+            submission.save
           end
         else
           Rails.logger.error(new_children[index].errors.full_messages)
@@ -189,11 +183,10 @@ class DynamicContent < Content
     # Now we'll expire all the old content.
     expire_children(old_children)
 
-    return true
-
+    true
   rescue Exception => e
     Rails.logger.error(e.message)
-    return false
+    false
   end
 
   # Build all the new child content.
@@ -208,9 +201,9 @@ class DynamicContent < Content
   # Remove stale dynamic content by expiring all child content.
   # Sets the `end_time` of children to the current time if it's
   # not already expired.
-  def expire_children(opt_children=nil)
-    children_to_expire = (opt_children || self.children).to_a
-    children_to_expire.reject!{ |child| child.is_expired? }
+  def expire_children(opt_children = nil)
+    children_to_expire = (opt_children || children).to_a
+    children_to_expire.reject!(&:is_expired?)
     children_to_expire.each do |child|
       child.end_time = Clock.time
       child.save
@@ -220,9 +213,7 @@ class DynamicContent < Content
   # Destroy all dynamic content children.
   # You probably never want to do this, but it's useful if things are broken.
   def destroy_children!
-    self.children.each do |child|
-      child.destroy
-    end
+    children.each(&:destroy)
   end
 
   # Update all the DynamicContent.
@@ -240,7 +231,7 @@ class DynamicContent < Content
         content.refresh
       end
     end
-    Rails.logger.info "Dynamic content updates finished."
+    Rails.logger.info 'Dynamic content updates finished.'
   end
 
   # Use a pid to ensure that only one dynamic content refresher is running.
@@ -248,9 +239,7 @@ class DynamicContent < Content
   def self.pid_locked_refresh
     FileUtils.mkdir_p(Rails.root.join('tmp', 'pids'))
     pid_name = Rails.root.join('tmp', 'pids', 'dynamic_content_refresh')
-    if File.exist?(pid_name)
-      Rails.logger.info "Not updating dynamic content, pid exists"
-    end
+    Rails.logger.info 'Not updating dynamic content, pid exists' if File.exist?(pid_name)
 
     File.open(pid_name, 'w') {}
     begin
@@ -262,9 +251,9 @@ class DynamicContent < Content
   end
 
   # Allow dynamic content to be manually refreshed.
-  def action_allowed?(action_name, user)
-    available = [:manual_refresh, :delete_children]
-    return available.include?(action_name)
+  def action_allowed?(action_name, _user)
+    available = %i[manual_refresh delete_children]
+    available.include?(action_name)
   end
 
   # Manually refresh the dynamic content, only if the user
@@ -272,14 +261,10 @@ class DynamicContent < Content
   def manual_refresh(options)
     # Only someoneone who can edit the content can do this.
     owner = Ability.new(options[:current_user])
-    if owner.cannot?(:edit, self)
-      return I18n.t(:sorry_access)
-    end
-    if refresh!
-      return I18n.t(:content_refreshed)
-    else
-      return I18n.t(:error_refreshing)
-    end
+    return I18n.t(:sorry_access) if owner.cannot?(:edit, self)
+    return I18n.t(:content_refreshed) if refresh!
+
+    I18n.t(:error_refreshing)
   end
 
   # Delete all the children of a dynamic content entry.
@@ -287,20 +272,17 @@ class DynamicContent < Content
   def delete_children(options)
     # Only someoneone who can edit the content can do this.
     owner = Ability.new(options[:current_user])
-    if owner.cannot?(:edit, self)
-      return I18n.t(:sorry_access)
-    end
-    self.children.each do |c|
-      c.destroy
-    end
-    return I18n.t(:content_deleted)
+    return I18n.t(:sorry_access) if owner.cannot?(:edit, self)
+
+    children.each(&:destroy)
+    I18n.t(:content_deleted)
   end
 
   # Manually refresh the dynamic content each time it is
   # added to a submission.  If we were smarter we would
   # wait for all of these to finish but that is left as
   # exercise to the reader.
-  def after_add_callback(unused_submission)
+  def after_add_callback(_unused_submission)
     refresh!
   end
 end

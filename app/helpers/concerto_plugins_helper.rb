@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module ConcertoPluginsHelper
   def source_link
     if @concerto_plugin.source == 'rubygems'
@@ -13,16 +15,18 @@ module ConcertoPluginsHelper
 
   def plugin_source(source)
     t('concerto_plugins.sources')[source.to_sym]
-  rescue
+  rescue StandardError
     # return raw value if someone messed up the localization entry
     source
   end
 
   def status_badge(enabled)
     if enabled
-      content_tag(:i, nil, class: 'far fa-check-square tooltip-basic', 'data-tooltip-text' => t('concerto_plugins.index.enabled_msg'))
+      content_tag(:i, nil, class: 'far fa-check-square tooltip-basic',
+                           'data-tooltip-text' => t('concerto_plugins.index.enabled_msg'))
     else
-      content_tag(:i, nil, class: 'far fa-square tooltip-basic', 'data-tooltip-text' => t('concerto_plugins.index.disabled_msg'))
+      content_tag(:i, nil, class: 'far fa-square tooltip-basic',
+                           'data-tooltip-text' => t('concerto_plugins.index.disabled_msg'))
     end
   end
 end

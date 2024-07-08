@@ -1,45 +1,47 @@
-#ImageMagick-specfic image manipulation calls for Concerto 2
-module ConcertoImageMagick
+# frozen_string_literal: true
 
+# ImageMagick-specfic image manipulation calls for Concerto 2
+module ConcertoImageMagick
   def self.load_image(file_contents)
-    return file_contents
-    #return Magick::Image.from_blob(file_contents).first
+    file_contents
+    # return Magick::Image.from_blob(file_contents).first
   end
-  
+
   def self.image_info(img)
-    return { size: img.filesize, density: img.density, width: img.columns, height: img.rows } if !img.nil?
+    { size: img.filesize, density: img.density, width: img.columns, height: img.rows } unless img.nil?
   end
 
   def self.new_drawing_object
-    return Magick::Draw.new
+    Magick::Draw.new
   end
-  
-  def self.draw_image(dw,image)
+
+  def self.draw_image(dw, image)
     dw.draw(image)
   end
-  
-  def self.draw_block(dw, options={})
-    #Draw the rectangle
+
+  def self.draw_block(dw, options = {})
+    # Draw the rectangle
     dw.fill(options[:fill_color])
     dw.stroke_opacity(options[:stroke_opacity])
     dw.fill_opacity(options[:fill_opacity])
-    dw.rectangle(options[:width]*options[:left], options[:height]*options[:top], options[:width]*options[:right], options[:height]*options[:bottom])
+    dw.rectangle(options[:width] * options[:left], options[:height] * options[:top], options[:width] * options[:right],
+                 options[:height] * options[:bottom])
   end
- 
-  def self.draw_text(dw, options={})
-    #Layer the field name
+
+  def self.draw_text(dw, options = {})
+    # Layer the field name
     dw.stroke(options[:stroke_color])
     dw.fill(options[:fill_color])
     dw.text_anchor(Magick::MiddleAnchor)
     dw.opacity(options[:opacity])
     font_size = [options[:width], options[:height]].min / 8
     dw.pointsize = font_size
-    dw.text((options[:width]*(options[:left] + options[:right])/2),
-            (options[:height]*(options[:top] + options[:bottom])/2+0.4*font_size),
-            options[:field_name])  
+    dw.text((options[:width] * (options[:left] + options[:right]) / 2),
+            ((options[:height] * (options[:top] + options[:bottom]) / 2) + (0.4 * font_size)),
+            options[:field_name])
   end
 
-  def self.graphic_transform(original_media, options={})
+  def self.graphic_transform(original_media, options = {})
     ## BK Wednesday, 26.June 2024: rewritten to action_storage
     # Todo: Imagemagick may be unnecessary?
     # Todo: Move to media
@@ -48,21 +50,18 @@ module ConcertoImageMagick
     # Resize the image to a height and width if they are both being set.
     # Round these numbers up to ensure the image will at least fill
     # the requested space.
-    height = options[:height].nil? ? nil : options[:height].to_f.ceil
-    width = options[:width].nil? ? nil : options[:width].to_f.ceil
+    height = options[:height]&.to_f&.ceil
+    width = options[:width]&.to_f&.ceil
 
     # action_storage rewrite / image = resize(image, width, height, true, options[:crop])
 
     # see https://guides.rubyonrails.org/active_storage_overview.html
     if options[:crop]
-      image = original_media.attached_file.variant(resize_to_fill: [width, height])
+      original_media.attached_file.variant(resize_to_fill: [width, height])
     else
-      image = original_media.attached_file.variant(resize_to_limit: [width, height])
-    end  
-    
-    return image
+      original_media.attached_file.variant(resize_to_limit: [width, height])
+    end
   end
-
 
   # Compute the size of a new image.
   # Using the size of the existing image, the desired size of the output, and some control
@@ -82,7 +81,7 @@ module ConcertoImageMagick
   #    resize the size to be no smaller than the desired output size, often used before
   #    cropping.
   # @return [Hash{Symbol => Integer}] Result hash with {width: Integer, height: Integer}.
-  def self.compute_size(image_width, image_height, desired_width, desired_height, options={})
+  def self.compute_size(image_width, image_height, desired_width, desired_height, options = {})
     options[:maintain_aspect_ratio] = true if options[:maintain_aspect_ratio].nil?
     options[:expand_to_fit] ||= false
 
@@ -90,12 +89,12 @@ module ConcertoImageMagick
     output_height = desired_height || 0
 
     if options[:maintain_aspect_ratio]
-      image_ratio = image_width.to_f / image_height  # Forcing the float here is important
+      image_ratio = image_width.to_f / image_height # Forcing the float here is important
 
       # If either of the desired outputs is missing, make up the value
       # based on the fact that we're keeping the aspect ratio the same.
-      output_width = desired_height.to_f * image_ratio if output_width == 0
-      output_height = desired_width.to_f / image_ratio if output_height == 0
+      output_width = desired_height.to_f * image_ratio if output_width.zero?
+      output_height = desired_width.to_f / image_ratio if output_height.zero?
 
       desired_ratio = output_width.to_f / output_height
       if image_ratio > desired_ratio
@@ -105,17 +104,16 @@ module ConcertoImageMagick
       end
 
       if options[:expand_to_fit] && (output_height < desired_height || output_width < desired_width)
-        upscale = 1
-        if output_height < desired_height
-          upscale = desired_height.to_f / output_height
-        else
-          upscale = desired_width.to_f / output_width
-        end
-        output_height = output_height * upscale
-        output_width = output_width * upscale
+        upscale = if output_height < desired_height
+                    desired_height.to_f / output_height
+                  else
+                    desired_width.to_f / output_width
+                  end
+        output_height *= upscale
+        output_width *= upscale
       end
     end
-    return {width: output_width.ceil, height: output_height.ceil}
+    { width: output_width.ceil, height: output_height.ceil }
   end
 
   # Resize an image to a height and width.
@@ -127,20 +125,18 @@ module ConcertoImageMagick
   # @param [Boolean] expand_to_fit When false, the content will be no larger than
   #    the desired size.  When true, the content will be no smaller than the desired size.
   # @return [Image] The resized image.
-  def self.resize(image, width, height, maintain_aspect_ratio=true, expand_to_fit=false)
+  def self.resize(image, width, height, maintain_aspect_ratio = true, expand_to_fit = false)
     if !width.nil? && !height.nil? && width <= 0 && height <= 0
-      image = self.new_image(0, 0)
+      image = new_image(0, 0)
     elsif !width.nil? || !height.nil?
       options = {
-        maintain_aspect_ratio: maintain_aspect_ratio,
-        expand_to_fit: expand_to_fit
+        maintain_aspect_ratio:,
+        expand_to_fit:
       }
-      size = self.compute_size(image.columns, image.rows, width, height, options)
-      if image.columns != size[:width] && image.rows != size[:height]
-        image = image.scale(size[:width], size[:height])
-      end
+      size = compute_size(image.columns, image.rows, width, height, options)
+      image = image.scale(size[:width], size[:height]) if image.columns != size[:width] && image.rows != size[:height]
     end
-    return image
+    image
   end
 
   # Crop an image to a width and height.
@@ -150,10 +146,8 @@ module ConcertoImageMagick
   # @param [Integer] height Height of the area to be cropped.
   # @return [Image] The cropped image, focused on the center of the image.
   def self.crop(image, width, height)
-    unless width.nil? && height.nil?
-      image.crop!(Magick::CenterGravity, width, height)
-    end
-    return image
+    image.crop!(Magick::CenterGravity, width, height) unless width.nil? && height.nil?
+    image
   end
 
   # Create a new image
@@ -162,6 +156,6 @@ module ConcertoImageMagick
   # @param [Integer] height Height of the image
   # @return [Image] The image
   def self.new_image(width, height)
-    return Magick::Image.new(width, height)
+    Magick::Image.new(width, height)
   end
 end

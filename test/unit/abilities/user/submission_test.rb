@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'test_helper'
 
 class UserSubmissionAbilityTest < ActiveSupport::TestCase
@@ -9,7 +11,7 @@ class UserSubmissionAbilityTest < ActiveSupport::TestCase
     @submission = Submission.new
   end
 
-  test "Approved submission can be read on public feed" do
+  test 'Approved submission can be read on public feed' do
     users = [User.new, @katie, @kristen]
     users.each do |user|
       ability = Ability.new(user)
@@ -19,7 +21,7 @@ class UserSubmissionAbilityTest < ActiveSupport::TestCase
     end
   end
 
-  test "Denied and pending submissions cannot be read on public feed" do
+  test 'Denied and pending submissions cannot be read on public feed' do
     users = [User.new, @kristen]
     users.each do |user|
       ability = Ability.new(user)
@@ -31,7 +33,7 @@ class UserSubmissionAbilityTest < ActiveSupport::TestCase
     end
   end
 
-  test "Denied and pending submission can be read by feed moderator" do
+  test 'Denied and pending submission can be read by feed moderator' do
     ability = Ability.new(@katie)
     @submission.feed = @wtg
     [false, nil].each do |flag|
@@ -40,7 +42,7 @@ class UserSubmissionAbilityTest < ActiveSupport::TestCase
     end
   end
 
-  test "Submission cannot be read on private feed" do
+  test 'Submission cannot be read on private feed' do
     users = [User.new, @kristen]
     users.each do |user|
       [true, false, nil].each do |flag|
@@ -52,40 +54,40 @@ class UserSubmissionAbilityTest < ActiveSupport::TestCase
     end
   end
 
-  test "Approved submission can be read on private feed by group member" do
+  test 'Approved submission can be read on private feed by group member' do
     ability = Ability.new(@katie)
     @submission.feed = @rpitv
     @submission.moderation_flag = true
     assert ability.can?(:read, @submission)
   end
 
-  test "Submissions cannot be created by unsaved users" do
+  test 'Submissions cannot be created by unsaved users' do
     ability = Ability.new(User.new)
     @submission.feed = @wtg
     assert ability.cannot?(:create, @submission)
   end
 
-  test "Submissions can be created to public feeds" do
+  test 'Submissions can be created to public feeds' do
     ability = Ability.new(@kristen)
     @submission.feed = @wtg
     assert ability.can?(:create, @submission)
   end
 
-  test "Submissions can be created on private feeds by members" do
+  test 'Submissions can be created on private feeds by members' do
     ability = Ability.new(@katie)
     @submission.feed = @rpitv
     assert ability.can?(:create, @submission)
   end
 
-  test "Submissions cannot be created to private feeds by non members" do
+  test 'Submissions cannot be created to private feeds by non members' do
     ability = Ability.new(@kristen)
     @submission.feed = @rpitv
     assert ability.cannot?(:create, @submission)
   end
 
-  test "Submissions can be modified by moderator" do
+  test 'Submissions can be modified by moderator' do
     ability = Ability.new(@katie)
-    content = Content.new(:user => users(:admin))
+    content = Content.new(user: users(:admin))
     @submission.content = content
     @submission.feed = feeds(:sleepy_announcements)
 
@@ -97,7 +99,7 @@ class UserSubmissionAbilityTest < ActiveSupport::TestCase
     ability = Ability.new(users(:karen))
     assert ability.cannot?(:update, @submission)
 
-    [:all, :submissions].each do |p|
+    %i[all submissions].each do |p|
       membership.perms[:feed] = p
       membership.save
       ability = Ability.new(users(:karen))
@@ -105,16 +107,16 @@ class UserSubmissionAbilityTest < ActiveSupport::TestCase
     end
   end
 
-  test "Submissions cannot be deleted by moderator" do
+  test 'Submissions cannot be deleted by moderator' do
     ability = Ability.new(@katie)
-    content = Content.new(:user => users(:admin))
+    content = Content.new(user: users(:admin))
     @submission.content = content
     @submission.feed = feeds(:sleepy_announcements)
 
     assert ability.cannot?(:delete, @submission)
 
     membership = memberships(:karen_wtg)
-    [:none, :submissions, :all].each do |p|
+    %i[none submissions all].each do |p|
       membership.perms[:feed] = p
       membership.save
       ability = Ability.new(users(:karen))
@@ -122,8 +124,8 @@ class UserSubmissionAbilityTest < ActiveSupport::TestCase
     end
   end
 
-  test "Content owner can only read and delete submission" do
-    content = Content.new(:user => @kristen)
+  test 'Content owner can only read and delete submission' do
+    content = Content.new(user: @kristen)
     @submission.content = content
     @submission.feed = @rpitv
 
@@ -138,4 +140,3 @@ class UserSubmissionAbilityTest < ActiveSupport::TestCase
     assert ability.cannot?(:delete, @submission)
   end
 end
-

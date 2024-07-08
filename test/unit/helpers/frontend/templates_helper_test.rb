@@ -1,4 +1,8 @@
+# frozen_string_literal: true
+
 require 'test_helper'
 
-class Frontend::TemplatesHelperTest < ActionView::TestCase
+module Frontend
+  class TemplatesHelperTest < ActionView::TestCase
+  end
 end

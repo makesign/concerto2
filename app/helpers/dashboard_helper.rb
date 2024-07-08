@@ -1,10 +1,12 @@
-module DashboardHelper  
+# frozen_string_literal: true
+
+module DashboardHelper
   # Check if the background processor is running or not
   # by looking at it's heartbeat and comparing it to a threshold.
   def background_processor_running?
     last_update = ConcertoConfig[:worker_heartbeat]
     threshold = Delayed::Worker.sleep_delay * 4
-    return (Clock.time.to_i - last_update.to_i) < threshold
+    (Clock.time.to_i - last_update.to_i) < threshold
   end
 
   # Get the owner of the activity, linkable if possible.
@@ -15,12 +17,10 @@ module DashboardHelper
   def get_activity_owner(activity)
     if activity.owner.nil?
       activity.parameters.include?(:owner_name) ? activity.parameters[:owner_name] : t('public_activity.unknown_user')
+    elsif can? :read, activity.owner
+      link_to(activity.owner.name, activity.owner)
     else
-      if can? :read, activity.owner
-        link_to(activity.owner.name, activity.owner)
-      else
-        activity.owner.name
-      end
+      activity.owner.name
     end
   end
 
@@ -39,7 +39,7 @@ module DashboardHelper
         activity.trackable.send(attr_name)
       end
     else
-      trackable_name_sym = (activity.trackable_type.underscore.downcase + '_' + attr_name).to_sym
+      trackable_name_sym = :"#{activity.trackable_type.underscore.downcase}_#{attr_name}"
       if activity.parameters.include?(trackable_name_sym)
         activity.parameters[trackable_name_sym]
       else
@@ -55,14 +55,13 @@ module DashboardHelper
   # @param [String] attr_name The attribute that represents the name of the instance of the item.
   # @return [String] The view contents.
   def generate_activity_view(activity, attr_name = 'name')
-    action = activity.key.split(".").last
+    action = activity.key.split('.').last
     model = activity.trackable_type.classify.safe_constantize
 
-    t('public_activity.' + action + '_the_model',
+    t("public_activity.#{action}_the_model",
       owner: get_activity_owner(activity),
       article: t("public_activity.#{model.model_name.singular}.article"),
       model: model.model_name.human,
-      item: get_activity_item(activity, attr_name)
-    ).html_safe
+      item: get_activity_item(activity, attr_name)).html_safe
   end
 end

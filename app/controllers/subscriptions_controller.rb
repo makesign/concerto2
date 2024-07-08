@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 class SubscriptionsController < ApplicationController
   before_action :get_screen, :get_field
-  
+
   def get_screen
     @screen = Screen.find(params[:screen_id])
   end
@@ -69,12 +71,11 @@ class SubscriptionsController < ApplicationController
       if @subscription.save
         format.html { redirect_to(screen_field_subscriptions_path(@screen, @field), notice: t(:subscription_created)) }
         format.xml  { render xml: @subscription, status: :created, location: @subscription }
-        format.js
       else
-        format.html { render action: "new" }
+        format.html { render action: 'new' }
         format.xml  { render xml: @subscription.errors, status: :unprocessable_entity }
-        format.js
       end
+      format.js
     end
   end
 
@@ -84,7 +85,9 @@ class SubscriptionsController < ApplicationController
 
     respond_to do |format|
       if @subscription.update(subscription_params)
-        format.html { redirect_to(screen_field_subscriptions_path(@screen, @field), notice: t('subscriptions.records_updated')) }
+        format.html do
+          redirect_to(screen_field_subscriptions_path(@screen, @field), notice: t('subscriptions.records_updated'))
+        end
         format.xml  { head :ok }
         format.js { head :ok }
       else
@@ -109,8 +112,8 @@ class SubscriptionsController < ApplicationController
   end
 
   private
+
   def subscription_params
     params.require(:subscription).permit(:feed_id, :weight)
   end
-
 end

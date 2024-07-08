@@ -1,66 +1,67 @@
+# frozen_string_literal: true
+
 require 'test_helper'
 
 class ContentsControllerTest < ActionController::TestCase
   include Devise::Test::ControllerHelpers
 
   def setup
-    request.env["devise.mapping"] = Devise.mappings[:user]
+    request.env['devise.mapping'] = Devise.mappings[:user]
   end
 
-  test "must sign in before new" do
+  test 'must sign in before new' do
     get :new, params: {}
     assert_login_failure
   end
 
-  test "should get generic new" do
+  test 'should get generic new' do
     sign_in users(:katie)
     get :new, params: {}
     assert_response :success
   end
 
-  test "should get new graphic" do
+  test 'should get new graphic' do
     sign_in users(:katie)
-    get(:new, params: { :type => "graphic" })
+    get(:new, params: { type: 'graphic' })
     assert_response :success
-    assert_select "input[type=file]"
-    assert_select "li.active > a", {:text => "Graphic"}
+    assert_select 'input[type=file]'
+    assert_select 'li.active > a', { text: 'Graphic' }
   end
 
-  test "should get new ticker" do
+  test 'should get new ticker' do
     sign_in users(:katie)
-    get(:new, params: { :type => "ticker" })
+    get(:new, params: { type: 'ticker' })
     assert_response :success
-    assert_select("textarea")
-    assert_select "li.active > a", {:text => "Text"}
+    assert_select('textarea')
+    assert_select 'li.active > a', { text: 'Text' }
   end
 
-  test "should upload new ticker" do
-    skip "htw_migration: failing test" if (SKIP_HTW_MIGRATION)
+  test 'should upload new ticker' do
+    skip 'htw_migration: failing test' if SKIP_HTW_MIGRATION
     sign_in users(:katie)
     assert_difference('Ticker.count') do
-      post :create, params: { :type => 'ticker', :ticker => {:data => "Body", :name => "Ticker Name", :duration => 6,
-       :start_time => {:date => "03/25/2013", :time => "12:00am"},
-       :end_time => {:date => "04/01/2013", :time => "11:59pm"},
-       }, :feed_id => {"0" => feeds(:service).id} }
+      post :create, params: { type: 'ticker', ticker: { data: 'Body', name: 'Ticker Name', duration: 6,
+                                                        start_time: { date: '03/25/2013', time: '12:00am' },
+                                                        end_time: { date: '04/01/2013', time: '11:59pm' } }, feed_id: { '0' => feeds(:service).id } }
     end
     assert_redirected_to content_path(assigns(:content))
     assert_equal 1, assigns(:content).submissions.length
     assert assigns(:content).submissions.first.moderation_flag
 
-    get(:show, params: { :id => assigns(:content).id })
-    assert_select 'p', {:text => "Body"}
+    get(:show, params: { id: assigns(:content).id })
+    assert_select 'p', { text: 'Body' }
   end
 
-  test "should fallback to generic" do
+  test 'should fallback to generic' do
     sign_in users(:katie)
-    get(:new, params: { :type => "bananas" })
+    get(:new, params: { type: 'bananas' })
     assert_response :success
-    assert_select "input[type=file]"
+    assert_select 'input[type=file]'
   end
 
-  test "broken default type raises exception" do
+  test 'broken default type raises exception' do
     sign_in users(:katie)
-    default = ConcertoConfig.find_by_key("default_upload_type")
+    default = ConcertoConfig.find_by_key('default_upload_type')
     default.destroy
 
     assert_raise RuntimeError do
@@ -68,10 +69,10 @@ class ContentsControllerTest < ActionController::TestCase
     end
   end
 
-  test "should demoderate submissions on edit" do
-    skip "htw_migration: failing test" if (SKIP_HTW_MIGRATION)
+  test 'should demoderate submissions on edit' do
+    skip 'htw_migration: failing test' if SKIP_HTW_MIGRATION
     sign_in users(:admin)
-    put :update, params: { :id => contents(:sample_ticker).id, :content => { :duration => "7" } }
+    put :update, params: { id: contents(:sample_ticker).id, content: { duration: '7' } }
     related_submissions = contents(:sample_ticker).submissions
     related_submissions.each do |submission|
       assert_nil(submission.moderation_flag)
@@ -91,31 +92,31 @@ class ContentsControllerTest < ActionController::TestCase
   #   assert_select 'input[type="checkbox"][disabled="disabled"]', 4
   # end
 
-  test "user cannot submit to all feeds" do
-    skip "htw_migration: failing test" if (SKIP_HTW_MIGRATION)
+  test 'user cannot submit to all feeds' do
+    skip 'htw_migration: failing test' if SKIP_HTW_MIGRATION
     sign_in users(:kristen)
-    get(:new, params: { :type => "graphic" })
+    get(:new, params: { type: 'graphic' })
     assert_response :success
     assert_equal 5, assigns(:feeds).length
   end
 
-  test "invalid content id should redirect to browse" do
+  test 'invalid content id should redirect to browse' do
     sign_in users(:kristen)
-    get(:show, params: { :id => 'bogus' })
+    get(:show, params: { id: 'bogus' })
     assert_redirected_to browse_path
   end
 
-  test "missing content should redirect to browse" do
+  test 'missing content should redirect to browse' do
     sign_in users(:kristen)
-    get(:show, params: { :id => 99999999 })
+    get(:show, params: { id: 99_999_999 })
     assert_redirected_to browse_path
   end
 
-  test "render full content preview" do
-    skip "htw_migration: failing test" if (SKIP_HTW_MIGRATION)
+  test 'render full content preview' do
+    skip 'htw_migration: failing test' if SKIP_HTW_MIGRATION
     c = contents(:sample_image)
     sign_in users(:admin)
-    get :display, params: { :id => c.id }
+    get :display, params: { id: c.id }
 
     file = assigns(:file)
     require 'concerto_image_magick'
@@ -124,12 +125,12 @@ class ContentsControllerTest < ActionController::TestCase
     assert_equal 1000, image.columns
   end
 
-  test "render resized content preview" do
-    skip "htw_migration: failing test" if (SKIP_HTW_MIGRATION)
+  test 'render resized content preview' do
+    skip 'htw_migration: failing test' if SKIP_HTW_MIGRATION
     c = contents(:sample_image)
     sign_in users(:admin)
 
-    get :display, params: { :id => c.id, :height => "150", :width => "200" }
+    get :display, params: { id: c.id, height: '150', width: '200' }
 
     file = assigns(:file)
     require 'concerto_image_magick'
@@ -137,38 +138,37 @@ class ContentsControllerTest < ActionController::TestCase
     assert_in_delta 150, image.rows, 1
     assert_in_delta 200, image.columns, 1
 
-    get :display, params: { :id => c.id, :height => "100", :witdh => "100" }
+    get :display, params: { id: c.id, height: '100', witdh: '100' }
 
     file = assigns(:file)
-    require 'concerto_image_magick'
     image = ConcertoImageMagick.load_image(file.file_contents)
     assert_in_delta 100, image.rows, 1
     assert_in_delta 133, image.columns, 1
   end
 
-  test "render single dimension resize content" do
-    skip "htw_migration: failing test" if (SKIP_HTW_MIGRATION)
+  test 'render single dimension resize content' do
+    skip 'htw_migration: failing test' if SKIP_HTW_MIGRATION
     c = contents(:sample_image)
     sign_in users(:admin)
 
-    get :display, params: { :id => c.id, :height => "200" }
+    get :display, params: { id: c.id, height: '200' }
 
     file = assigns(:file)
     image = ConcertoImageMagick.load_image(file.file_contents)
     assert_in_delta 200, image.rows, 1
 
-    get :display, params: { :id => c.id, :width => "150" }
+    get :display, params: { id: c.id, width: '150' }
 
     file = assigns(:file)
     image = ConcertoImageMagick.load_image(file.file_contents)
     assert_in_delta 150, image.columns, 1
   end
 
-  test "render cropped content preview" do
-    skip "htw_migration: failing test" if (SKIP_HTW_MIGRATION)
+  test 'render cropped content preview' do
+    skip 'htw_migration: failing test' if SKIP_HTW_MIGRATION
     c = contents(:sample_image)
     sign_in users(:admin)
-    get :display, params: { :id => c.id, :crop => "true", :width => "200", :height => "200" }
+    get :display, params: { id: c.id, crop: 'true', width: '200', height: '200' }
 
     file = assigns(:file)
     require 'concerto_image_magick'

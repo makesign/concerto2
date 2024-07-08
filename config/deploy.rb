@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # To update or deploy using capistrano:
 #
 # To deploy from/to the concerto vm image:
@@ -48,7 +50,7 @@ set :branch, ENV['branch'] || `git tag`.split("\n").last
 # Default deploy_to directory is /var/www/my_app_name
 # set :deploy_to, '/var/www/my_app_name'
 
-set :deploy_to, "/var/webapps/#{fetch(:application)}"    # make sure this exists and is writable
+set :deploy_to, "/var/webapps/#{fetch(:application)}" # make sure this exists and is writable
 
 # Default value for :scm is :git
 # set :scm, :git
@@ -64,14 +66,15 @@ set :pty, true
 set :ssh_options, {
   forward_agent: true,
   user: fetch(:user)
-#  verbose: :debug
+  #  verbose: :debug
 }
 
 # Default value for :linked_files is []
 set :linked_files, fetch(:linked_files, []).push('config/database.yml', 'config/concerto.yml')
 
 # Default value for linked_dirs is []
-set :linked_dirs, fetch(:linked_dirs, []).push('log', 'tmp/pids', 'tmp/cache', 'tmp/sockets', 'vendor/bundle', 'public/system')
+set :linked_dirs,
+    fetch(:linked_dirs, []).push('log', 'tmp/pids', 'tmp/cache', 'tmp/sockets', 'vendor/bundle', 'public/system')
 
 # Default value for default_env is {}
 # set :default_env, { path: "/opt/ruby/bin:$PATH" }
@@ -82,7 +85,6 @@ set :linked_dirs, fetch(:linked_dirs, []).push('log', 'tmp/pids', 'tmp/cache', '
 set :passenger_restart_with_sudo, true
 
 namespace :deploy do
-
   after :restart, :clear_cache do
     on roles(:web), in: :groups, limit: 3, wait: 10 do
       # Here we can do anything such as:
@@ -93,69 +95,68 @@ namespace :deploy do
   end
 
   namespace :services do
-
     # start, stop, or restart the services if the service control script exists
     %w[start stop restart].each do |command|
       desc "#{command} concerto background services"
       task command.to_sym do
-        on roles(:app) do 
-          if test("[ -L /etc/init.d/concerto ]")
+        on roles(:app) do
+          if test('[ -L /etc/init.d/concerto ]')
             as :root do
-              execute "invoke-rc.d", "concerto", "#{command}"
+              execute 'invoke-rc.d', 'concerto', command.to_s
             end
           end
         end
       end
     end
 
-    desc "install concerto background services"
+    desc 'install concerto background services'
     task :setup do
-      on roles(:app) do 
+      on roles(:app) do
         # Must occur after code is deployed and symlink to current is created
         # If the service control script does not yet exist, but the script is in our app directory
         # then we link it (to create the service control script) and make sure it's executable
-        # and not world-writable.  
+        # and not world-writable.
         # Otherwise if the service control script already exists, then the script in the app directory
         # may have just been replaced, so make sure it's permissions are like we said.
-        if !test("[ -L /etc/init.d/concerto ]") and test("[ -f #{current_path}/concerto-init.d ]")
+        if !test('[ -L /etc/init.d/concerto ]') && test("[ -f #{current_path}/concerto-init.d ]")
           as :root do
-            execute :ln, "-nfs", "#{current_path}/concerto-init.d", "/etc/init.d/concerto"
-            execute :chmod, "+x", "#{current_path}/concerto-init.d"
-            execute :chmod, "o-w", "#{current_path}/concerto-init.d" 
-            execute "update-rc.d", "concerto", "defaults"
+            execute :ln, '-nfs', "#{current_path}/concerto-init.d", '/etc/init.d/concerto'
+            execute :chmod, '+x', "#{current_path}/concerto-init.d"
+            execute :chmod, 'o-w', "#{current_path}/concerto-init.d"
+            execute 'update-rc.d', 'concerto', 'defaults'
           end
         elsif test("[ -f #{current_path}/concerto-init.d ]")
           as :root do
-            execute :chmod, "+x", "#{current_path}/concerto-init.d"
-            execute :chmod, "o-w", "#{current_path}/concerto-init.d" 
+            execute :chmod, '+x', "#{current_path}/concerto-init.d"
+            execute :chmod, 'o-w', "#{current_path}/concerto-init.d"
           end
         end
       end
     end
 
-    desc "set default directory for concerto background services"
+    desc 'set default directory for concerto background services'
     task :defaults do
-      on roles(:app) do 
-        if !test("[ -f /etc/default/concerto ]")
+      on roles(:app) do
+        unless test('[ -f /etc/default/concerto ]')
           as :root do
             # set the path for finding our app
             # set the user that the services will run as (vi su)
-            execute :echo, "CONCERTODIR=#{current_path}", ">/etc/default/concerto"
-            execute :echo, "USERNAME=#{fetch(:user)}", ">>/etc/default/concerto"
-            execute :echo, "SUSHELL=/bin/bash", ">>/etc/default/concerto"
+            execute :echo, "CONCERTODIR=#{current_path}", '>/etc/default/concerto'
+            execute :echo, "USERNAME=#{fetch(:user)}", '>>/etc/default/concerto'
+            execute :echo, 'SUSHELL=/bin/bash', '>>/etc/default/concerto'
           end
         end
       end
     end
 
-    desc "remove concerto background services"
+    desc 'remove concerto background services'
     task :remove do
-      on roles(:app) do 
+      on roles(:app) do
         # if the service control script exists, then remove it and unschedule it
-        if test("[ -L /etc/init.d/concerto ]")
+        if test('[ -L /etc/init.d/concerto ]')
           as :root do
-            execute "unlink", "/etc/init.d/concerto"
-            execute "update-rc.d", "concerto", "remove"
+            execute 'unlink', '/etc/init.d/concerto'
+            execute 'update-rc.d', 'concerto', 'remove'
           end
         end
       end
@@ -163,8 +164,8 @@ namespace :deploy do
   end
 end
 
-before "deploy:services:remove", "deploy:services:stop"   # stop the service before we remove it
-before "deploy:updating", "deploy:services:stop"      # stop the service before we update the code
-after "deploy:restart", "deploy:services:setup"  # reinstall/reset perms on service after code changes
-after "deploy:services:setup", "deploy:services:start"    # restart the service after its been set up
-after "deploy:starting", "deploy:services:defaults" # set defaults for the service when we set up a new server
+before 'deploy:services:remove', 'deploy:services:stop' # stop the service before we remove it
+before 'deploy:updating', 'deploy:services:stop' # stop the service before we update the code
+after 'deploy:restart', 'deploy:services:setup' # reinstall/reset perms on service after code changes
+after 'deploy:services:setup', 'deploy:services:start' # restart the service after its been set up
+after 'deploy:starting', 'deploy:services:defaults' # set defaults for the service when we set up a new server

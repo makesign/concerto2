@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ApplicationController < ActionController::Base
   protect_from_forgery
   before_action :set_locale
@@ -26,9 +28,7 @@ class ApplicationController < ActionController::Base
   # on the current action.
   # Used by current_ability and use_plugin_ability
   def current_accessor
-    if @screen_api
-      @current_accessor ||= current_screen
-    end
+    @current_accessor ||= current_screen if @screen_api
     @current_accessor ||= current_user
   end
 
@@ -40,15 +40,13 @@ class ApplicationController < ActionController::Base
   def current_screen
     if @current_screen.nil?
       unless request.authorization.blank?
-        (user,pass) = http_basic_user_name_and_password
-        if user=="screen" and !pass.nil?
+        (user, pass) = http_basic_user_name_and_password
+        if (user == 'screen') && !pass.nil?
           @current_screen = Screen.find_by_screen_token(pass)
-          if params.has_key? :request_cookie
-            cookies.permanent[:concerto_screen_token] = pass
-          end
+          cookies.permanent[:concerto_screen_token] = pass if params.key? :request_cookie
         end
       end
-      if @current_screen.nil? and cookies.has_key? :concerto_screen_token
+      if @current_screen.nil? && cookies.key?(:concerto_screen_token)
         token = cookies[:concerto_screen_token]
         @current_screen = Screen.find_by_screen_token(token)
       end
@@ -59,11 +57,11 @@ class ApplicationController < ActionController::Base
   # This method allows the Frontend to circumvent normal screen auth
   # in order to support legacy unsecured screens. Should not be used
   # outside the Frontend controllers.
-  def allow_screen_if_unsecured (screen)
-    if screen.unsecured? || screen.auth_by_mac?
-      @current_screen = screen
-      @current_ability = nil
-    end
+  def allow_screen_if_unsecured(screen)
+    return unless screen.unsecured? || screen.auth_by_mac?
+
+    @current_screen = screen
+    @current_ability = nil
   end
 
   def http_basic_user_name_and_password
@@ -72,15 +70,15 @@ class ApplicationController < ActionController::Base
 
   def sign_in_screen(screen)
     token = screen.generate_screen_token!
-    cookies.permanent[:concerto_screen_token]=token
+    cookies.permanent[:concerto_screen_token] = token
   end
 
   def sign_out_screen
-    if !current_screen.nil?
+    unless current_screen.nil?
       current_screen.clear_screen_token!
       @current_screen = nil
     end
-    cookies.permanent[:concerto_screen_token]=""
+    cookies.permanent[:concerto_screen_token] = ''
   end
 
   # Call this with a before filter to indicate that the current action
@@ -89,7 +87,7 @@ class ApplicationController < ActionController::Base
   # current user. Screen API pages may only be viewed by authenticated
   # screens.
   def screen_api
-    @screen_api=true
+    @screen_api = true
   end
 
   def restart_webserver
@@ -98,58 +96,55 @@ class ApplicationController < ActionController::Base
       return false
     end
     begin
-      File.open("tmp/restart.txt", "w") {}
-      return true
-    rescue
-      #generally a write permission error
+      File.open('tmp/restart.txt', 'w') {}
+      true
+    rescue StandardError
+      # generally a write permission error
       flash[:notice] = t(:cant_write_restart_txt)
-      return false
+      false
     end
   end
 
-  def set_time_zone(&block)
+  def set_time_zone(&)
     if user_signed_in? && !current_user.time_zone.nil?
-      Time.use_zone(current_user.time_zone, &block)
+      Time.use_zone(current_user.time_zone, &)
     else
-      Time.use_zone(ConcertoConfig[:system_time_zone], &block)
+      Time.use_zone(ConcertoConfig[:system_time_zone], &)
     end
   end
 
   def webserver_supports_restart?
-    #add any webservers that don't support tmp/restart.txt to this array
-    no_restart_txt = ["webrick"]
+    # add any webservers that don't support tmp/restart.txt to this array
+    no_restart_txt = ['webrick']
     no_restart_txt.each do |w|
-      #check if the server environment contains a webserver that doesn't support restart.txt
-      #This is NOT foolproof - a webserver may elect not to send this
+      # check if the server environment contains a webserver that doesn't support restart.txt
+      # This is NOT foolproof - a webserver may elect not to send this
       server_match = /\S*#{w}/.match(request.env['SERVER_SOFTWARE'].to_s.downcase)
-      if server_match.nil?
-        return true
-      else
-        return false
-      end
+      return true if server_match.nil?
+
+      return false
     end
   end
 
   def rake_precompile
     require 'rake'
-    Rake.load_rakefile Rails.root.join( 'Rakefile' )
+    Rake.load_rakefile Rails.root.join('Rakefile')
     Rake::Task['assets:precompile'].invoke
   end
 
   def precompile_error_catch
     require 'yaml'
-    concerto_base_config = YAML.load_file("./config/concerto.yml")
-    if concerto_base_config['compile_production_assets'] == true
-      if File.exist?('public/assets/manifest.yml') == false && Rails.env.production?
-        rake_precompile()
-        restart_webserver()
-      end
-    end
+    concerto_base_config = YAML.load_file('./config/concerto.yml')
+    return unless concerto_base_config['compile_production_assets'] == true
+    return unless File.exist?('public/assets/manifest.yml') == false && Rails.env.production?
+
+    rake_precompile
+    restart_webserver
   end
 
   # Allow views in the main application to do authorization
   # checks for plugins.
-  def use_plugin_ability(mod, &block)
+  def use_plugin_ability(mod)
     switch_to_plugin_ability(mod)
     yield
     switch_to_main_app_ability
@@ -162,18 +157,18 @@ class ApplicationController < ActionController::Base
   # block above.
   def switch_to_plugin_ability(mod)
     @main_app_ability = @current_ability
-    @plugin_abilities = @plugin_abilities || {}
+    @plugin_abilities ||= {}
     mod_sym = mod.name.to_sym
     if @plugin_abilities[mod_sym].nil?
       begin
-        ability = (mod.name+"::Ability").constantize
-      rescue
+        ability = "#{mod.name}::Ability".constantize
+      rescue StandardError
         ability = nil
       end
       if ability.nil?
         # Presumably this plugin doesn't define its own rules, no biggie
-        logger.warn "ConcertoPlugin: use_plugin_ability: "+
-          "No Ability found for "+mod.name
+        logger.warn 'ConcertoPlugin: use_plugin_ability: ' \
+                    'No Ability found for ' + mod.name
       else
         @plugin_abilities[mod_sym] ||= ability.new(current_accessor)
         @current_ability = @plugin_abilities[mod_sym]
@@ -206,22 +201,23 @@ class ApplicationController < ActionController::Base
     options[:params] ||= {}
     options[:params].merge!(pa_params) unless pa_params.nil?
     activity = ar_instance.create_activity(options)
-    
+
     # Get the name of the activity mailer by changing the dot to an underscore (eg "submission.update" to "submission_update")
-    am_string = activity.key.gsub(".", "_")
+    am_string = activity.key.gsub('.', '_')
 
     # If ActivityMailer can find a method by the formulated name, pass in the activity (everything we know about what was done)
     if ActivityMailer.respond_to?(am_string) && !options[:recipient].nil? && !options[:owner].nil? && options[:recipient] != options[:owner]
-      #fulfilling bamnet's expansive notification ambitions via metaprogramming since 2013
+      # fulfilling bamnet's expansive notification ambitions via metaprogramming since 2013
       begin
         ActivityMailer.send(am_string, activity).deliver
-      #make an effort to catch all mail-related exceptions after sending the mail - IOError will catch anything for sendmail, SMTP for the rest
-      rescue IOError, Net::SMTPAuthenticationError, Net::SMTPServerBusy, Net::SMTPSyntaxError, Net::SMTPFatalError, Net::SMTPUnknownError => e
-        Rails.logger.debug "Mail delivery failed at #{Time.now.to_s} for #{options[:recipient]}: #{e.message}"
-        ConcertoConfig.first.create_activity action: :system_notification, params: {message: t(:smtp_send_error)}
+      # make an effort to catch all mail-related exceptions after sending the mail - IOError will catch anything for sendmail, SMTP for the rest
+      rescue IOError, Net::SMTPAuthenticationError, Net::SMTPServerBusy, Net::SMTPSyntaxError, Net::SMTPFatalError,
+             Net::SMTPUnknownError => e
+        Rails.logger.debug "Mail delivery failed at #{Time.now} for #{options[:recipient]}: #{e.message}"
+        ConcertoConfig.first.create_activity action: :system_notification, params: { message: t(:smtp_send_error) }
       rescue OpenSSL::SSL::SSLError => e
-        Rails.logger.debug "Mail delivery failed at #{Time.now.to_s} for #{options[:recipient]}: #{e.message} -- might need to disable SSL Verification in settings"
-        ConcertoConfig.first.create_activity action: :system_notification, params: {message: t(:smtp_send_error_ssl)}
+        Rails.logger.debug "Mail delivery failed at #{Time.now} for #{options[:recipient]}: #{e.message} -- might need to disable SSL Verification in settings"
+        ConcertoConfig.first.create_activity action: :system_notification, params: { message: t(:smtp_send_error_ssl) }
       end
     end
 
@@ -233,11 +229,11 @@ class ApplicationController < ActionController::Base
   # @pending_submissions_count
   def compute_pending_moderation
     @pending_submissions_count = 0
-    if user_signed_in?
-      feeds = current_user.owned_feeds
-      feeds.each do |f|
-        @pending_submissions_count += f.submissions_to_moderate.count
-      end
+    return unless user_signed_in?
+
+    feeds = current_user.owned_feeds
+    feeds.each do |f|
+      @pending_submissions_count += f.submissions_to_moderate.count
     end
   end
 
@@ -246,41 +242,37 @@ class ApplicationController < ActionController::Base
   end
 
   def set_locale
-    if user_signed_in? && current_user.locale != ""
-      session[:locale] = current_user.locale
-    end
+    session[:locale] = current_user.locale if user_signed_in? && current_user.locale != ''
 
     I18n.locale = session[:locale] || I18n.default_locale
   end
 
-  #If there are no users defined yet, redirect to create the first admin user
+  # If there are no users defined yet, redirect to create the first admin user
   def check_for_initial_install
-    #Don't do anything if a user is logged in
-    unless user_signed_in?
-      #if the flag set in the seeds file still isn't set to true and there are no users, let's do our thing
-      if !User.exists? && !ConcertoConfig[:setup_complete]
-        redirect_to new_user_registration_path
+    # Don't do anything if a user is logged in
+    return if user_signed_in?
+    # if the flag set in the seeds file still isn't set to true and there are no users, let's do our thing
+    return unless !User.exists? && !ConcertoConfig[:setup_complete]
+
+    redirect_to new_user_registration_path
+  end
+
+  # Don't break for CanCan exceptions; send the user to the front page with a Flash error message
+  rescue_from CanCan::AccessDenied do |exception|
+    respond_to do |format|
+      format.json { render json: { error: true, status: 403, message: exception.message }, status: :forbidden }
+      format.xml { render xml: { error: true, status: 403, message: exception.message }, status: :forbidden }
+      format.any do
+        redirect_to main_app.root_url, flash: { notice: exception.message }
       end
     end
   end
-
-  #Don't break for CanCan exceptions; send the user to the front page with a Flash error message
-  rescue_from CanCan::AccessDenied do |exception|
-    respond_to do |format|
-      format.json { render json: {error:true, status:403, message: exception.message}, status: :forbidden }
-      format.xml{ render xml: {error:true, status:403, message: exception.message}, status: :forbidden }
-      format.any {
-        redirect_to main_app.root_url, flash: { notice: exception.message }
-      }
-    end
-  end
-
 
   # Ensure that any Relative URL Root applied by the webserver is available
   # to engine routing logic. This should not be needed once we go to Rails 4,
   # per Rails ticket #6933
   def apply_relative_root
-    Rails.application.routes.default_url_options[:script_name] = ENV['RAILS_RELATIVE_URL_ROOT']
+    Rails.application.routes.default_url_options[:script_name] = ENV.fetch('RAILS_RELATIVE_URL_ROOT', nil)
   end
 
   # Authenticate using the current action and instance variables.
@@ -304,73 +296,65 @@ class ApplicationController < ActionController::Base
       'edit' => :update,
       'create' => :create,
       'update' => :update,
-      'destroy' => :delete,
+      'destroy' => :delete
     }
 
-    test_action = (opts[:action] || action_map[action_name])
+    test_action = opts[:action] || action_map[action_name]
     allow_empty = true
-    if !opts[:allow_empty].nil?
-      allow_empty = opts[:allow_empty]
-    end
+    allow_empty = opts[:allow_empty] unless opts[:allow_empty].nil?
 
     new_exception = true
-    if !opts[:new_exception].nil?
-      new_exception = opts[:new_exception]
-    end
+    new_exception = opts[:new_exception] unless opts[:new_exception].nil?
 
     var_name = controller_name
-    if action_name != 'index'
-      var_name = controller_name.singularize
-    end
-    object = (opts[:object] || instance_variable_get("@#{var_name}"))
+    var_name = controller_name.singularize if action_name != 'index'
+    object = opts[:object] || instance_variable_get("@#{var_name}")
     object_needs_replacement = false
 
-    unless object.nil?
-      if (object.is_a? ActiveRecord::Relation)
-        # ActiveRecord::Relation will maintain ties back to the original query.
-        # By replacing it with an array, we can make sure that it only ever
-        # contains the items which have passed auth!.
-        pagination = extract_pagination_from_relation(object)
-        object = object.to_a
-        object_needs_replacement = true
-      end # Now continue as a normal Enumberable
-      if (object.is_a? Enumerable)
-        object = object.to_a # In case of a non-Array Enumerable
-        object.delete_if {|o| cannot?(test_action, o)}
-        if new_exception && object.empty?
-          # Parent will be Object for Concerto, or the module for Plugins.
-          # BK ## Tuesday, 25.June 2024 18:03
-          # .parent was removed in rails7
-          # Object is correct for Concerto itself
-          # what is the "correct" way to determine if this is called from a plugin controller?
-          # remove for now
-          # TBD_HTW
-          # new_parent = self.class.parent
-          new_parent = Object
-          class_name =  controller_name.singularize.classify
-          new_class = new_parent.const_get(class_name) if new_parent.const_defined?(class_name)
-          new_object = new_class.new if !new_class.nil?
-          return true if can?(:create, new_object)
-        end
-        if !allow_empty && object.empty?
-          fake_cancan = Class.new.extend(CanCan::Ability)
-          message ||= fake_cancan.unauthorized_message(test_action, object.class)
-          raise CanCan::AccessDenied.new(message, test_action, object.class)
-        end
-        object = reapply_pagination(object, pagination) unless pagination.nil?
-        if object_needs_replacement
-          # Certain objects (Relations in particular) can't be authorized
-          # by simply modifying them - they need to be replaced with new objects.
-          instance_variable_set("@#{var_name}",object) if opts[:object].nil?
-          return object if !opts[:object].nil?
-        end
-      else
-        if cannot?(test_action, object)
-          fake_cancan = Class.new.extend(CanCan::Ability)
-          message ||= fake_cancan.unauthorized_message(test_action, object.class)
-          raise CanCan::AccessDenied.new(message, test_action, object.class)
-        end
+    return if object.nil?
+
+    if object.is_a? ActiveRecord::Relation
+      # ActiveRecord::Relation will maintain ties back to the original query.
+      # By replacing it with an array, we can make sure that it only ever
+      # contains the items which have passed auth!.
+      pagination = extract_pagination_from_relation(object)
+      object = object.to_a
+      object_needs_replacement = true
+    end
+    if object.is_a? Enumerable
+      object = object.to_a # In case of a non-Array Enumerable
+      object.delete_if { |o| cannot?(test_action, o) }
+      if new_exception && object.empty?
+        # Parent will be Object for Concerto, or the module for Plugins.
+        # BK ## Tuesday, 25.June 2024 18:03
+        # .parent was removed in rails7
+        # Object is correct for Concerto itself
+        # what is the "correct" way to determine if this is called from a plugin controller?
+        # remove for now
+        # TBD_HTW
+        # new_parent = self.class.parent
+        new_parent = Object
+        class_name = controller_name.singularize.classify
+        new_class = new_parent.const_get(class_name) if new_parent.const_defined?(class_name)
+        new_object = new_class.new unless new_class.nil?
+        return true if can?(:create, new_object)
       end
+      if !allow_empty && object.empty?
+        fake_cancan = Class.new.extend(CanCan::Ability)
+        message ||= fake_cancan.unauthorized_message(test_action, object.class)
+        raise CanCan::AccessDenied.new(message, test_action, object.class)
+      end
+      object = reapply_pagination(object, pagination) unless pagination.nil?
+      if object_needs_replacement
+        # Certain objects (Relations in particular) can't be authorized
+        # by simply modifying them - they need to be replaced with new objects.
+        instance_variable_set("@#{var_name}", object) if opts[:object].nil?
+        object unless opts[:object].nil?
+      end
+    elsif cannot?(test_action, object)
+      fake_cancan = Class.new.extend(CanCan::Ability)
+      message ||= fake_cancan.unauthorized_message(test_action, object.class)
+      raise CanCan::AccessDenied.new(message, test_action, object.class)
     end
   end
 
@@ -383,21 +367,18 @@ class ApplicationController < ActionController::Base
   def extract_pagination_from_relation(relation)
     if relation.loaded?
       # Can't do anything once the query has been executed.
-      return nil
+      nil
     elsif relation.singleton_class.include? Kaminari::PageScopeMethods
-     # This relation has had Kaminari's .page() method applied
-     page = relation.current_page
-     per = relation.limit_value
-     offset = relation.offset_value
-     # Reset the relation to the pre-pagination query as best we can.
-     # If Kaminari's padding() method was used, the padding will be
-     # applied before auth.
-     relation.limit_value = nil
-     relation.offset_value = [0,offset-(page-1)*per].max
-     return {page: page, per: per}
-    else
-     # Not paginated, we don't need to do anything.
-     return nil
+      # This relation has had Kaminari's .page() method applied
+      page = relation.current_page
+      per = relation.limit_value
+      offset = relation.offset_value
+      # Reset the relation to the pre-pagination query as best we can.
+      # If Kaminari's padding() method was used, the padding will be
+      # applied before auth.
+      relation.limit_value = nil
+      relation.offset_value = [0, offset - ((page - 1) * per)].max
+      { page:, per: }
     end
   end
 
@@ -405,12 +386,10 @@ class ApplicationController < ActionController::Base
     if pagination.is_a? Hash
       page = pagination[:page]
       per = pagination[:per]
-      if page.is_a? Numeric and per.is_a? Numeric
-       return Kaminari.paginate_array(arr).page(page).per(per)
-      end
+      return Kaminari.paginate_array(arr).page(page).per(per) if page.is_a?(Numeric) && per.is_a?(Numeric)
     end
     # If there was no pagination, we need to do nothing.
-    return arr
+    arr
   end
 
   # Cross-Origin Resource Sharing for JS interfaces
@@ -427,7 +406,7 @@ class ApplicationController < ActionController::Base
   end
 
   # Redirect the user to the dashboard after signing in.
-  def after_sign_in_path_for(resource)
+  def after_sign_in_path_for(_resource)
     dashboard_path
   end
 
@@ -454,12 +433,11 @@ class ApplicationController < ActionController::Base
     # and member_name
     redact_pii = true # set accordingly from config
     if opts.include?(:params) && redact_pii
-      opts[:params].delete(:user_name)  if opts[:params].include?(:user_name)
-      opts[:params].delete(:owner_name)  if opts[:params].include?(:owner_name)
-      opts[:params].delete(:member_name)  if opts[:params].include?(:member_name)
+      opts[:params].delete(:user_name) if opts[:params].include?(:user_name)
+      opts[:params].delete(:owner_name) if opts[:params].include?(:owner_name)
+      opts[:params].delete(:member_name) if opts[:params].include?(:member_name)
     end
 
     opts
   end
-
 end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class RenameTypeToKind < ActiveRecord::Migration[7.1]
   def self.up
     rename_table :types, :kinds

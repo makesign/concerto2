@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'test_helper'
 
 class SharedFieldAbilityTest < ActiveSupport::TestCase
@@ -7,14 +9,14 @@ class SharedFieldAbilityTest < ActiveSupport::TestCase
     @field = fields(:one)
   end
 
-  test "anyone can read fields" do
+  test 'anyone can read fields' do
     [@user, @screen].each do |thing|
       ability = Ability.new(thing)
       assert ability.can?(:read, @field)
     end
   end
 
-  test "no one can update / delete fields" do
+  test 'no one can update / delete fields' do
     [@user, @screen].each do |thing|
       ability = Ability.new(thing)
       assert ability.cannot?(:update, @field)
@@ -22,4 +24,3 @@ class SharedFieldAbilityTest < ActiveSupport::TestCase
     end
   end
 end
-

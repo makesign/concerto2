@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class PagesController < ApplicationController
   # GET /pages
   def index
@@ -8,7 +10,7 @@ class PagesController < ApplicationController
   # GET /pages/1
   def show
     @page = Page.find_by(slug: params[:id])
-    @file_path = File.join(Rails.root, "app", "views", "pages", @page.title.parameterize + ".#{@page.language}" +".md")
+    @file_path = File.join(Rails.root, 'app', 'views', 'pages', "#{@page.title.parameterize}.#{@page.language}.md")
     @markdown = Redcarpet::Markdown.new(Redcarpet::Render::HTML, autolink: true, space_after_headers: true)
     auth!
   end
@@ -22,7 +24,7 @@ class PagesController < ApplicationController
   # GET /pages/1/edit
   def edit
     @page = Page.find_by(slug: params[:id])
-    @file_path = File.join(Rails.root, "app", "views", "pages", @page.title.parameterize + ".#{@page.language}" +".md")
+    @file_path = File.join(Rails.root, 'app', 'views', 'pages', "#{@page.title.parameterize}.#{@page.language}.md")
     auth!
   end
 
@@ -57,8 +59,9 @@ class PagesController < ApplicationController
   end
 
   private
-    # Only allow a trusted parameter "white list" through.
-    def page_params
-      params.require(:page).permit(:category, :language, :title, :body)
-    end
+
+  # Only allow a trusted parameter "white list" through.
+  def page_params
+    params.require(:page).permit(:category, :language, :title, :body)
+  end
 end

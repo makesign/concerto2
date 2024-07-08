@@ -1,11 +1,12 @@
-Rails.logger.debug "Starting #{File.basename(__FILE__)} at #{Time.now.to_s}"
-Rails.logger.debug "---- SKIP 00-inflections which was basically a db:migrate from the app... -----"
+# frozen_string_literal: true
+
+Rails.logger.debug "Starting #{File.basename(__FILE__)} at #{Time.now}"
+Rails.logger.debug '---- SKIP 00-inflections which was basically a db:migrate from the app... -----'
 # ## Saturday, 22.June 2024 09:39
 
-
-#Checks current migration status of Concerto and migrates to any more recent migration version available
-#Creates and migrates the database if it doesn't yet exist
-#Implementation based on http://trevorturk.wordpress.com/2008/04/10/automatically-creating-loading-and-migrating-your-database/
+# Checks current migration status of Concerto and migrates to any more recent migration version available
+# Creates and migrates the database if it doesn't yet exist
+# Implementation based on http://trevorturk.wordpress.com/2008/04/10/automatically-creating-loading-and-migrating-your-database/
 
 # require 'benchmark'
 
@@ -19,11 +20,11 @@ Rails.logger.debug "---- SKIP 00-inflections which was basically a db:migrate fr
 #   if railtie.respond_to?(:paths) && (path = railtie.paths['db/migrate'].first)
 #     railties[railtie.railtie_name] = path
 #   end
-# 
+#
 #   on_copy = Proc.new do |name, migration, old_path|
 #     puts "Copied migration #{migration.basename} from #{name}"
 #   end
-# 
+#
 #   ActiveRecord::Migration.copy(
 #     ActiveRecord::Migrator.migrations_paths.first,
 #     railties,
@@ -37,13 +38,13 @@ Rails.logger.debug "---- SKIP 00-inflections which was basically a db:migrate fr
 # concerto_base_config = YAML.load_file("./config/concerto.yml")
 # if concerto_base_config['automatic_database_installation'] == true && !is_manual_migration
 
-  # Database creation and migration
-  # Notes:
-  #  - Is the rescue really needed?
-  #  - This is very fast, but does not account for the possibility of
-  #    unrun migrations with an older timestamp. Rails supports detection
-  #    and execution of those migrations with db:migrate, but the code
-  #    below does not.
+# Database creation and migration
+# Notes:
+#  - Is the rescue really needed?
+#  - This is very fast, but does not account for the possibility of
+#    unrun migrations with an older timestamp. Rails supports detection
+#    and execution of those migrations with db:migrate, but the code
+#    below does not.
 
 #   require 'timeout'
 #   #when the loop times out, "Timeout::Error: execution expired" is returned
@@ -56,13 +57,13 @@ Rails.logger.debug "---- SKIP 00-inflections which was basically a db:migrate fr
 #       Rails.logger.warn "Attempt to migrate in initializer 01 timed out"
 #     end
 #   }
-# 
+#
 #   unless File.exist?("tmp/migration_tempfile")
 #     #The Concerto Git repo doesn't include a tmp directory, and if it isn't created here, things crash
 #     FileUtils.mkdir_p('tmp')
 #     #write a temporary file to indicate a migration is in progress
 #     File.open("tmp/migration_tempfile", "w") {}
-# 
+#
 #     begin
 #       current_version = ActiveRecord::Migrator.current_version
 #       #Grab the timestamp from each migration filename, and run max() on the resulting array
@@ -89,7 +90,7 @@ Rails.logger.debug "---- SKIP 00-inflections which was basically a db:migrate fr
 #     end
 #   end
 # end
-# 
+#
 # File.delete("tmp/migration_tempfile") if File.exist?("tmp/migration_tempfile")
 
-Rails.logger.debug "Completed #{File.basename(__FILE__)} at #{Time.now.to_s}"
+Rails.logger.debug "Completed #{File.basename(__FILE__)} at #{Time.now}"

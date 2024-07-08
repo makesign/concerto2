@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateFeeds < ActiveRecord::Migration[7.1]
   def self.up
     create_table :feeds do |t|
