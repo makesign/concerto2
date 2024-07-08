@@ -3,6 +3,15 @@
 rails: open
 - rails server
 
+ci-test: bundle-audit brakeman rubocop
+
+bundle-audit:
+- bin/bundle-audit --update
+brakeman:
+- bin/brakeman -q -w3
+rubocop:
+- bin/rubocop --parallel
+
 tests-questions:
 - git show --name-only 8dc6d81
 
