@@ -119,7 +119,8 @@ class ConcertoPluginsController < ApplicationController
   def update_gem
     results = {}
     plugin = ConcertoPlugin.find(params[:id])
-    results[:bundle_output] = `bundle update --source #{plugin.gem_name} 2>&1`
+    # Todo (see issue #) - das machen wir mal einfach nicht.
+    # results[:bundle_output] = `bundle update --source #{plugin.gem_name} 2>&1`
     results[:bundle_success] = $CHILD_STATUS.success?
 
     if results[:bundle_success]
