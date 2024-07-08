@@ -1,14 +1,15 @@
-source "https://rubygems.org"
+# frozen_string_literal: true
 
+source 'https://rubygems.org'
 
-ruby "3.3.3"
+ruby '3.3.3'
 
 # workaround for net-pop till fixed with ruby 3.3.4
 gem 'net-pop', github: 'ruby/net-pop'
 
 # TBD: is nokogiri still needed in rails 7?
 # gem 'nokogiri', '~> 1.13', '>= 1.13.10' # pin while on ruby < 2.7
-gem "rails", "~> 7.1.3", ">= 7.1.3.4"
+gem 'rails', '~> 7.1.3', '>= 7.1.3.4'
 
 # Get the absolute path of this Gemfile so the includes below still work
 # when the current directory for a bundler command isn't the application's
@@ -22,13 +23,13 @@ basedir = File.dirname(__FILE__)
 # through the ConcertoPlugins controller.
 
 group :concerto_plugins do
-  gem "concerto_calendar"
-  gem "concerto_frontend"
-  gem "concerto_hardware"
+  gem 'concerto_calendar'
+  gem 'concerto_frontend'
+  gem 'concerto_hardware'
   # gem "concerto_iframe"
-  gem "concerto_remote_video"
-  gem "concerto_simple_rss"
-# gem "concerto_weather", :git => 'https://github.com/concerto/concerto-weather.git', :branch => 'rails5'
+  gem 'concerto_remote_video'
+  gem 'concerto_simple_rss'
+  # gem "concerto_weather", :git => 'https://github.com/concerto/concerto-weather.git', :branch => 'rails5'
 end
 
 # Load a local Gemfile if it exists
@@ -37,27 +38,27 @@ eval File.read("#{basedir}/Gemfile.local") if File.exist?("#{basedir}/Gemfile.lo
 # ConcertoPlugins end
 
 # The original asset pipeline for Rails [https://github.com/rails/sprockets-rails]
-gem "sprockets-rails"
+gem 'sprockets-rails'
 
 # Use sqlite3 as the database for Active Record
-gem "sqlite3", "~> 1.4"
+gem 'sqlite3', '~> 1.4'
 
 # new rails gems (somewhere between rails 3 and rails 7)
 
 # Use the Puma web server [https://github.com/puma/puma]
-gem "puma", ">= 5.0"
+gem 'puma', '>= 5.0'
 
 # Use JavaScript with ESM import maps [https://github.com/rails/importmap-rails]
-gem "importmap-rails"
+gem 'importmap-rails'
 
 # Hotwire's SPA-like page accelerator [https://turbo.hotwired.dev]
-gem "turbo-rails"
+gem 'turbo-rails'
 
 # Hotwire's modest JavaScript framework [https://stimulus.hotwired.dev]
-gem "stimulus-rails"
+gem 'stimulus-rails'
 
 # Build JSON APIs with ease [https://github.com/rails/jbuilder]
-gem "jbuilder"
+gem 'jbuilder'
 
 # Use Redis adapter to run Action Cable in production
 # gem "redis", ">= 4.0.1"
@@ -69,22 +70,22 @@ gem "jbuilder"
 # gem "bcrypt", "~> 3.1.7"
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
-gem "tzinfo-data", platforms: %i[ windows jruby ]
+gem 'tzinfo-data', platforms: %i[windows jruby]
 
 # Reduces boot times through caching; required in config/boot.rb
-gem "bootsnap", require: false
+gem 'bootsnap', require: false
 
 # Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
-gem "image_processing", "~> 1.2"
+gem 'image_processing', '~> 1.2'
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
-  gem "debug", platforms: %i[ mri windows ]
+  gem 'debug', platforms: %i[mri windows]
 end
 
 group :development do
   # Use console on exceptions pages [https://github.com/rails/web-console]
-  gem "web-console"
+  gem 'web-console'
 
   # Add speed badges [https://github.com/MiniProfiler/rack-mini-profiler]
   # gem "rack-mini-profiler"
@@ -95,56 +96,44 @@ end
 
 group :test do
   # Use system testing [https://guides.rubyonrails.org/testing.html#system-testing]
-  gem "capybara"
-  gem "selenium-webdriver"
+  gem 'capybara'
+  gem 'selenium-webdriver'
   gem 'simplecov'
 end
 
+gem 'cancancan', '~> 3.6'
 gem 'devise'
-gem "cancancan", "~> 3.6"
 
 # extra gems in concerto
 
-
-
-
-
-
-
-gem "mime-types", "~> 3.5"
+gem 'mime-types', '~> 3.5'
 # https://github.com/rails/dartsass-rails
-gem "dartsass-rails", "~> 0.5.0"
+gem 'dartsass-rails', '~> 0.5.0'
 
-gem "delayed_job", "~> 4.1"
+gem 'delayed_job', '~> 4.1'
 
-gem "kaminari", "~> 1.2"
+gem 'kaminari', '~> 1.2'
 
-gem "octokit", "~> 9.1"
+gem 'octokit', '~> 9.1'
 
+gem 'font-awesome-sass', '~> 6.5'
 
+gem 'bootstrap', '~> 5.3'
 
-gem "font-awesome-sass", "~> 6.5"
+gem 'faraday-retry', '~> 2.2'
 
+gem 'rmagick', '~> 6.0'
 
+gem 'faraday-multipart', '~> 1.0'
 
-gem "bootstrap", "~> 5.3"
+gem 'rails-controller-testing', '~> 1.0'
 
+gem 'rails-mermaid_erd', '~> 0.5.0'
 
+gem 'redcarpet', '~> 3.6'
 
-gem "faraday-retry", "~> 2.2"
+gem 'bundler-audit', '~> 0.9.1'
 
-gem "rmagick", "~> 6.0"
+gem 'brakeman', '~> 6.1'
 
-gem "faraday-multipart", "~> 1.0"
-
-gem "rails-controller-testing", "~> 1.0"
-
-gem "rails-mermaid_erd", "~> 0.5.0"
-
-gem "redcarpet", "~> 3.6"
-
-gem "bundler-audit", "~> 0.9.1"
-
-gem "brakeman", "~> 6.1"
-
-gem "rubocop", "~> 1.64"
+gem 'rubocop', '~> 1.64'

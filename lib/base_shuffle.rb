@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Implement a simple Base Shuffle algorithm.
 # A simple approach that just grabs all the content
 # without shuffling it or weighing it.
@@ -34,6 +36,6 @@ class BaseShuffle
   private
 
   def content
-    @subscriptions.collect{|s| s.contents }.flatten
+    @subscriptions.collect(&:contents).flatten
   end
 end

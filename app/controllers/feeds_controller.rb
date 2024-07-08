@@ -1,8 +1,10 @@
+# frozen_string_literal: true
+
 class FeedsController < ApplicationController
   rescue_from ActionView::Template::Error, with: :precompile_error_catch
   respond_to :html, :json
   responders :flash
-  
+
   # GET /feeds
   # GET /feeds.xml
   # GET /feeds.js
@@ -31,11 +33,11 @@ class FeedsController < ApplicationController
     # if a user can moderate a feed, because they have that membership permission :submission, then even
     # though they cannot edit a feed, they can still moderate the content, so change the action below from update to moderate
     auth!(object: @feeds, action: :moderate, allow_empty: false)
-    @feeds.to_a.reject!{|f| not f.pending_contents.count > 0}
-    
+    @feeds.to_a.select! { |f| f.pending_contents.count.positive? }
+
     respond_to do |format|
-      format.html { }
-      format.js { }
+      format.html {}
+      format.js {}
     end
   end
 
@@ -58,10 +60,10 @@ class FeedsController < ApplicationController
   def new
     @feed = Feed.new
     auth!
-    
-    #populate the checkboxes for content types by default when creating a new feed
+
+    # populate the checkboxes for content types by default when creating a new feed
     Rails.application.config.content_types.each do |type|
-      @feed.content_types[type.name] = "1"
+      @feed.content_types[type.name] = '1'
     end
 
     respond_to do |format|
@@ -82,7 +84,7 @@ class FeedsController < ApplicationController
     @feed = Feed.new(feed_params)
     auth!
     if @feed.save
-      process_notification(@feed, {}, process_notification_options({params: {feed_name: @feed.name}}))
+      process_notification(@feed, {}, process_notification_options({ params: { feed_name: @feed.name } }))
       flash[:notice] = t(:feed_created)
     end
     respond_with(@feed)
@@ -96,11 +98,11 @@ class FeedsController < ApplicationController
 
     respond_to do |format|
       if @feed.update(feed_params)
-        process_notification(@feed, {}, process_notification_options({params: {feed_name: @feed.name}}))
+        process_notification(@feed, {}, process_notification_options({ params: { feed_name: @feed.name } }))
         format.html { redirect_to(feed_submissions_path(@feed), notice: t(:feed_updated)) }
         format.xml  { head :ok }
       else
-        format.html { render action: "edit" }
+        format.html { render action: 'edit' }
         format.xml  { render xml: @feed.errors, status: :unprocessable_entity }
       end
     end
@@ -111,16 +113,16 @@ class FeedsController < ApplicationController
   def destroy
     @feed = Feed.find(params[:id])
     auth!
-    process_notification(@feed, {}, process_notification_options({params: {feed_name: @feed.name}}))
+    process_notification(@feed, {}, process_notification_options({ params: { feed_name: @feed.name } }))
     @feed.destroy
     respond_with(@feed)
   end
 
-private
+  private
 
   def feed_params
-    types = Rails.application.config.content_types.map{|t| t.name.to_sym}
-    params.require(:feed).permit(:name, :description, :parent_id, :group_id, :is_viewable, :is_submittable, content_types: types)
+    types = Rails.application.config.content_types.map { |t| t.name.to_sym }
+    params.require(:feed).permit(:name, :description, :parent_id, :group_id, :is_viewable, :is_submittable,
+                                 content_types: types)
   end
-
 end

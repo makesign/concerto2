@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Feed < ActiveRecord::Base
   include ActiveModel::ForbiddenAttributesProtection
 
@@ -10,32 +12,38 @@ class Feed < ActiveRecord::Base
   serialize :content_types, type: Hash, coder: YAML # see https://api.rubyonrails.org/v7.1.2/classes/ActiveRecord/AttributeMethods/Serialization/ClassMethods.html
 
   # Scoped relations for content approval states
-  has_many :approved_contents, -> { where "submissions.moderation_flag" => true}, through: :submissions, source: :content
-  has_many :pending_contents, -> { where "submissions.moderation_flag IS NULL"}, through: :submissions, source: :content
-  has_many :denied_contents, -> { where "submissions.moderation_flag" => false}, through: :submissions, source: :content
+  has_many :approved_contents, lambda {
+                                 where 'submissions.moderation_flag' => true
+                               }, through: :submissions, source: :content
+  has_many :pending_contents, lambda {
+                                where 'submissions.moderation_flag IS NULL'
+                              }, through: :submissions, source: :content
+  has_many :denied_contents, lambda {
+                               where 'submissions.moderation_flag' => false
+                             }, through: :submissions, source: :content
 
   # Validations
   validates :name, presence: true, uniqueness: true
 
   validate :parent_id_cannot_be_this_feed
 
-  #Newsfeed
+  # Newsfeed
   include PublicActivity::Common if defined? PublicActivity::Common
 
   # Generate a unique list of screens on which this feed appears
   def shown_on_screens
-    return subscriptions.collect{|s| s.screen }.uniq
+    subscriptions.collect(&:screen).uniq
   end
 
   def parent_id_cannot_be_this_feed
-    if !parent_id.blank? and parent_id == id
-      errors.add(:parent_id, I18n.t(:cant_be_this_feed))
-    end
+    return unless !parent_id.blank? && (parent_id == id)
+
+    errors.add(:parent_id, I18n.t(:cant_be_this_feed))
   end
 
   # Feed Hierarchy
-  belongs_to :parent, optional: true, class_name: "Feed"
-  has_many :children, class_name: "Feed", foreign_key: "parent_id"
+  belongs_to :parent, optional: true, class_name: 'Feed'
+  has_many :children, class_name: 'Feed', foreign_key: 'parent_id'
 
   default_scope { order 'LOWER(feeds.name)' }
   scope :roots, -> { where parent_id: nil }
@@ -50,7 +58,8 @@ class Feed < ActiveRecord::Base
   # up the tree.
   # Compliments of DHH http://github.com/rails/acts_as_tree
   def ancestors
-    node, nodes = self, []
+    node = self
+    nodes = []
     nodes << node = node.parent while node.parent
     nodes
   end
@@ -60,13 +69,16 @@ class Feed < ActiveRecord::Base
   # climbs down a tree.
   # Compliments of http://github.com/funkensturm/acts_as_category
   def descendants
-    node, nodes = self, []
-    node.children.each { |child|
-      if !nodes.include?(child) #Try and stop any circular dependencies
-        nodes += [child]
-        nodes += child.descendants
+    node = self
+    nodes = []
+    unless node.children.empty?
+      node.children.each do |child|
+        unless nodes.include?(child) # Try and stop any circular dependencies
+          nodes += [child]
+          nodes += child.descendants
+        end
       end
-    } unless node.children.empty?
+    end
     nodes
   end
 
@@ -85,7 +97,7 @@ class Feed < ActiveRecord::Base
   # [All accessible feeds - currently subscribed]
   def self.subscribable(screen, field)
     subscriptions = Subscription.where(screen_id: screen, field_id: field)
-    current_feeds = subscriptions.collect{ |s| s.feed }
+    current_feeds = subscriptions.collect(&:feed)
 
     accessible_feeds = Feed.accessible_by(Ability.new(screen), :read)
     accessible_feeds - current_feeds
@@ -95,11 +107,11 @@ class Feed < ActiveRecord::Base
   # This is a list of all the pending submissions minus dynamic content who have
   # a parent pending moderation (since that moderation will propogate automatically).
   def submissions_to_moderate
-    moderate = self.submissions.pending.to_a
-    moderate_content = moderate.collect{|s| s.content}
+    moderate = submissions.pending.to_a
+    moderate_content = moderate.collect(&:content)
     moderate.reject! do |s|
       !s.content.parent.nil? && moderate_content.include?(s.content.parent)
     end
-    return moderate
+    moderate
   end
 end

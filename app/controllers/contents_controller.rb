@@ -1,5 +1,7 @@
+# frozen_string_literal: true
+
 class ContentsController < ApplicationController
-  before_action :get_content_const, only: [:new, :create, :update, :preview]
+  before_action :get_content_const, only: %i[new create update preview]
   respond_to :html, :json, :js
   after_action :allow_iframe, only: :preview
 
@@ -11,7 +13,7 @@ class ContentsController < ApplicationController
   # additional error checking.
   def get_content_const
     content_types = Rails.application.config.content_types + Rails.application.config._unused_content_types_
-    content_models = content_types.map{ |type| type.model_name.singular }
+    content_models = content_types.map { |type| type.model_name.singular }
 
     unless params[:type].blank?
       content_models.each do |model|
@@ -20,7 +22,7 @@ class ContentsController < ApplicationController
       end
     end
 
-    @content_const ||= nil
+    @get_content_const ||= nil
   end
 
   def index
@@ -29,7 +31,7 @@ class ContentsController < ApplicationController
 
     respond_to do |format|
       format.html
-      format.js {render json: @content}
+      format.js { render json: @content }
     end
   end
 
@@ -41,7 +43,6 @@ class ContentsController < ApplicationController
     auth!
 
     respond_with(@content)
-
   rescue ActiveRecord::RecordNotFound
     # while it could be returned as a 404, we should keep the user in the application
     # render text: "Requested content not found", status: 404
@@ -60,11 +61,10 @@ class ContentsController < ApplicationController
     if @content_const.nil? || !@content_const.ancestors.include?(Content)
       Rails.logger.debug "Content type #{@content_const} found not OK, trying default."
       default_upload_type = ConcertoConfig[:default_upload_type]
-      if !default_upload_type
-        raise t(:missing_default_type)
-      else
-        @content_const = default_upload_type.camelize.constantize
-      end
+      raise t(:missing_default_type) unless default_upload_type
+
+      @content_const = default_upload_type.camelize.constantize
+
     end
 
     # We don't recognize the requested content type, or
@@ -72,7 +72,7 @@ class ContentsController < ApplicationController
     if @content_const.nil? || !@content_const.ancestors.include?(Content)
       render text: t(:unrecognized_type), status: 400
     else
-      @content = @content_const.new()
+      @content = @content_const.new
       @content.duration = ConcertoConfig[:default_content_duration].to_i
       auth!
       @feeds = submittable_feeds
@@ -84,9 +84,7 @@ class ContentsController < ApplicationController
     @feed = Feed.find(params[:feed_id])
     @feed_index = params[:feed_index]
 
-    respond_to do |format|
-      format.js
-    end
+    respond_to(&:js)
   end
 
   # GET /contents/1/edit
@@ -104,11 +102,12 @@ class ContentsController < ApplicationController
     if prams.include?(:media_attributes)
       # pull out the media_id otherwise, new will try to find it even though it's not yet linked
       media_attributes = prams[:media_attributes]
-      media_attributes.each { |key, attribute|
+      media_attributes.each do |key, attribute|
         next if !attribute.include?(:id) || attribute[:id].blank?
+
         media_ids << attribute[:id]
         prams[:media_attributes][key].delete :id
-      }
+      end
     end
     # some content, like the ticker_text, can have a kind other than it's model's default
     if prams.include?(:kind_id)
@@ -116,21 +115,21 @@ class ContentsController < ApplicationController
       prams.delete :kind_id
     end
     @content = @content_const.new(prams)
-    @content.kind = kind if !kind.nil?
+    @content.kind = kind unless kind.nil?
     @content.user = current_user
     auth!
 
     @feed_ids = feed_ids
 
     remove_empty_media_param
-    if !media_ids.empty?
+    unless media_ids.empty?
       @content.media.clear
       media_ids.each do |media_id|
         # if the media_id was passed in then there is an existing media
         # record that needs to be attached to this content
         @media = Media.find(media_id)
         # only reassign if not already assigned
-        if @media[:key] == 'preview' && @media[:attachable_id] == 0
+        if @media[:key] == 'preview' && (@media[:attachable_id]).zero?
           @media[:key] = 'original'
           @content.media.concat(@media)
         end
@@ -145,24 +144,23 @@ class ContentsController < ApplicationController
         results = false
         flash.now[:error] = e.message
       rescue StandardError => e
-         results = false
-         flash.now[:error] = e.message
+        results = false
+        flash.now[:error] = e.message
       end
       if results
         process_content_notification action_name
         # Copy over the duration to each submission instance
         create_submissions
-        @content.save #This second save adds the submissions
+        @content.save # This second save adds the submissions
         if @feed_ids == []
           format.html { redirect_to(@content, notice: t(:content_created_no_feeds)) }
-          format.xml { render xml: @content, status: :created, location: @content }
         else
           format.html { redirect_to(@content, notice: t(:content_created)) }
-          format.xml { render xml: @content, status: :created, location: @content }
         end
+        format.xml { render xml: @content, status: :created, location: @content }
       else
         @feeds = submittable_feeds
-        format.html { render action: "new" }
+        format.html { render action: 'new' }
         format.xml { render xml: @content.errors, status: :unprocessable_entity }
       end
     end
@@ -213,22 +211,19 @@ class ContentsController < ApplicationController
       submissions.each do |submission|
         if @feed_ids.include? submission.feed_id
           # set the "needs moderated" flag if they cannot moderate the submission
-          submission.update(moderation_flag: nil) if !can?(:update, submission)
+          submission.update(moderation_flag: nil) unless can?(:update, submission)
         else
           submission.mark_for_destruction
         end
       end
-      submitted_feeds = submissions.map { |s| s.feed_id }
+      submitted_feeds = submissions.map(&:feed_id)
       @feed_ids.reject! { |id| submitted_feeds.include? id }
       create_submissions
-      if @content.save
-        flash[:notice] = t(:content_updated)
-      end
-      respond_with(@content)
+      flash[:notice] = t(:content_updated) if @content.save
     else
       @feeds = submittable_feeds
-      respond_with(@content)
     end
+    respond_with(@content)
   end
 
   # DELETE /contents/1
@@ -253,13 +248,12 @@ class ContentsController < ApplicationController
   def display
     # To support graphic preview where there isnt any content yet, create an unsaved
     # piece of content owned by the current user and associate the preview media with it.
-    if params[:id] == "preview" && params[:type].present?
+    if params[:id] == 'preview' && params[:type].present?
       get_content_const
       @content = @content_const.new(user: current_user)
       media = Media.valid_preview(params[:media_id])
-      if media.nil?
-        raise ActiveRecord::RecordNotFound
-      end
+      raise ActiveRecord::RecordNotFound if media.nil?
+
       @content.media << media
     else
       @content = Content.find(params[:id])
@@ -267,15 +261,17 @@ class ContentsController < ApplicationController
 
     auth!(action: :read)
     # if handling graphic preview (the content id is 0), force a render
-    if params[:id] == "preview" || stale?(etag: @content, last_modified: @content.updated_at.utc, public: true)
-      @file = nil
-      data = nil
-      benchmark("Content#render") do
-        @file = @content.render(params)
-        data = @file.file_contents
-      end
-      send_data data, filename: @file.file_name, type: @file.file_type, disposition: 'inline'
+    unless params[:id] == 'preview' || stale?(etag: @content, last_modified: @content.updated_at.utc, public: true)
+      return
     end
+
+    @file = nil
+    data = nil
+    benchmark('Content#render') do
+      @file = @content.render(params)
+      data = @file.file_contents
+    end
+    send_data data, filename: @file.file_name, type: @file.file_type, disposition: 'inline'
   end
 
   # PUT /contents/1/act
@@ -308,17 +304,15 @@ class ContentsController < ApplicationController
 
   # returns the content types preview of the specified data or looked up by id
   def preview
-    data = ""
+    data = ''
     if !params[:data].nil?
       data = params[:data]
     elsif !params[:id].nil?
       content = Content.find(params[:id])
       data = content[:data] unless content.nil?
     end
-    html = "Unrecognized content type"
-    if !@content_const.nil?
-      html = @content_const.preview(data)
-    end
+    html = 'Unrecognized content type'
+    html = @content_const.preview(data) unless @content_const.nil?
     respond_to do |format|
       format.html { render text: html, layout: false }
     end
@@ -328,42 +322,38 @@ class ContentsController < ApplicationController
 
   def process_content_notification(action_name)
     process_notification(@content, {}, process_notification_options({
-      params: {
-        content_name: @content.name,
-        content_type: @content.class.model_name.human
-      },
-      key: "content.#{action_name}"
-    }))
+                                                                      params: {
+                                                                        content_name: @content.name,
+                                                                        content_type: @content.class.model_name.human
+                                                                      },
+                                                                      key: "content.#{action_name}"
+                                                                    }))
   end
 
   def allow_iframe
-    response.headers['X-Frame-Options'] = "ALLOWALL"
+    response.headers['X-Frame-Options'] = 'ALLOWALL'
   end
-
 
   # Restrict the allowed parameters to a select set defined in the model.
   def content_params
     # First we need to figure out the model name.
     content_sym = :content
     attributes = Content.form_attributes
-    if !@content_const.nil?
+    unless @content_const.nil?
       content_sym = @content_const.model_name.singular.to_sym
       attributes = @content_const.form_attributes
     end
 
     # Reach into the model and grab the attributes to accept.
     params.require(content_sym).permit(*attributes)
-
   end
 
   # Use an extra restrictive list of params for content updates.
   def content_update_params
     run_callbacks :update_params do
       @content_sym = :content
-      if !@content_const.nil?
-        @content_sym = @content_const.model_name.singular.to_sym
-      end
-      @attributes = [:name, :data, :duration, {start_time: [:time, :date]}, {end_time: [:time, :date]}]
+      @content_sym = @content_const.model_name.singular.to_sym unless @content_const.nil?
+      @attributes = [:name, :data, :duration, { start_time: %i[time date] }, { end_time: %i[time date] }]
     end
     params.require(@content_sym).permit(*@attributes)
   end
@@ -373,8 +363,8 @@ class ContentsController < ApplicationController
   end
 
   def feed_ids
-    feed_ids = params[:feed_id].values.map(&:to_i) if params.has_key?("feed_id")
-    feed_ids ||= []
+    feed_ids = params[:feed_id].values.map(&:to_i) if params.key?('feed_id')
+    feed_ids || []
   end
 
   def remove_empty_media_param
@@ -384,12 +374,13 @@ class ContentsController < ApplicationController
   def create_submissions
     @feed_ids.each do |feed_id|
       @feed = Feed.find(feed_id)
-      #If a user can moderate the feed in question the content is automatically approved with their imprimatur
-      if can?(:update, @feed)
-        @content.submissions << Submission.new({feed_id: feed_id, duration: @content.duration, moderation_flag: true, moderator_id: current_user.id})
-      else
-        @content.submissions << Submission.new({feed_id: feed_id, duration: @content.duration})
-      end
+      # If a user can moderate the feed in question the content is automatically approved with their imprimatur
+      @content.submissions << if can?(:update, @feed)
+                                Submission.new({ feed_id:, duration: @content.duration, moderation_flag: true,
+                                                 moderator_id: current_user.id })
+                              else
+                                Submission.new({ feed_id:, duration: @content.duration })
+                              end
     end
   end
 end

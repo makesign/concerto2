@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # This migration comes from hardware (originally 20131127201048)
 class AddUpdatesToConcertoHardwarePlayers < ActiveRecord::Migration[7.1]
   def change

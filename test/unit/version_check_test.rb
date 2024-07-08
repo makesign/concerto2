@@ -1,13 +1,15 @@
+# frozen_string_literal: true
+
 require 'test_helper'
 
 class VersionCheckTest < ActiveSupport::TestCase
   # regex comes from https://semver.org
-  PATTERN=/^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$/
+  PATTERN = /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$/
 
   test 'STRING should match pattern' do
     assert PATTERN =~ Concerto::Version::STRING
   end
-  
+
   test 'version check latest version should match pattern' do
     Rails.cache.delete('concerto_version')
     Rails.cache.delete('concerto_version_time')
@@ -18,13 +20,13 @@ class VersionCheckTest < ActiveSupport::TestCase
   end
 
   test 'latest version is cached for 24 hours' do
-    skip "htw_migration: failing test" if (SKIP_HTW_MIGRATION)
+    skip 'htw_migration: failing test' if SKIP_HTW_MIGRATION
     Rails.cache.write('concerto_version', '1')
-    Rails.cache.write('concerto_version_time', Time.now - 86300)
+    Rails.cache.write('concerto_version_time', Time.now - 86_300)
     v = VersionCheck.latest_version
     assert_equal '1', v
 
-    Rails.cache.write('concerto_version_time', Time.now - 86500)
+    Rails.cache.write('concerto_version_time', Time.now - 86_500)
     v = VersionCheck.latest_version
     assert_not_equal '1', v
   end

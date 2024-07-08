@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateFieldConfigs < ActiveRecord::Migration[7.1]
   def change
     create_table :field_configs do |t|

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class V1User < ActiveRecord::Base
   self.table_name = 'user'
   establish_connection :legacy
@@ -6,7 +8,7 @@ end
 class V1Group < ActiveRecord::Base
   self.table_name = 'group'
   has_and_belongs_to_many :users, class_name: 'V1User', join_table: 'user_group',
-                          foreign_key: 'group_id', association_foreign_key: 'user_id'
+                                  foreign_key: 'group_id', association_foreign_key: 'user_id'
   establish_connection :legacy
 end
 
@@ -32,7 +34,7 @@ end
 
 class V1Submission < ActiveRecord::Base
   self.table_name = 'feed_content'
-  establish_connection :legacy  
+  establish_connection :legacy
 end
 
 class V1Template < ActiveRecord::Base

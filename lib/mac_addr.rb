@@ -1,7 +1,8 @@
+# frozen_string_literal: true
+
 # Utilities for working with Mac Addresses.
 # Handy for use with V1-style screen URLs where macs are common.
 module MacAddr
-
   # Condense a mac address to a small string.
   # Strip out any puncuation and leading 0s.
   # If the mac is all 0s then we return a single 0.
@@ -9,13 +10,12 @@ module MacAddr
   # @param mac_addr [String] Mac address.
   # @return [String] The condensed mac address
   def self.condense(mac_addr)
-    mac_addr = mac_addr.downcase.gsub(/[^a-z\d]/,'')
+    mac_addr = mac_addr.downcase.gsub(/[^a-z\d]/, '')
 
     # If the mac address is all 0s then we condense it down to 1 zero
-    return "0" if /^0+$/.match(mac_addr)
+    return '0' if /^0+$/.match(mac_addr)
 
-    mac_addr = mac_addr.gsub(/^0+/,'')
-    return mac_addr
+    mac_addr.gsub(/^0+/, '')
   end
 
   # Expand a mac address to a full string.
@@ -26,7 +26,7 @@ module MacAddr
   def self.expand(mac_addr)
     mac_addr = mac_addr.rjust(12, '0')
     octects = mac_addr.scan(/../)
-    return octects.join(':')
+    octects.join(':')
   end
 
   # Convert int mac address to hex.
@@ -35,7 +35,7 @@ module MacAddr
   # @return [String] Expanded mac address.
   def self.to_hex(int_addr)
     hex = int_addr.to_s(16)
-    return expand(hex)
+    expand(hex)
   end
 
   # Convert mac address to an integer.
@@ -44,7 +44,6 @@ module MacAddr
   # @return [Integer] Integer mac address.
   def self.to_i(hex_addr)
     hex = condense(hex_addr)
-    return hex.to_i(16)
+    hex.to_i(16)
   end
-
 end

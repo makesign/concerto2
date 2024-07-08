@@ -1,6 +1,7 @@
-module ScreensHelper
+# frozen_string_literal: true
 
-  def set_screen_field_data(screen,field)
+module ScreensHelper
+  def set_screen_field_data(screen, field)
     @subscriptions = screen.subscriptions.where(field_id: field.id)
     auth! object: @subscriptions, action: :read
 
@@ -9,7 +10,7 @@ module ScreensHelper
   end
 
   # return screen owner as a link if they are allowed to read the owner record
-  def screen_owner(screen, tip=true)
+  def screen_owner(screen, tip = true)
     path = ((screen.owner.is_a? Group) ? group_path(screen.owner.id) : user_path(screen.owner.id))
     if can? :read, screen.owner
       if tip
@@ -17,12 +18,10 @@ module ScreensHelper
       else
         link_to screen.owner.name, path
       end
+    elsif tip
+      content_tag :span, screen.owner.name, title: t('screens.thumbs.owner')
     else
-      if tip
-        content_tag :span, screen.owner.name, title: t('screens.thumbs.owner')
-      else
-        content_tag :span, screen.owner.name
-      end
+      content_tag :span, screen.owner.name
     end
   end
 end

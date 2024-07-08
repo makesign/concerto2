@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class SubmissionsController < ApplicationController
   before_action :get_feed
   helper :contents
@@ -34,7 +36,7 @@ class SubmissionsController < ApplicationController
     # Other pages may show submissions without a parent to collect them under,
     # so we paginate directly on them there.  This will probably need cleanup at some point.
     if state == 'active'
-      @paginated_submissions = @submissions.select {|s| s.content.parent_id.nil? }
+      @paginated_submissions = @submissions.select { |s| s.content.parent_id.nil? }
       @paginated_submissions = Kaminari.paginate_array(@paginated_submissions)
     else
       @paginated_submissions = @submissions
@@ -44,8 +46,8 @@ class SubmissionsController < ApplicationController
     @state = state
 
     respond_to do |format|
-      format.html { }
-      format.js { }
+      format.html {}
+      format.js {}
     end
   end
 
@@ -74,10 +76,10 @@ class SubmissionsController < ApplicationController
           # child content also has a submission record, and its seq_no should match it's parent, so skip the children here
           next if s.content.parent.present?
 
-          seq_no = seq_no + 1
+          seq_no += 1
           if s.id == @before.id
             reserved_slot = seq_no
-            seq_no = seq_no + 1
+            seq_no += 1
             s.seq_no = seq_no
           elsif s.id == @submission.id
             s.seq_no = reserved_slot
@@ -87,12 +89,9 @@ class SubmissionsController < ApplicationController
           s.save
 
           # keep track of each parent's seq_no so we can set their children
-          if s.content.children_count > 0
-            parent_seq_nos[s.content.id] = s.seq_no
-          end
-        end
-        @submissions.each do |s|
+          parent_seq_nos[s.content.id] = s.seq_no if s.content.children_count.positive?
           next if s.content.parent.blank?
+
           s.seq_no = parent_seq_nos[s.content.parent.id]
           s.save
         end
@@ -107,22 +106,20 @@ class SubmissionsController < ApplicationController
   def show
     @submission = Submission.find(params[:id])
     auth!
-    
+
     # IMPORTANT: .load must be at the end of the collection to eager load and prevent the actual object from being deleted!
     @other_submissions = @submission.content.submissions.to_a
-    
+
     # remove the current submission from the collection of its content's related submissions
     @other_submissions.delete(@submission)
 
     # Enforce the correct feed ID in the URL
-    if @submission.feed != @feed
-      redirect_to feed_submissions_path(params[:feed_id])
-    end
+    redirect_to feed_submissions_path(params[:feed_id]) if @submission.feed != @feed
     auth!
 
     respond_to do |format|
-      format.html { }
-      format.js { }
+      format.html {}
+      format.js {}
     end
   end
 
@@ -135,25 +132,24 @@ class SubmissionsController < ApplicationController
     respond_to do |format|
       if @submission.update(submission_params)
         process_notification(@submission, {}, process_notification_options({
-          params: {
-            status: @submission.moderation_flag,
-            content_name: @submission.content.name,
-            feed_name: @submission.feed.name
-            }, 
-          recipient: @submission.content.user}))
+                                                                             params: {
+                                                                               status: @submission.moderation_flag,
+                                                                               content_name: @submission.content.name,
+                                                                               feed_name: @submission.feed.name
+                                                                             },
+                                                                             recipient: @submission.content.user
+                                                                           }))
         format.html { redirect_to(feed_submissions_path, notice: t(:content_moderated)) }
-        format.js
       else
         format.html { redirect_to(feed_submission_path, notice: t(:content_failed_moderation)) }
-        format.js
       end
+      format.js
     end
   end
 
-private
+  private
 
   def submission_params
     params.require(:submission).permit(:moderation_reason, :moderation_flag, :duration)
   end
-
 end

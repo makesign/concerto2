@@ -1,4 +1,6 @@
-Rails.logger.debug "Starting #{File.basename(__FILE__)} at #{Time.now.to_s}"
+# frozen_string_literal: true
+
+Rails.logger.debug "Starting #{File.basename(__FILE__)} at #{Time.now}"
 
 Kaminari.configure do |config|
   config.default_per_page = 50
@@ -11,4 +13,4 @@ Kaminari.configure do |config|
   # config.param_name = :page
 end
 
-Rails.logger.debug "Completed #{File.basename(__FILE__)} at #{Time.now.to_s}"
+Rails.logger.debug "Completed #{File.basename(__FILE__)} at #{Time.now}"

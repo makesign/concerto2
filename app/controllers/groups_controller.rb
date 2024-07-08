@@ -1,7 +1,9 @@
+# frozen_string_literal: true
+
 class GroupsController < ApplicationController
   respond_to :html, :json, :xml
   responders :flash
-  
+
   # GET /groups
   # GET /groups.xml
   def index
@@ -51,7 +53,7 @@ class GroupsController < ApplicationController
     @group = Group.new(group_params)
     auth!
     if @group.save
-      process_notification(@group, {}, process_notification_options({params: {group_name: @group.name}}))
+      process_notification(@group, {}, process_notification_options({ params: { group_name: @group.name } }))
       flash[:notice] = t(:group_created)
     end
     respond_with(@group)
@@ -62,11 +64,11 @@ class GroupsController < ApplicationController
   def update
     @group = Group.find(params[:id])
     auth!
-    if @group.update(group_params)  
-      process_notification(@group, {}, process_notification_options({params: {group_name: @group.name}}))
-      flash[:notice] = t(:group_updated) 
-    end  
-    respond_with(@group)  
+    if @group.update(group_params)
+      process_notification(@group, {}, process_notification_options({ params: { group_name: @group.name } }))
+      flash[:notice] = t(:group_updated)
+    end
+    respond_with(@group)
   end
 
   # DELETE /groups/1
@@ -74,22 +76,23 @@ class GroupsController < ApplicationController
   def destroy
     @group = Group.find(params[:id])
     auth!
-    #we don't let groups owning screens or feeds get deleted
+    # we don't let groups owning screens or feeds get deleted
     unless @group.is_deletable?
-      redirect_to(@group, notice: t(:group_not_deletable)) 
+      redirect_to(@group, notice: t(:group_not_deletable))
       return
     end
-    
-    process_notification(@group, {}, process_notification_options({params: {group_name: @group.name}}))
+
+    process_notification(@group, {}, process_notification_options({ params: { group_name: @group.name } }))
     @group.destroy
 
-    respond_with(@group) 
+    respond_with(@group)
   end
 
-private
+  private
 
   # Restrict the allowed parameters to a select set defined in the model.
   def group_params
-    params.require(:group).permit(:name, :narrative, :new_leader, memberships_attributes: [:id, {perms: [:screen, :feed]}])
+    params.require(:group).permit(:name, :narrative, :new_leader,
+                                  memberships_attributes: [:id, { perms: %i[screen feed] }])
   end
 end

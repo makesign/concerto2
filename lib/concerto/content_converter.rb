@@ -1,27 +1,28 @@
-module Concerto
+# frozen_string_literal: true
 
+module Concerto
   # Class to convert various mime types for content media
   class ContentConverter
     # To add another converter, add the array of what it handles here, and then in
     # the supported_types method also.  Then in the convert method call your converter.
     DOCSPLIT_TYPES = [
-      "application/msword",
-      "application/pdf",
-      "application/vnd.ms-excel",
-      "application/vnd.ms-powerpoint",
-      "application/vnd.oasis.opendocument.graphics",
-      "application/vnd.oasis.opendocument.presentation",
-      "application/vnd.oasis.opendocument.spreadsheet",
-      "application/vnd.oasis.opendocument.text",
-      "application/vnd.openxmlformats-officedocument.presentationml.presentation",
-      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-      "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-      "image/x-eps"
-    ]
+      'application/msword',
+      'application/pdf',
+      'application/vnd.ms-excel',
+      'application/vnd.ms-powerpoint',
+      'application/vnd.oasis.opendocument.graphics',
+      'application/vnd.oasis.opendocument.presentation',
+      'application/vnd.oasis.opendocument.spreadsheet',
+      'application/vnd.oasis.opendocument.text',
+      'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+      'image/x-eps'
+    ].freeze
 
     # Returns an array of all supported mime-types.
     def self.supported_types
-      return DOCSPLIT_TYPES
+      DOCSPLIT_TYPES
     end
 
     # Delegate the conversion of the media if no processed entries already exist,
@@ -35,11 +36,9 @@ module Concerto
         return media
       end
 
-      if media.size > 0 && DOCSPLIT_TYPES.include?(media[0].file_type)
-        return DocSplitConverter.convert media
-      end
+      return DocSplitConverter.convert media if media.size.positive? && DOCSPLIT_TYPES.include?(media[0].file_type)
 
-      raise Unconvertable.new("Unable to convert the specified type #{media[0].file_type}")
+      raise Unconvertable, "Unable to convert the specified type #{media[0].file_type}"
     end
 
     # When a document cannot be converted, this exception will be raised.
@@ -49,7 +48,7 @@ module Concerto
       end
 
       def to_s
-        @message || "Unable to convert"
+        @message || 'Unable to convert'
       end
     end
 
@@ -65,7 +64,7 @@ module Concerto
       def self.convert(media)
         # write the original media to a file so we can process it and pull it back into media
         original_media = media[0]
-        original_filepath = File.join("/tmp", original_media.file_name)
+        original_filepath = File.join('/tmp', original_media.file_name)
         File.open(original_filepath, 'wb') do |f|
           f.write original_media.file_contents
         end
@@ -74,18 +73,21 @@ module Concerto
         begin
           if original_filepath.end_with?('.pdf') && command?('pdftoppm')
             # scale the longest side to 1920 and maintain the aspect ratio
-            scale="-scale-to 1920"
-            Rails.logger.debug("pdftoppm -singlefile #{scale} -png \"#{original_filepath}\" \"/tmp/#{File.basename(original_filepath,".*")}_1\"")
-            `pdftoppm -singlefile #{scale} -png "#{original_filepath}" "/tmp/#{File.basename(original_filepath, ".*")}_1"`
+            scale = '-scale-to 1920'
+            Rails.logger.debug("pdftoppm -singlefile #{scale} -png \"#{original_filepath}\" \"/tmp/#{File.basename(
+              original_filepath, '.*'
+            )}_1\"")
+            `pdftoppm -singlefile #{scale} -png "#{original_filepath}" "/tmp/#{File.basename(original_filepath,
+                                                                                             '.*')}_1"`
           else
-            Docsplit.extract_images("#{original_filepath}", density: 300, pages: 1, format: 'png', output: "/tmp")
+            Docsplit.extract_images(original_filepath.to_s, density: 300, pages: 1, format: 'png', output: '/tmp')
           end
           # if all went well, get the new filename... which has the _pageno appended to it
-          new_filename = "#{File.basename(original_filepath,".*")}_1.png"
-          new_filepath = File.join( File.dirname(original_filepath), new_filename)
+          new_filename = "#{File.basename(original_filepath, '.*')}_1.png"
+          new_filepath = File.join(File.dirname(original_filepath), new_filename)
 
           # ... and load into into the new media...
-          image = Magick::Image::read(new_filepath).first
+          image = Magick::Image.read(new_filepath).first
           image.alpha(Magick::DeactivateAlphaChannel)
           new_media = Media.new(
             attachable: original_media.attachable,
@@ -98,10 +100,10 @@ module Concerto
           media << new_media
           File.delete(original_filepath) if File.exist?(original_filepath)
           File.delete(new_filepath) if File.exist?(new_filepath)
-          return media
+          media
         rescue Docsplit::ExtractionFailed => e
           Rails.logger.error(e.message.chomp)
-          raise Unconvertable.new("Unable to convert #{original_media.file_name}")
+          raise Unconvertable, "Unable to convert #{original_media.file_name}"
         end
       end
     end

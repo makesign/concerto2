@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class TextContent < Content
   # Validations
   validates :duration, numericality: { greater_than: 0 }
@@ -5,13 +7,13 @@ class TextContent < Content
 
   # make sure the data only contains authorized html tags
   def sanitize_html
-    self.data = self.class.clean_html(self.data) unless self.data.nil?
+    self.data = self.class.clean_html(data) unless data.nil?
   end
 
   # if markdown text is present in ticker, it will be converted to html
   # and cleaned before it is saved
   def process_markdown
-    self.data = self.class.convert_markdown(self.data)
+    self.data = self.class.convert_markdown(data)
     sanitize_html
   end
 
@@ -23,9 +25,11 @@ class TextContent < Content
   # clear out the unapproved html tags
   def self.clean_html(html)
     # sanitize gem erased '<<<'' whereas ActionView's was more discerning
+    return if html.nil?
+
     ActionController::Base.helpers.sanitize(html,
-      tags: %w(h1 h2 h3 h4 div b br i em li ol u ul p q small strong),
-      attributes: %w(style class)) unless html.nil?
+                                            tags: %w[h1 h2 h3 h4 div b br i em li ol u ul p q small strong],
+                                            attributes: %w[style class])
   end
 
   # return the cleaned input data

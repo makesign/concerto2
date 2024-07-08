@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddPages < ActiveRecord::Migration[7.1]
   def change
     create_table :pages do |t|
@@ -6,6 +8,6 @@ class AddPages < ActiveRecord::Migration[7.1]
       t.string :language
       t.text :body
       t.timestamps
-    end    
+    end
   end
 end

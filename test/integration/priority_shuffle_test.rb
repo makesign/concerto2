@@ -1,10 +1,12 @@
+# frozen_string_literal: true
+
 require 'test_helper'
 
 class PriorityShuffleIntegrationTest < ActionDispatch::IntegrationTest
   # fixtures :all
 
   test 'returns level 2 priority content' do
-    skip "htw_migration: failing test" if (SKIP_HTW_MIGRATION)
+    skip 'htw_migration: failing test' if SKIP_HTW_MIGRATION
     screen = screens(:one)
     field = fields(:one)
     subscriptions = screen.subscriptions.where(field_id: field.id)
@@ -19,7 +21,7 @@ class PriorityShuffleIntegrationTest < ActionDispatch::IntegrationTest
   end
 
   test 'returns level 1 priority content' do
-    skip "htw_migration: failing test" if (SKIP_HTW_MIGRATION)
+    skip 'htw_migration: failing test' if SKIP_HTW_MIGRATION
     screen = screens(:one)
     field = fields(:one)
 

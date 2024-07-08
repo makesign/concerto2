@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module FieldConfigsHelper
   # All the FieldConfig keys from the global config which have not already
   # been used on a Field for a Screen.
@@ -7,7 +9,10 @@ module FieldConfigsHelper
   # @returns [Array<Symbol>] An array of unused keys.
   def get_available_keys(screen, field)
     available_keys = Rails.application.config.field_configs.keys
-    used_keys = FieldConfig.where(field_id: field.id, screen_id: screen.id).select('field_configs.key').collect{ |field_config| field_config.key.to_sym }
-    return available_keys - used_keys
+    used_keys = FieldConfig.where(field_id: field.id,
+                                  screen_id: screen.id).select('field_configs.key').collect do |field_config|
+      field_config.key.to_sym
+    end
+    available_keys - used_keys
   end
 end

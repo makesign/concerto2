@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'test_helper'
 require 'concerto_image_magick'
 
@@ -10,22 +12,22 @@ class ConcertoImageMagickTest < ActiveSupport::TestCase
     @image = nil
   end
 
-  test "load returns an image" do
-    skip "htw_migration: failing test" if (SKIP_HTW_MIGRATION)
+  test 'load returns an image' do
+    skip 'htw_migration: failing test' if SKIP_HTW_MIGRATION
     @image = ConcertoImageMagick.load_image(@graphic_data)
-    assert @image.kind_of?(Magick::Image)
+    assert @image.is_a?(Magick::Image)
 
     assert_equal 1920, @image.columns
     assert_equal 1200, @image.rows
   end
 
-  test "compute size simple resize" do
+  test 'compute size simple resize' do
     size = ConcertoImageMagick.compute_size(100, 100, 200, 200)
     assert_equal 200, size[:width]
     assert_equal 200, size[:height]
   end
 
-  test "compute size maintain ratio resize" do
+  test 'compute size maintain ratio resize' do
     # Constrained width
     size = ConcertoImageMagick.compute_size(20, 10, 100, 100)
     assert_equal 100, size[:width]
@@ -37,14 +39,14 @@ class ConcertoImageMagickTest < ActiveSupport::TestCase
     assert_equal 100, size[:height]
   end
 
-  test "compute size ignore ratio" do
-    options = {:maintain_aspect_ratio => false}
+  test 'compute size ignore ratio' do
+    options = { maintain_aspect_ratio: false }
     size = ConcertoImageMagick.compute_size(10, 20, 100, 100, options)
     assert_equal 100, size[:width]
     assert_equal 100, size[:height]
   end
 
-  test "compute size maintain ratio single resize" do
+  test 'compute size maintain ratio single resize' do
     # Constrained width
     size = ConcertoImageMagick.compute_size(20, 10, 100, 0)
     assert_equal 100, size[:width]
@@ -64,8 +66,8 @@ class ConcertoImageMagickTest < ActiveSupport::TestCase
     assert_equal 100, size[:height]
   end
 
-  test "compute size with expand to fit" do
-    options = {:expand_to_fit => true}
+  test 'compute size with expand to fit' do
+    options = { expand_to_fit: true }
     # Constrained width
     size = ConcertoImageMagick.compute_size(20, 10, 100, 100, options)
     assert_equal 200, size[:width]
@@ -77,8 +79,8 @@ class ConcertoImageMagickTest < ActiveSupport::TestCase
     assert_equal 200, size[:height]
   end
 
-  test "resize resizes image" do
-    skip "htw_migration: failing test" if (SKIP_HTW_MIGRATION)
+  test 'resize resizes image' do
+    skip 'htw_migration: failing test' if SKIP_HTW_MIGRATION
     @image = ConcertoImageMagick.load_image(@graphic_data)
     result = ConcertoImageMagick.resize(@image, 100, 200)
     assert_equal 100, result.columns
@@ -89,24 +91,24 @@ class ConcertoImageMagickTest < ActiveSupport::TestCase
     assert_equal 100, result.rows
   end
 
-  test "resize with options" do
-    skip "htw_migration: failing test" if (SKIP_HTW_MIGRATION)
+  test 'resize with options' do
+    skip 'htw_migration: failing test' if SKIP_HTW_MIGRATION
     @image = ConcertoImageMagick.load_image(@graphic_data)
     result = ConcertoImageMagick.resize(@image, 100, 200, true, true)
     assert_in_delta 330, result.columns, 10
     assert_equal 200, result.rows
   end
 
-  test "resize with invalid options returns empty image" do
-    skip "htw_migration: failing test" if (SKIP_HTW_MIGRATION)
+  test 'resize with invalid options returns empty image' do
+    skip 'htw_migration: failing test' if SKIP_HTW_MIGRATION
     @image = ConcertoImageMagick.load_image(@graphic_data)
     result = ConcertoImageMagick.resize(@image, -100, -200, true, true)
-    assert result.columns == 0
-    assert result.rows == 0
+    assert result.columns.zero?
+    assert result.rows.zero?
   end
 
-  test "crop image" do
-    skip "htw_migration: failing test" if (SKIP_HTW_MIGRATION)
+  test 'crop image' do
+    skip 'htw_migration: failing test' if SKIP_HTW_MIGRATION
     @image = ConcertoImageMagick.load_image(@graphic_data)
     result = ConcertoImageMagick.crop(@image, 100, 200)
     assert_equal 100, result.columns
@@ -120,7 +122,7 @@ class ConcertoImageMagickTest < ActiveSupport::TestCase
   end
 
   test 'image_info returns info about image' do
-    skip "htw_migration: failing test" if (SKIP_HTW_MIGRATION)
+    skip 'htw_migration: failing test' if SKIP_HTW_MIGRATION
     img = ConcertoImageMagick.load_image(@graphic_data)
     info = ConcertoImageMagick.image_info(img)
     assert info[:size] == img.filesize
@@ -130,7 +132,7 @@ class ConcertoImageMagickTest < ActiveSupport::TestCase
   end
 
   test 'graphic_transform supports cropping' do
-    skip "htw_migration: failing test" if (SKIP_HTW_MIGRATION)
+    skip 'htw_migration: failing test' if SKIP_HTW_MIGRATION
     class OmClass
       attr_accessor :file_contents
     end

@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 class KindsController < ApplicationController
   respond_to :html, :json, :xml
-  
+
   # GET /kinds
   # GET /kinds.xml
   def index
@@ -38,13 +40,10 @@ class KindsController < ApplicationController
   def create
     @kind = Kind.new(kind_params)
     auth!
-    
-    if @kind.save
-      flash[:notice] = t(:kind_created)
-    end
-    
-    respond_with(@kind)
 
+    flash[:notice] = t(:kind_created) if @kind.save
+
+    respond_with(@kind)
   end
 
   # PUT /kinds/1
@@ -52,10 +51,8 @@ class KindsController < ApplicationController
   def update
     @kind = Kind.find(params[:id])
     auth!
-    
-    if @kind.update(kind_params)
-      flash[:notice] = t(:kind_updated)
-    end
+
+    flash[:notice] = t(:kind_updated) if @kind.update(kind_params)
     respond_with(@kind)
   end
 
@@ -68,11 +65,10 @@ class KindsController < ApplicationController
     respond_with(:kind)
   end
 
-private
+  private
 
   # Restrict the allowed parameters to a select set defined in the model.
   def kind_params
     params.require(:kind).permit(:name)
   end
-
 end

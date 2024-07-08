@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class MembershipsController < ApplicationController
   before_action :get_group
 
@@ -24,14 +26,15 @@ class MembershipsController < ApplicationController
     respond_to do |format|
       if @membership.save
         process_notification(@membership, {}, process_notification_options({
-          params: {
-            level: @membership.level_name,
-            member_id: @membership.user.id,
-            member_name: @membership.user.name,
-            group_id: @membership.group.id,
-            group_name: @membership.group.name
-          },
-          recipient: @membership.group}))
+                                                                             params: {
+                                                                               level: @membership.level_name,
+                                                                               member_id: @membership.user.id,
+                                                                               member_name: @membership.user.name,
+                                                                               group_id: @membership.group.id,
+                                                                               group_name: @membership.group.name
+                                                                             },
+                                                                             recipient: @membership.group
+                                                                           }))
         if can? :update, @group
           format.html { redirect_to(manage_members_group_path(@group), notice: t(:membership_created)) }
         else
@@ -60,25 +63,30 @@ class MembershipsController < ApplicationController
     auth!
     respond_to do |format|
       success, note = @membership.update_membership_level(action) unless action.nil?
-      @membership.receive_emails = receive_emails unless (receive_emails.nil? || !success)
+      @membership.receive_emails = receive_emails unless receive_emails.nil? || !success
       # redirect to the users page if an email preference was specified since thats the only place it can come from
       if success && @membership.save
         process_notification(@membership, {}, process_notification_options({
-          key: "membership." + (action || 'update'),
-          params: {
-            action: action,
-            level: @membership.level_name,
-            member_id: @membership.user.id,
-            member_name: @membership.user.name,
-            group_id: @membership.group.id,
-            group_name: @membership.group.name
-          },
-          recipient: @membership.user}))
+                                                                             key: "membership.#{action || 'update'}",
+                                                                             params: {
+                                                                               action:,
+                                                                               level: @membership.level_name,
+                                                                               member_id: @membership.user.id,
+                                                                               member_name: @membership.user.name,
+                                                                               group_id: @membership.group.id,
+                                                                               group_name: @membership.group.name
+                                                                             },
+                                                                             recipient: @membership.user
+                                                                           }))
 
-        format.html { redirect_to (receive_emails.nil? ? manage_members_group_path(@group) : @membership.user), notice: t(note) }
+        format.html do
+          redirect_to (receive_emails.nil? ? manage_members_group_path(@group) : @membership.user), notice: t(note)
+        end
         format.xml { head :ok }
       else
-        format.html { redirect_to (receive_emails.nil? ? manage_members_group_path(@group) : @membership.user), notice: t(note) }
+        format.html do
+          redirect_to (receive_emails.nil? ? manage_members_group_path(@group) : @membership.user), notice: t(note)
+        end
         format.xml { render xml: t(note), status: :unprocessable_entity }
       end
     end
@@ -91,14 +99,15 @@ class MembershipsController < ApplicationController
     auth!
     respond_to do |format|
       process_notification(@membership, {}, process_notification_options({
-        params: {
-          level: @membership.level_name,
-          member_id: @membership.user.id,
-          member_name: @membership.user.name,
-          group_id: @membership.group.id,
-          group_name: @membership.group.name
-        },
-        recipient: @membership.user}))
+                                                                           params: {
+                                                                             level: @membership.level_name,
+                                                                             member_id: @membership.user.id,
+                                                                             member_name: @membership.user.name,
+                                                                             group_id: @membership.group.id,
+                                                                             group_name: @membership.group.name
+                                                                           },
+                                                                           recipient: @membership.user
+                                                                         }))
 
       if @membership.destroy
         format.html { redirect_to manage_members_group_path(@group), notice: t(:member_removed) }

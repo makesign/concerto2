@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateTemplates < ActiveRecord::Migration[7.1]
   def self.up
     create_table :templates do |t|

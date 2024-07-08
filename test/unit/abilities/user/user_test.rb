@@ -1,7 +1,8 @@
+# frozen_string_literal: true
+
 require 'test_helper'
 
 class UserUserAbilityTest < ActiveSupport::TestCase
-
   def setup
     @admin = users(:admin)
     @katie = users(:katie)
@@ -9,7 +10,7 @@ class UserUserAbilityTest < ActiveSupport::TestCase
     @karen = users(:karen)
   end
 
-  test "admin users can do anything to users" do
+  test 'admin users can do anything to users' do
     ability = Ability.new(@admin)
     assert ability.can?(:create, User)
     assert ability.can?(:read, @kristen)
@@ -17,7 +18,7 @@ class UserUserAbilityTest < ActiveSupport::TestCase
     assert ability.can?(:destroy, User.new)
   end
 
-  test "regular users can only read and update themselves" do
+  test 'regular users can only read and update themselves' do
     user = @kristen
     ability = Ability.new(user)
     assert ability.can?(:read, @kristen)
@@ -35,7 +36,7 @@ class UserUserAbilityTest < ActiveSupport::TestCase
     assert ability.can?(:read, @katie)
   end
 
-  test "regular users cannot list all users" do
+  test 'regular users cannot list all users' do
     user = @kristen
     ability = Ability.new(user)
     assert ability.cannot?(:list, User)
@@ -44,7 +45,7 @@ class UserUserAbilityTest < ActiveSupport::TestCase
     assert ability.can?(:list, User)
   end
 
-  test "new users can only sign up" do
+  test 'new users can only sign up' do
     ability = Ability.new(User.new)
     assert ability.can?(:create, User)
     assert ability.cannot?(:read, @karen)
@@ -52,8 +53,8 @@ class UserUserAbilityTest < ActiveSupport::TestCase
     assert ability.cannot?(:destroy, @karen)
   end
 
-  test "new users cannot sign up with disabled" do
-    ConcertoConfig.set(:allow_registration, "false")
+  test 'new users cannot sign up with disabled' do
+    ConcertoConfig.set(:allow_registration, 'false')
     ability = Ability.new(User.new)
     assert ability.cannot?(:create, User)
   end

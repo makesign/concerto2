@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 class Field < ActiveRecord::Base
   def initialize(*args, &block)
-    puts "------- field initialize ------"
+    puts '------- field initialize ------'
     super(*args, &block)
   end
   include ActiveModel::ForbiddenAttributesProtection
@@ -11,11 +13,10 @@ class Field < ActiveRecord::Base
   has_many :subscriptions, dependent: :destroy
   has_many :positions, dependent: :destroy
   has_many :field_configs, dependent: :destroy
-  #has_many :screens, through: :field_configs   # valid, but not used yet
-  
-  attr_accessor  :config  # for setup.json formatting
+  # has_many :screens, through: :field_configs   # valid, but not used yet
+
+  attr_accessor :config # for setup.json formatting
 
   # Validations
   validates :name, presence: true
-
 end

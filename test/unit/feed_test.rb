@@ -1,12 +1,13 @@
+# frozen_string_literal: true
+
 require 'test_helper'
 
 class FeedTest < ActiveSupport::TestCase
-
-  test "valid_fixtures" do
+  test 'valid_fixtures' do
     # , :pending_ticker
-    [:service, :root].each do |fixture_name|
-      resource = feeds( fixture_name )
-      valid = resource.valid?
+    %i[service root].each do |fixture_name|
+      resource = feeds(fixture_name)
+      resource.valid?
       errors = resource.errors.full_messages
       assert_equal [], errors, "#{fixture_name} is not valid"
     end
@@ -18,7 +19,7 @@ class FeedTest < ActiveSupport::TestCase
   end
 
   # Attributes cannot be left empty/blank
-  test "feed attributes must not be empty" do
+  test 'feed attributes must not be empty' do
     feed = Feed.new
     assert feed.invalid?
     assert feed.errors[:name].any?
@@ -26,20 +27,19 @@ class FeedTest < ActiveSupport::TestCase
   end
 
   # The feed name must be unique
-  test "feed is now valid without a unique name" do
-    feed = Feed.new(:name => feeds(:service).name,
-                    :description => "Another feed.",
-                    :group => groups(:rpitv))
+  test 'feed is now valid without a unique name' do
+    feed = Feed.new(name: feeds(:service).name,
+                    description: 'Another feed.',
+                    group: groups(:rpitv))
 
     assert feed.invalid?
     assert feed.errors[:name].any?
   end
 
-
   # Feed Hierachy Tests
 
   # Verify the root scope returns all root feeds.
-  test "feed root scope" do
+  test 'feed root scope' do
     roots = Feed.roots
     roots.each do |feed|
       assert feed.is_root?
@@ -47,15 +47,15 @@ class FeedTest < ActiveSupport::TestCase
   end
 
   # A child feed should have a parent
-  test "feed parent relationship" do
-    skip "htw_migration: failing test" if (SKIP_HTW_MIGRATION)
+  test 'feed parent relationship' do
+    skip 'htw_migration: failing test' if SKIP_HTW_MIGRATION
     assert_nil feeds(:announcements).parent
     assert_equal feeds(:announcements), feeds(:boring_announcements).parent
   end
 
   # A feed should have children
-  test "feed child relationship" do
-    skip "htw_migration: failing test" if (SKIP_HTW_MIGRATION)
+  test 'feed child relationship' do
+    skip 'htw_migration: failing test' if SKIP_HTW_MIGRATION
     assert feeds(:service).children.empty?
     assert feeds(:announcements).children.include?(feeds(:boring_announcements))
     assert feeds(:announcements).children.include?(feeds(:important_announcements))
@@ -64,8 +64,8 @@ class FeedTest < ActiveSupport::TestCase
   end
 
   # A root feed is_root?
-  test "feed is_root?" do
-    skip "htw_migration: failing test" if (SKIP_HTW_MIGRATION)
+  test 'feed is_root?' do
+    skip 'htw_migration: failing test' if SKIP_HTW_MIGRATION
     assert feeds(:service).is_root?
     assert !feeds(:boring_announcements).is_root?
   end
@@ -79,8 +79,8 @@ class FeedTest < ActiveSupport::TestCase
   end
 
   # The ancestor tree is built and in order
-  test "feed ancestors" do
-    skip "htw_migration: failing test" if (SKIP_HTW_MIGRATION)
+  test 'feed ancestors' do
+    skip 'htw_migration: failing test' if SKIP_HTW_MIGRATION
     assert feeds(:service).ancestors.empty?
 
     assert feeds(:announcements).ancestors.empty?
@@ -90,8 +90,8 @@ class FeedTest < ActiveSupport::TestCase
   end
 
   # Descendants are built and in order
-  test "feed descendants" do
-    skip "htw_migration: failing test" if (SKIP_HTW_MIGRATION)
+  test 'feed descendants' do
+    skip 'htw_migration: failing test' if SKIP_HTW_MIGRATION
     assert feeds(:service).descendants.empty?
 
     assert_equal 3, feeds(:announcements).descendants.size
@@ -106,8 +106,8 @@ class FeedTest < ActiveSupport::TestCase
   end
 
   # Test feed depth
-  test "feed depth" do
-    skip "htw_migration: failing test" if (SKIP_HTW_MIGRATION)
+  test 'feed depth' do
+    skip 'htw_migration: failing test' if SKIP_HTW_MIGRATION
     assert_equal 0, feeds(:service).depth
     assert_equal 0, feeds(:announcements).depth
 
@@ -115,8 +115,8 @@ class FeedTest < ActiveSupport::TestCase
   end
 
   # Self and siblings works for children and roots
-  test "self and siblings" do
-    skip "htw_migration: failing test" if (SKIP_HTW_MIGRATION)
+  test 'self and siblings' do
+    skip 'htw_migration: failing test' if SKIP_HTW_MIGRATION
     roots = Feed.roots
     roots.each do |root|
       roots.each do |sibling|
@@ -132,20 +132,20 @@ class FeedTest < ActiveSupport::TestCase
     assert feeds(:sleepy_announcements).self_and_siblings.include?(feeds(:sleepy_announcements))
   end
 
-  test "subscribable lists unsubscribed feeds" do
-    skip "htw_migration: failing test" if (SKIP_HTW_MIGRATION)
+  test 'subscribable lists unsubscribed feeds' do
+    skip 'htw_migration: failing test' if SKIP_HTW_MIGRATION
     f = Feed.subscribable(screens(:two), fields(:one))
     assert f.include?(feeds(:boring_announcements))
-    assert !f.include?(feeds(:secret_announcements))  # This feed is private
-    assert !f.include?(feeds(:service))  # This feed already exists
+    assert !f.include?(feeds(:secret_announcements)) # This feed is private
+    assert !f.include?(feeds(:service)) # This feed already exists
 
     f = Feed.subscribable(screens(:one), fields(:one))
     assert f.include?(feeds(:boring_announcements))
-    assert f.include?(feeds(:secret_announcements))  # This feed is private, but owned via a shared user
-    assert !f.include?(feeds(:service))  # This feed already exists
+    assert f.include?(feeds(:secret_announcements)) # This feed is private, but owned via a shared user
+    assert !f.include?(feeds(:service)) # This feed already exists
   end
 
-  test "a group leader or supporter can create feeds" do
+  test 'a group leader or supporter can create feeds' do
     katie = users(:katie)
     ability = Ability.new(katie)
     assert ability.can?(:create, feeds(:service)) # feed for group they lead
@@ -161,9 +161,9 @@ class FeedTest < ActiveSupport::TestCase
     assert ability.cannot?(:create, feeds(:service)) # feed for group they dont lead or support
   end
 
-  test "list screens on which feeds appear" do
-    assert_equal feeds(:service).shown_on_screens.sort {|a,b| a.name <=> b.name }, 
-      [screens(:one), screens(:two)].sort {|a,b| a.name <=> b.name }
+  test 'list screens on which feeds appear' do
+    assert_equal(feeds(:service).shown_on_screens.sort { |a, b| a.name <=> b.name },
+                 [screens(:one), screens(:two)].sort { |a, b| a.name <=> b.name })
     assert_equal feeds(:announcements).shown_on_screens, [screens(:one)]
   end
 end

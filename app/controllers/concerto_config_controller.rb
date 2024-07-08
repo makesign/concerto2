@@ -1,35 +1,36 @@
-class ConcertoConfigController < ApplicationController
+# frozen_string_literal: true
 
+class ConcertoConfigController < ApplicationController
   # GET /settings
   def show
     authorize! :read, ConcertoConfig
-    @concerto_configs = ConcertoConfig.where(hidden: false).order("category, seq_no, concerto_configs.key")
+    @concerto_configs = ConcertoConfig.where(hidden: false).order('category, seq_no, concerto_configs.key')
   end
 
   def initiate_restart
-    restart_webserver()
+    restart_webserver
     redirect_to action: :show
   end
 
   def config_check
-    @imagemagick_installed = command?("convert")
-    @rmagick_installed = Gem::Specification::find_all_by_name('rmagick').any?
-    @not_using_sqlite = ActiveRecord::Base.configurations[Rails.env]['adapter'] != "sqlite3"
-    @not_world_writable = !(File.stat(Rails.root).world_writable?)
-    #Using Ruby methods to stat a directory and convert the mod bit to the familiar 3-digit octal
-    #The logic here and in the view assumes a *nix system - no idea what other posix systems will return
-    @rails_root_perms = File.stat(Rails.root).mode.to_s(8)[-3,3] == "700" #should be 700 on a shared box
-    @rails_log_perms = File.stat(Rails.root.join('log')).mode.to_s(8)[-3,3] == "600" #should be 600 on a shared box
+    @imagemagick_installed = command?('convert')
+    @rmagick_installed = Gem::Specification.find_all_by_name('rmagick').any?
+    @not_using_sqlite = ActiveRecord::Base.configurations[Rails.env]['adapter'] != 'sqlite3'
+    @not_world_writable = !File.stat(Rails.root).world_writable?
+    # Using Ruby methods to stat a directory and convert the mod bit to the familiar 3-digit octal
+    # The logic here and in the view assumes a *nix system - no idea what other posix systems will return
+    @rails_root_perms = File.stat(Rails.root).mode.to_s(8)[-3, 3] == '700' # should be 700 on a shared box
+    @rails_log_perms = File.stat(Rails.root.join('log')).mode.to_s(8)[-3, 3] == '600' # should be 600 on a shared box
     @rails_tmp_perms = File.stat(Rails.root.join('tmp')).writable?
     @webserver_ownership = File.stat(Rails.root).owned?
 
-    unless ConcertoConfig["mailer_from"].blank?
-      begin
-        ActivityMailer.test_email(current_user.email).deliver
-      rescue StandardError => e
-        Rails.logger.error(e)
-        flash[:notice] = t('.unable_to_send_test_email')
-      end
+    return if ConcertoConfig['mailer_from'].blank?
+
+    begin
+      ActivityMailer.test_email(current_user.email).deliver
+    rescue StandardError => e
+      Rails.logger.error(e)
+      flash[:notice] = t('.unable_to_send_test_email')
     end
   end
 
@@ -37,27 +38,26 @@ class ConcertoConfigController < ApplicationController
   # PUT /settings
   def update
     authorize! :update, ConcertoConfig
-    params[:concerto_config].each  do |k,v|
+    params[:concerto_config].each do |k, v|
       config = ConcertoConfig.where(key: k).first
       # since all they can change is the value, only create/update if it changed
-      if config.nil? || config.value != v
-        # translate back to english
-        if k == "content_default_start_time" || k == "content_default_end_time"
-          v = v.gsub(I18n.t('time.am'), "am").gsub(I18n.t('time.pm'), "pm")
-        end
-        if config.nil?
-          config = ConcertoConfig.new(key: k, value: v)
-          config.save
-        else
-          config.update_column(:value, v)
-        end
-        process_notification(config, {}, process_notification_options({params: {concerto_config_key: config.key}}))
+      next unless config.nil? || config.value != v
+
+      # translate back to english
+      if %w[content_default_start_time content_default_end_time].include?(k)
+        v = v.gsub(I18n.t('time.am'), 'am').gsub(I18n.t('time.pm'), 'pm')
       end
+      if config.nil?
+        config = ConcertoConfig.new(key: k, value: v)
+        config.save
+      else
+        config.update_column(:value, v)
+      end
+      process_notification(config, {}, process_notification_options({ params: { concerto_config_key: config.key } }))
     end
 
     ConcertoConfig.cache_expire
     flash[:notice] = t(:settings_saved)
     redirect_to action: :show
   end
-
 end

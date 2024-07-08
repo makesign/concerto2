@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Stub out a clock
 class Clock
   # Wrapper around the current time.

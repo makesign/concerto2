@@ -1,10 +1,12 @@
+# frozen_string_literal: true
+
 require 'test_helper'
 
 class ShuffleIntegrationTest < ActionDispatch::IntegrationTest
-  #fixtures :all
+  # fixtures :all
 
   test 'returns expected content in expected order' do
-    skip "htw_migration: failing test" if (SKIP_HTW_MIGRATION)
+    skip 'htw_migration: failing test' if SKIP_HTW_MIGRATION
     screen = screens(:one)
     field = fields(:one)
     subscriptions = screen.subscriptions.where(field_id: field.id)
