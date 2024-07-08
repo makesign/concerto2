@@ -53,21 +53,14 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           bundler-cache: true
-      - name: "tree vendor/bundle"
-        run: tree vendor/bundle
-      - name: "where are the gems"
-        run: |
-          ls bin
-          bundle install --binstubs
-          ls bin
-  
-
-      # Add or replace any other lints here
+      - name: "binstubs"
+        run: bundle binstubs --all
+       # Add or replace any other lints here
       - name: Security audit dependencies
-        run: bundle-audit --update
+        run: bin/bundle-audit --update
         #run: bin/bundler-audit --update
       - name: Security audit application code
-        run: brakeman -q -w2
+        run: bin/brakeman -q -w2
       - name: Lint Ruby files
-        run: rubocop --parallel
+        run: bin/rubocop --parallel
 # huh. 327 files inspected, 6638 offenses detected, 5992 offenses autocorrectable
