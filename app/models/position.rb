@@ -61,7 +61,7 @@ class Position < ActiveRecord::Base
     priority_keys = %w[top left bottom right]
     priority_keys.each do |key|
       if data.key?(key)
-        send("#{key}=".to_sym, data[key].to_f)
+        send(:"#{key}=", data[key].to_f)
         data.delete(key)
       end
     end
@@ -74,7 +74,7 @@ class Position < ActiveRecord::Base
     end
     # Handle everything else...
     data.each_pair do |key, value|
-      send("#{key}=".to_sym, value) if respond_to?("#{key}=".to_sym)
+      send(:"#{key}=", value) if respond_to?(:"#{key}=")
     end
   end
 

@@ -4,9 +4,7 @@ Rails.logger.debug "Starting #{File.basename(__FILE__)} at #{Time.now}"
 
 Rails.configuration.after_initialize do
   Devise.setup do |config|
-    if ActiveRecord::Base.connection.data_source_exists? 'concerto_configs'
-      config.mailer_sender = ConcertoConfig[:mailer_from]
-    end
+    config.mailer_sender = ConcertoConfig[:mailer_from] if ActiveRecord::Base.connection.data_source_exists? 'concerto_configs'
   end
 end
 
@@ -26,7 +24,7 @@ Devise.setup do |config|
   # by default. You can change it below and use your own secret key.
   # config.secret_key = 'c92e9fc74fb95778890a2a760240eddb38a4fd0552abd129125a677959ca453bc204b03b02e27cebe3bcfb73bdbfb2ab5690e503602c54fb3279739ac4d08814'
   # from concerto:
-  config.secret_key = ENV['SECRET_KEY_BASE']
+  config.secret_key = ENV.fetch('SECRET_KEY_BASE', nil)
   # ==> Controller configuration
   # Configure the parent class to the devise controllers.
   # config.parent_controller = 'DeviseController'

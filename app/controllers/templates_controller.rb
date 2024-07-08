@@ -96,9 +96,7 @@ class TemplatesController < ApplicationController
     # get a copy of the params and remove the bogus file fields as we process them
     template_parameters = template_params
     owner = params[:owner]
-    if owner.present? && (owner.split('-').size == 2)
-      template_parameters[:owner_type], template_parameters[:owner_id] = owner.split('-')
-    end
+    template_parameters[:owner_type], template_parameters[:owner_id] = owner.split('-') if owner.present? && (owner.split('-').size == 2)
     # doens't matter which file is in which field because the file type is inspected for each
     %i[template_css template_image].each do |file|
       unless template_parameters[file].nil?

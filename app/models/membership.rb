@@ -89,10 +89,10 @@ class Membership < ActiveRecord::Base
         p_value = local_perms[key][p_sym]
       end
       if index.zero?
-        new_permissions = if !p_value.nil?
-                            p_value
-                          else
+        new_permissions = if p_value.nil?
                             0
+                          else
+                            p_value
                           end
       else
         new_permissions += p_value * (10**index)
@@ -135,25 +135,19 @@ class Membership < ActiveRecord::Base
     case action
     when 'approve'
       # Can only approve if current level is pending
-      if level == Membership::LEVELS[:pending] && update({ level: Membership::LEVELS[:regular] })
-        return true, :membership_approved
-      end
+      return true, :membership_approved if level == Membership::LEVELS[:pending] && update({ level: Membership::LEVELS[:regular] })
 
       return false, :membership_approved_failure
 
     when 'deny'
       # Can only deny if current level is pending
-      if level == Membership::LEVELS[:pending] && update({ level: Membership::LEVELS[:denied] })
-        return true, :membership_denied
-      end
+      return true, :membership_denied if level == Membership::LEVELS[:pending] && update({ level: Membership::LEVELS[:denied] })
 
       return false, :membership_denied_failure
 
     when 'promote'
       # Can only promote regular members
-      if level == Membership::LEVELS[:regular] && update({ level: Membership::LEVELS[:leader] })
-        return true, :membership_promoted
-      end
+      return true, :membership_promoted if level == Membership::LEVELS[:regular] && update({ level: Membership::LEVELS[:leader] })
 
       return false, :membership_promoted_failure
 
@@ -167,9 +161,7 @@ class Membership < ActiveRecord::Base
         false
       end
     when 'unblock'
-      if level == Membership::LEVELS[:denied] && update({ level: Membership::LEVELS[:regular] })
-        return true, :membership_approved
-      end
+      return true, :membership_approved if level == Membership::LEVELS[:denied] && update({ level: Membership::LEVELS[:regular] })
 
       return false, :membership_approved_failure
 

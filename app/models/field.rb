@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 class Field < ActiveRecord::Base
-  def initialize(*args, &block)
+  def initialize(*, &)
     puts '------- field initialize ------'
-    super(*args, &block)
+    super
   end
   include ActiveModel::ForbiddenAttributesProtection
 

@@ -39,7 +39,7 @@ class TextContent < Content
 
   # Ticker Text also accepts the kind because the user can change it to HtmlText
   def self.form_attributes
-    attributes = super()
-    attributes.concat([:kind_id])
+    attributes = super
+    attributes.push(:kind_id)
   end
 end

@@ -105,8 +105,8 @@ class Ability
       #   it is not approved yet or we can moderate all its submissions or
       #   it is expired (users can resubmit their expired content)
       content.user_id == user.id &&
-        ((content.submissions.select(&:moderation_flag).empty? ||
-          content.submissions.select { |s| Ability.new(user).cannot?(:update, s) }.empty?) ||
+        ((content.submissions.none?(&:moderation_flag) ||
+          content.submissions.none? { |s| Ability.new(user).cannot?(:update, s) }) ||
         content.is_expired?)
     end
     # Users can update the full details of their own content if they
@@ -114,8 +114,8 @@ class Ability
     # it has been submitted.  This is a custom action.
     can :update_full_details, Content do |content|
       content.user_id == user.id &&
-        (content.submissions.select(&:moderation_flag).empty? ||
-          content.submissions.select { |s| Ability.new(user).cannot?(:update, s) }.empty?)
+        (content.submissions.none?(&:moderation_flag) ||
+          content.submissions.none? { |s| Ability.new(user).cannot?(:update, s) })
     end
 
     ## Screens
@@ -204,11 +204,11 @@ class Ability
     if ConcertoConfig[:allow_user_feed_creation] && (user.leading_groups.any? || user.supporting_groups(:feed,
                                                                                                         [:all]).any?)
       can :create, Feed do |feed|
-        if !feed.group.nil?
+        if feed.group.nil?
+          true
+        else
           user.leading_groups.include?(feed.group) ||
             user.supporting_groups(:feed, [:all]).include?(feed.group)
-        else
-          true
         end
       end
     end

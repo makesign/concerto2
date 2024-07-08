@@ -31,9 +31,7 @@ class FieldConfig < ActiveRecord::Base
     return nil if key.nil?
 
     sym_key = key.to_sym
-    if Rails.application.config.respond_to?(:field_configs) && Rails.application.config.field_configs.include?(sym_key)
-      return Rails.application.config.field_configs[sym_key][:type]
-    end
+    return Rails.application.config.field_configs[sym_key][:type] if Rails.application.config.respond_to?(:field_configs) && Rails.application.config.field_configs.include?(sym_key)
 
     nil
   end

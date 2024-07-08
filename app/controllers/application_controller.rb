@@ -105,11 +105,11 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  def set_time_zone(&block)
+  def set_time_zone(&)
     if user_signed_in? && !current_user.time_zone.nil?
-      Time.use_zone(current_user.time_zone, &block)
+      Time.use_zone(current_user.time_zone, &)
     else
-      Time.use_zone(ConcertoConfig[:system_time_zone], &block)
+      Time.use_zone(ConcertoConfig[:system_time_zone], &)
     end
   end
 
@@ -272,7 +272,7 @@ class ApplicationController < ActionController::Base
   # to engine routing logic. This should not be needed once we go to Rails 4,
   # per Rails ticket #6933
   def apply_relative_root
-    Rails.application.routes.default_url_options[:script_name] = ENV['RAILS_RELATIVE_URL_ROOT']
+    Rails.application.routes.default_url_options[:script_name] = ENV.fetch('RAILS_RELATIVE_URL_ROOT', nil)
   end
 
   # Authenticate using the current action and instance variables.
@@ -377,7 +377,7 @@ class ApplicationController < ActionController::Base
       # If Kaminari's padding() method was used, the padding will be
       # applied before auth.
       relation.limit_value = nil
-      relation.offset_value = [0, offset - (page - 1) * per].max
+      relation.offset_value = [0, offset - ((page - 1) * per)].max
       { page:, per: }
     end
   end

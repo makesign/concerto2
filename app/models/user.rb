@@ -5,16 +5,12 @@ class User < ActiveRecord::Base
   include PublicActivity::Common if defined? PublicActivity::Common
 
   # If the concerto identity plugin is installed, allow the deletion of identity records with users
-  if Object.const_defined?('ConcertoIdentity')
-    has_one :concerto_identity, class_name: 'ConcertoIdentity::Identity', dependent: :destroy
-  end
+  has_one :concerto_identity, class_name: 'ConcertoIdentity::Identity', dependent: :destroy if Object.const_defined?('ConcertoIdentity')
   # Include default devise modules. Others available are:
   # :token_authenticatable, :encryptable, :confirmable,
   # :lockable, :timeoutable and :omniauthable, :trackable
   modules = %i[database_authenticatable recoverable registerable rememberable]
-  if ActiveRecord::Base.connection.data_source_exists?('concerto_configs') && (ConcertoConfig[:confirmable])
-    modules << :confirmable
-  end
+  modules << :confirmable if ActiveRecord::Base.connection.data_source_exists?('concerto_configs') && (ConcertoConfig[:confirmable])
   devise(*modules)
 
   before_destroy :dont_delete_last_admin

@@ -118,8 +118,8 @@ class Graphic < Content
 
   # Graphics also accept media attributes for the uploaded file.
   def self.form_attributes
-    attributes = super()
-    attributes.concat([{ media_attributes: %i[file key id] }])
+    attributes = super
+    attributes.push({ media_attributes: %i[file key id] })
   end
 
   # return the cleaned input data

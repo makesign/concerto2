@@ -90,9 +90,7 @@ class DynamicContent < Content
   # assume a refresh is not needed.
   def refresh_needed?
     return false unless config.include? 'interval'
-    if config.include? 'last_refresh_attempt'
-      return Clock.time.to_i > (config['interval'] + config['last_refresh_attempt'])
-    end
+    return Clock.time.to_i > (config['interval'] + config['last_refresh_attempt']) if config.include? 'last_refresh_attempt'
 
     true
   end

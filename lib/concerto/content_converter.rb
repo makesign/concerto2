@@ -65,9 +65,7 @@ module Concerto
         # write the original media to a file so we can process it and pull it back into media
         original_media = media[0]
         original_filepath = File.join('/tmp', original_media.file_name)
-        File.open(original_filepath, 'wb') do |f|
-          f.write original_media.file_contents
-        end
+        File.binwrite(original_filepath, original_media.file_contents)
 
         # process it with docsplit via the api
         begin

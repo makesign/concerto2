@@ -137,8 +137,8 @@ class ConcertoPluginsController < ApplicationController
 
   def write_Gemfile
     # slurp in the old Gemfile and write it to a backup file for use in config.ru
-    old_gemfile = IO.read('Gemfile-plugins')
-    File.open('Gemfile-plugins.bak', 'w') { |f| f.write(old_gemfile) }
+    old_gemfile = File.read('Gemfile-plugins')
+    File.write('Gemfile-plugins.bak', old_gemfile)
 
     # start a big string to put the Gemfile contents in until it's written to the filesystem
     gemfile_content = ''
@@ -155,7 +155,7 @@ class ConcertoPluginsController < ApplicationController
       gemfile_content = "#{gemfile_content}\ngem #{gem_args.join(', ')}\n"
     end
 
-    File.open('Gemfile-plugins', 'w') { |f| f.write(gemfile_content) }
+    File.write('Gemfile-plugins', gemfile_content)
   end
 
   private

@@ -39,7 +39,7 @@ module DashboardHelper
         activity.trackable.send(attr_name)
       end
     else
-      trackable_name_sym = "#{activity.trackable_type.underscore.downcase}_#{attr_name}".to_sym
+      trackable_name_sym = :"#{activity.trackable_type.underscore.downcase}_#{attr_name}"
       if activity.parameters.include?(trackable_name_sym)
         activity.parameters[trackable_name_sym]
       else

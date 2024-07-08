@@ -261,9 +261,7 @@ class ContentsController < ApplicationController
 
     auth!(action: :read)
     # if handling graphic preview (the content id is 0), force a render
-    unless params[:id] == 'preview' || stale?(etag: @content, last_modified: @content.updated_at.utc, public: true)
-      return
-    end
+    return unless params[:id] == 'preview' || stale?(etag: @content, last_modified: @content.updated_at.utc, public: true)
 
     @file = nil
     data = nil

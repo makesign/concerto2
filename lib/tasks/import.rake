@@ -139,10 +139,10 @@ namespace :import do
     kinds = {}
     V1Type.all.each do |t|
       kind = Kind.where(name: t.name).first
-      if !kind.nil?
-        kinds[t.id] = kind.id
-      else
+      if kind.nil?
         puts "No mapping Kind found for #{t.name}."
+      else
+        kinds[t.id] = kind.id
       end
     end
     V1Content.all.each do |c|
@@ -155,7 +155,9 @@ namespace :import do
         elsif c.mime_type == 'text/plain'
           content_type = Ticker
         end
-        if !content_type.nil?
+        if content_type.nil?
+          puts "Unable to find Content Class for #{c.id} - #{c.name}."
+        else
           new_content = content_type.new(
             name: c.name,
             user_id: users[c.user_id],
@@ -167,7 +169,7 @@ namespace :import do
           )
           new_content.data = c.content if content_type == Ticker
           if content_type == Graphic
-            filename = "#{ENV['CONTENT_DIR']}/#{c.content}"
+            filename = "#{ENV.fetch('CONTENT_DIR', nil)}/#{c.content}"
             unless File.exist?(filename)
               puts "Missing file: #{filename} for content #{c.id}"
               next
@@ -178,8 +180,6 @@ namespace :import do
           new_content.save
           save_mapping('content', { c.id => new_content.id })
           # puts new_content.to_yaml
-        else
-          puts "Unable to find Content Class for #{c.id} - #{c.name}."
         end
       end
     end
@@ -257,7 +257,7 @@ namespace :import do
           puts f.to_yaml
           position.destroy
         end
-        filename = "#{ENV['TEMPLATE_DIR']}/#{t.filename}"
+        filename = "#{ENV.fetch('TEMPLATE_DIR', nil)}/#{t.filename}"
         unless File.exist?(filename)
           puts "Missing file: #{filename} for template #{t.id}"
           next

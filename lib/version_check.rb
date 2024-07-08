@@ -6,9 +6,7 @@ module VersionCheck
     version = Rails.cache.read 'concerto_version'
     version_updated = Rails.cache.read 'concerto_version_time'
     if !version.nil? && version_updated.is_a?(Time) && !version_updated.nil? # Version is cached.
-      if version_updated < Time.now - 86_400 # Stale (older than 24 hours).
-        version = Octokit.latest_release('concerto/concerto').tag_name
-      end
+      version = Octokit.latest_release('concerto/concerto').tag_name if version_updated < Time.now - 86_400 # Stale (older than 24 hours).
     else # Fetch the latest version.
       Rails.logger.info 'Downloading latest Concerto version information for the first time.'
       begin

@@ -14,6 +14,6 @@ class WeightedShuffle < BaseShuffle
   private
 
   def weighted_content
-    @subscriptions.collect { |s| s.contents * (!s.weight.nil? ? s.weight : 1) }.flatten.shuffle!
+    @subscriptions.collect { |s| s.contents * (s.weight.nil? ? 1 : s.weight) }.flatten.shuffle!
   end
 end

@@ -44,9 +44,7 @@ class ConcertoConfigController < ApplicationController
       next unless config.nil? || config.value != v
 
       # translate back to english
-      if %w[content_default_start_time content_default_end_time].include?(k)
-        v = v.gsub(I18n.t('time.am'), 'am').gsub(I18n.t('time.pm'), 'pm')
-      end
+      v = v.gsub(I18n.t('time.am'), 'am').gsub(I18n.t('time.pm'), 'pm') if %w[content_default_start_time content_default_end_time].include?(k)
       if config.nil?
         config = ConcertoConfig.new(key: k, value: v)
         config.save

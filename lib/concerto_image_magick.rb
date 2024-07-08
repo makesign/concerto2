@@ -37,7 +37,7 @@ module ConcertoImageMagick
     font_size = [options[:width], options[:height]].min / 8
     dw.pointsize = font_size
     dw.text((options[:width] * (options[:left] + options[:right]) / 2),
-            (options[:height] * (options[:top] + options[:bottom]) / 2 + 0.4 * font_size),
+            ((options[:height] * (options[:top] + options[:bottom]) / 2) + (0.4 * font_size)),
             options[:field_name])
   end
 

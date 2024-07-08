@@ -104,9 +104,7 @@ class ConcertoConfig < ActiveRecord::Base
     resync_columns.each do |column_key|
       next unless ConcertoConfig.columns_hash.key?(column_key.to_s)
 
-      if entry[column_key].nil? || (entry[column_key] != options[column_key])
-        options_to_resync[column_key] = options[column_key]
-      end
+      options_to_resync[column_key] = options[column_key] if entry[column_key].nil? || (entry[column_key] != options[column_key])
     end
     return if options_to_resync.empty?
 
@@ -164,6 +162,7 @@ class ConcertoConfig < ActiveRecord::Base
   def self.set_config_items(keys)
     @@config_items = keys
   end
+
   def self.delete_unused_configs
     # remove any config items not in the whitelist on the ConcertoConfig class
     ConcertoConfig.all.each do |config|

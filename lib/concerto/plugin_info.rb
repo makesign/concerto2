@@ -21,8 +21,8 @@ module Concerto
 
     # Provide a convenient way for the engine to configure plugin
     # settings using the methods provided below.
-    def initialize(&block)
-      instance_exec(&block)
+    def initialize(&)
+      instance_exec(&)
     end
 
     private # the following methods will be accessed via instance_exec

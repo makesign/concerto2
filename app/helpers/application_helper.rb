@@ -50,8 +50,8 @@ module ApplicationHelper
 
   # Generate an <a> link tag that submits a Rails form,
   # instead of having to always use inputs or buttons.
-  def link_to_submit(*args, &block)
-    link_to_function (block_given? ? capture(&block) : args[0]), "$(this).closest('form').submit()",
+  def link_to_submit(*args, &)
+    link_to_function (block_given? ? capture(&) : args[0]), "$(this).closest('form').submit()",
                      args.extract_options!
   end
 

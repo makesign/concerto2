@@ -45,7 +45,7 @@ class MembershipTest < ActiveSupport::TestCase
 
   # Pending users don't count for membership
   test "pending members aren't in group" do
-    wtg = groups(:wtg)
+    wtg = groups(:wtg) # rubocop:disable Lint/UselessAssignment
     users(:kristen)
     assert_no_difference 'wtg.users.count' do
       @m = Membership.new(user: users(:kristen), group: groups(:wtg))

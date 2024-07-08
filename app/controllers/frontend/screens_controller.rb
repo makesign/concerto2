@@ -148,11 +148,11 @@ module Frontend
         @screen.run_callbacks(:frontend_display) do
           # Inject paths into fake attribute so they gets sent with the setup info.
           # Pretend that it's better not to change the format of the image, so we detect it's upload extension.
-          if !@screen.template.media.preferred.first.nil?
+          if @screen.template.media.preferred.first.nil?
+            @screen.template.path = nil
+          else
             template_format = File.extname(@screen.template.media.preferred.first.file_name)[1..]
             @screen.template.path = frontend_screen_template_path(@screen, @screen.template, format: template_format)
-          else
-            @screen.template.path = nil
           end
           css_media = @screen.template.media.where({ key: 'css' })
           @screen.template.css_path = media_path(css_media.first) unless css_media.empty?
