@@ -53,8 +53,15 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           bundler-cache: true
-      - name: "where are the gems"
+      - name: "tree vendor/bundle"
         run: tree vendor/bundle
+      - name: "where are the gems"
+        run: |
+          ls bin
+          bundle install --binstubs
+          ls bin
+  
+
       # Add or replace any other lints here
       - name: Security audit dependencies
         run: bundle-audit --update
