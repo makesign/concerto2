@@ -3,6 +3,15 @@
 rails: open
 - rails server
 
+tests-questions:
+- git show --name-only 8dc6d81
+
+test-file:
+- git diff 8dc6d81 fa4e458 $f 
+
+questions:
+- git diff 8dc6d81 fa4e458 *.rb 
+
 open:
 - open http://localhost:3000
 
