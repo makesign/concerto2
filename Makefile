@@ -122,3 +122,6 @@ dc-db:
 - docker-compose run concerto bin/rails db:migrate
 - docker-compose run concerto bin/rails db:seed
 
+
+quick-push:
+- git commit -am "commit at $(shell date "+%H:%M:%S")" && git push && open https://github.com/htw-imi-showtime/showtime-website/actions
