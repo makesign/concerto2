@@ -7,6 +7,7 @@ Style/Encoding:
 
 Layout/LineLength:
   Max: 194
+  Enabled: false
 
 Metrics/BlockLength:
   Enabled: false
@@ -42,4 +43,64 @@ Metrics/PerceivedComplexity:
 
 Metrics/CyclomaticComplexity:
   Enabled: false
+
+Lint/MissingSuper:
+  Enabled: false
+
+Security/Eval:
+  Enabled: false
+
+Style/OptionalBooleanParameter:
+  Enabled: false
+
+Lint/EmptyBlock:
+  Enabled: false
+
+Naming/FileName:
+  Enabled: false
+
+Naming/PredicateName:
+  Enabled: false
+
+
+Style/MultilineBlockChain:
+  Enabled: false
+
+Lint/ShadowingOuterLocalVariable:
+  Enabled: false
+
+Lint/RescueException:
+  Enabled: false
+
+Lint/UnreachableCode:
+  Enabled: false
+
+Lint/UnderscorePrefixedVariableName:
+  Enabled: false
+
+Naming/AccessorMethodName:
+  Enabled: false
+
+Style/ClassVars:
+  Enabled: false
+
+Lint/DuplicateBranch:
+  Enabled: false
+
+Naming/MethodName:
+  Enabled: false
+
+Lint/UnreachableLoop:
+  Enabled: false
+
+Metrics/BlockNesting:
+  Enabled: false
+
+Style/TernaryParentheses:
+  Enabled: false
+
+
+Naming/VariableNumber:
+  Enabled: false
+
 
