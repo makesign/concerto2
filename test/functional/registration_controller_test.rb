@@ -11,10 +11,11 @@ class ConcertoDeviseRegistrationsControllerTest < ActionController::TestCase
   end
 
   def unsetup_everything
-    User.all.each do |u|
-      u.screens.each(&:destroy)
-      u.destroy
-    end
+    # BK: this did not work, and test db management is done by fixtures.
+    # User.all.each do |u|
+    #   u.screens.each(&:destroy)
+    #   u.destroy
+    # end
     ConcertoConfig.set('setup_complete', 'false')
   end
 

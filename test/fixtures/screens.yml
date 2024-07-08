@@ -4,7 +4,7 @@ one:
   name: The first screen
   location: Katie's Room
   is_public: false
-  owner: katie
+  owner: katie (User)
   template: two
   width: 1920
   height: 1080
@@ -15,7 +15,7 @@ one_without_fields:
   name: Like the first Screen but without fields
   location: Katie's Room
   is_public: false
-  owner: katie
+  owner: katie (User)
   template: two
   width: 1920
   height: 1080

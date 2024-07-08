@@ -13,7 +13,7 @@ root:
 service:
   name: Service Events
   description: This feed is for community service related announcements
-  parent: root (Feed)
+  parent: root
   group: wtg
   is_submittable: true
   is_viewable: true
@@ -44,7 +44,7 @@ announcements:
 boring_announcements:
   name: Boring Announcements
   description: Not so exciting organizational announcements
-  parent: announcements (Feed)
+  parent: announcements
   group: wtg
   content_types:
     "Graphic": "0"
@@ -53,14 +53,14 @@ boring_announcements:
 important_announcements:
   name: Important Announcements
   description: Really important stuff
-  parent: announcements (Feed)
+  parent: announcements
   group: wtg
   is_submittable: false
 
 sleepy_announcements:
   name: zZzZzZ
   description: Announcements that will put you to sleep
-  parent: boring_announcements (Feed)
+  parent: boring_announcements
   group: wtg
   is_viewable: false
 

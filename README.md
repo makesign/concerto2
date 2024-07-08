@@ -1,3 +1,7 @@
+main: [![Ruby on Rails CI](https://github.com/makesign/concerto2/actions/workflows/rubyonrails.yml/badge.svg)](https://github.com/makesign/concerto2/actions/workflows/rubyonrails.yml)
+
+fix_tests: [![Ruby on Rails CI](https://github.com/makesign/concerto2/actions/workflows/rubyonrails.yml/badge.svg?branch=fix_tests)](https://github.com/makesign/concerto2/actions/workflows/rubyonrails.yml)
+
 # README
 
     rvm use 3.3.3@concerto-new
