@@ -3,8 +3,11 @@
 rails: open
 - rails server
 
-ci-test: bundle-audit brakeman rubocop
+ci-all: ci-test ci-lint
+ci-test:
+- bin/rails test
 
+ci-lint: bundle-audit brakeman rubocop
 bundle-audit:
 - bin/bundle-audit --update
 brakeman:
