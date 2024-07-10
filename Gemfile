@@ -142,3 +142,9 @@ gem 'rubocop', '~> 1.64'
 gem 'pg', '~> 1.5'
 
 gem 'jquery-rails', '~> 4.6'
+
+gem "bootstrap-datepicker-rails", "~> 1.10"
+
+gem "twitter-bootstrap-rails-confirm", "~> 2.0"
+
+gem "jquery-timepicker-rails", "~> 1.11"
