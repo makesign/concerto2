@@ -67,7 +67,7 @@ module Frontend
     end
 
     test 'v1 redirects to screen' do
-      get(:index, params: { mac: 'a1:b2:c3' })  
+      get(:index, params: { mac: 'a1:b2:c3' })
       assert_redirected_to frontend_screen_path(screens(:two))
     end
 

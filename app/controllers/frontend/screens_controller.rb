@@ -10,14 +10,14 @@ module Frontend
 
     # GET /frontend
     # Handles cases where the ID is not provided:
-    #   public legacy screens screens - a MAC address is provided instead of an ID
+    #   public legacy screens screetest/functional/frontend/screens_controller_test.rbns - a MAC address is provided instead of an ID
     #   private screens - send to ID based on authentication token from cookie or GET param
     #   private screen setup - a short token is stored in the session or GET param
     def index
       if !current_screen.nil?
         send_to_screen(current_screen)
       elsif params[:mac]
-        screen = Screen.find_by(mac: params[:mac])
+        screen = Screen.with_mac(params[:mac])
         if screen
           if screen.is_public?
             redirect_to frontend_screen_path(screen), status: :moved_permanently
@@ -28,7 +28,7 @@ module Frontend
           render plain: 'Screen not found.', status: :not_found
         end
       elsif (@temp_token = session[:screen_temp_token] || params[:screen_temp_token])
-        screen = Screen.find_by temp_token: @temp_token
+        screen = Screen.with_temp_token(@temp_token)
         if screen.nil?
           send_temp_token
         else

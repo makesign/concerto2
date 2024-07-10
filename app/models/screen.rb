@@ -42,7 +42,7 @@ class Screen < ApplicationRecord
   # something like if owner_type.is_class (however that would work)
   validates :owner, presence: true, associated: true, if: proc { %w[User Group].include?(owner_type) }
   # Authentication token must be unique, prevents mac address collisions with legacy screens.
-  validates :authentication_token, uniqueness: { allow_blank: true }
+  validates :authentication_token, uniqueness:  { allow_nil: true, allow_blank: true }
   validate :unsecured_screens_must_be_public
 
   validates :locale, format: { with: /\A[a-z]{2}(-[A-Z]{2}){0,1}\Z/, message: 'format is xx or xx-XX' },
@@ -106,7 +106,7 @@ class Screen < ApplicationRecord
     frontend_updated_at.nil? || frontend_updated_at < (Clock.time - within)
   end
 
-  def self.find_by_mac(mac_addr)
+  def self.with_mac(mac_addr)
     mac = MacAddr.condense(mac_addr)
     token = "mac:#{mac}"
     Screen.where(authentication_token: token).first
@@ -175,7 +175,7 @@ class Screen < ApplicationRecord
     token_by_type('temp')
   end
 
-  def self.find_by_temp_token(token)
+  def self.with_temp_token(token)
     return nil if token.blank?
 
     begin
@@ -227,7 +227,7 @@ class Screen < ApplicationRecord
 
   def unsecured?
     authentication_token.nil? or
-      !authentication_token.start_with? 'auth:', 'temp:', 'mac:'
+      !(authentication_token.start_with? 'auth:', 'temp:', 'mac:')
   end
 
   def auth_by_token?
