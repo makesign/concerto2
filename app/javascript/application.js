@@ -24,7 +24,7 @@
 //= require jquery.qtip.min.js
 //= require jquery.formSavior.js
 //= require rangeinput.js
-//= require turbolinks
+import "@hotwired/turbo-rails"
 //= require nprogress
 //= require nprogress-turbolinks
 //= require google-analytics-turbolinks

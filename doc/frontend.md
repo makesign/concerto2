@@ -63,5 +63,20 @@ grep 18 Gemfile.lock
       i18n
   i18n-js (~> 4.2)
 
+#### https://github.com/makesign/concerto2/issues/16
+to update translations (app/javascript/i18n/translation.js) run
+i18n-js:
+- bin/i18n export
 
+-> should be automated. See
+see https://github.com/fnando/i18n-js
   
+
+## Turbolinks
+
+ersetzt durch turbo, siehe 
+https://github.com/turbolinks/turbolinks
+
+
+https://github.com/hotwired/turbo
+https://github.com/hotwired/turbo-rails
