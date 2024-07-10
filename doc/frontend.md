@@ -4,6 +4,9 @@ Console:
 
 Rails.application.config.assets.paths
 
+## dartsass
+
+./bin/rails dartsass:install
 
 # fonts:
 
