@@ -148,3 +148,5 @@ gem 'bootstrap-datepicker-rails', '~> 1.10'
 gem 'twitter-bootstrap-rails-confirm', '~> 2.0'
 
 gem 'jquery-timepicker-rails', '~> 1.11'
+
+gem "rubocop-rails", "~> 2.25"

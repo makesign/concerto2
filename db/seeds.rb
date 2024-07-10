@@ -25,7 +25,7 @@ user.receive_moderation_notifications = true
 user.save
 
 # Default plugins
-enable_plugins = false
+# enable_plugins = false
 
 # ConcertoPlugin.where(gem_name: 'concerto_weather').first_or_create!(enabled: enable_plugins,
 #                                                                     source: 'rubygems')

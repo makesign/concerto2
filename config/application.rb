@@ -85,6 +85,14 @@ module Concerto
       ConcertoDevise::RegistrationsController.skip_before_action :check_for_initial_install, raise: false
     end
 
+    # run robocop after generators, see 
+    # https://docs.rubocop.org/rubocop-rails/usage.html#rails-configuration-tip
+    config.generators.after_generate do |files|
+      parsable_files = files.filter { |file| File.exist?(file) && file.end_with?('.rb') }
+      unless parsable_files.empty?
+        system("bundle exec rubocop -A --fail-level=E #{parsable_files.shelljoin}", exception: true)
+      end
+    end
     # Error Handling
     # We will configure the Rails ShowErrors middleware to send all errors it
     # sees to a controller within Concerto so we can render a nice error. This
@@ -94,4 +102,7 @@ module Concerto
     #     ErrorsController.action(:render_error).call(env)
     #  end
   end
+
+
+
 end
