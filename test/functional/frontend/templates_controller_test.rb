@@ -4,7 +4,7 @@ require 'test_helper'
 
 # TODO: Media class has no method file_contents (all three tests fail because of that)
 module Frontend
-  class TemplatesControllerTest <  ActionController::TestCase
+  class TemplatesControllerTest < ActionController::TestCase
     include Devise::Test::ControllerHelpers
     # fixtures :screens
     # fixtures :templates

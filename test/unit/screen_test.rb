@@ -114,12 +114,12 @@ class ScreenUnitTest < ActiveSupport::TestCase
   end
 
   test 'find by mac' do
-    assert_equal screens(:two), Screen.with_mac( 'a1:b2:c3')
-    assert_equal screens(:two), Screen.with_mac( 'a1b2c3')
-    assert_equal screens(:two), Screen.with_mac( '00:00:00:a1:b2:c3')
+    assert_equal screens(:two), Screen.with_mac('a1:b2:c3')
+    assert_equal screens(:two), Screen.with_mac('a1b2c3')
+    assert_equal screens(:two), Screen.with_mac('00:00:00:a1:b2:c3')
     assert_nil Screen.with_mac('123')
   end
-    
+
   test 'mac get and set' do
     s = Screen.new
     assert_nil s.mac_address
