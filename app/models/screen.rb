@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Screen < ApplicationRecord
+class Screen < ActiveRecord::Base
   include ActiveModel::ForbiddenAttributesProtection
 
   # Define integration hooks for Concerto Plugins
@@ -20,8 +20,9 @@ class Screen < ApplicationRecord
   # devise
 
   belongs_to :owner, polymorphic: true
+  validates :owner_id, presence: true
   belongs_to :template
-  validates :template, associated: true
+  validates :template, presence: true, associated: true
 
   has_many :subscriptions, dependent: :destroy
   has_many :positions, through: :template
@@ -42,7 +43,7 @@ class Screen < ApplicationRecord
   # something like if owner_type.is_class (however that would work)
   validates :owner, presence: true, associated: true, if: proc { %w[User Group].include?(owner_type) }
   # Authentication token must be unique, prevents mac address collisions with legacy screens.
-  validates :authentication_token, uniqueness:  { allow_nil: true, allow_blank: true }
+  validates :authentication_token, uniqueness: { allow_nil: true, allow_blank: true }
   validate :unsecured_screens_must_be_public
 
   validates :locale, format: { with: /\A[a-z]{2}(-[A-Z]{2}){0,1}\Z/, message: 'format is xx or xx-XX' },
@@ -60,7 +61,7 @@ class Screen < ApplicationRecord
   # Scopes
   ONLINE_THRESHOLD = 5.minutes
   OFFLINE_THRESHOLD = 5.minutes
-  scope :online, -> { where(frontend_updated_at: (Clock.time - Screen::ONLINE_THRESHOLD)..) }
+  scope :online, -> { where('frontend_updated_at >= ?', Clock.time - Screen::ONLINE_THRESHOLD) }
   scope :offline, lambda {
                     where('frontend_updated_at IS NULL OR frontend_updated_at < ?', Clock.time - Screen::OFFLINE_THRESHOLD)
                   }
@@ -129,7 +130,7 @@ class Screen < ApplicationRecord
     token_by_type('auth')
   end
 
-  def self.find_by_screen_token(token)
+  def self.with_screen_token(token)
     return nil if token.blank?
 
     begin
@@ -166,7 +167,7 @@ class Screen < ApplicationRecord
   end
 
   def temp_token=(token)
-    return if token.blank? # TODO: Validate
+    return unless !token.nil? && !token.empty? # TODO: Validate
 
     self.authentication_token = "temp:#{token}"
   end
@@ -199,7 +200,7 @@ class Screen < ApplicationRecord
 
   # Radio button default
   def auth_action
-    return AUTH_NEW_TOKEN if new_temp_token.present?
+    return AUTH_NEW_TOKEN unless new_temp_token.blank?
     return AUTH_NO_SECURITY if unsecured?
     return AUTH_KEEP_TOKEN if auth_in_progress? || auth_by_token?
     return AUTH_LEGACY_SCREEN if auth_by_mac?
@@ -227,7 +228,7 @@ class Screen < ApplicationRecord
 
   def unsecured?
     authentication_token.nil? or
-      !(authentication_token.start_with? 'auth:', 'temp:', 'mac:')
+      !authentication_token.start_with? 'auth:', 'temp:', 'mac:'
   end
 
   def auth_by_token?

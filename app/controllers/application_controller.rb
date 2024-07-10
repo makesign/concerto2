@@ -42,13 +42,13 @@ class ApplicationController < ActionController::Base
       if request.authorization.present?
         (user, pass) = http_basic_user_name_and_password
         if (user == 'screen') && !pass.nil?
-          @current_screen = Screen.find_by(screen_token: pass)
+          @current_screen = Screen.with_screen_token(pass)
           cookies.permanent[:concerto_screen_token] = pass if params.key? :request_cookie
         end
       end
       if @current_screen.nil? && cookies.key?(:concerto_screen_token)
         token = cookies[:concerto_screen_token]
-        @current_screen = Screen.find_by(screen_token: token)
+        @current_screen = Screen.with_screen_token(token)
       end
     end
     @current_screen
