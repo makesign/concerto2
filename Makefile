@@ -1,8 +1,11 @@
 .RECIPEPREFIX = -
 
 rails: open
-- rails server
+- bin/dev
+#- rails server
 
+sass:
+- bin/dartsass:build
 ci-all: ci-test ci-lint
 ci-test:
 - bin/rails test

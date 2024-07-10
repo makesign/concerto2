@@ -85,17 +85,12 @@ GEM
       public_suffix (>= 2.0.2, < 7.0)
     ansi (1.5.0)
     ast (2.4.2)
-    autoprefixer-rails (10.4.16.0)
-      execjs (~> 2)
     base64 (0.2.0)
     bcrypt (3.1.20)
     bigdecimal (3.1.8)
     bindex (0.8.1)
     bootsnap (1.18.3)
       msgpack (~> 1.2)
-    bootstrap (5.3.3)
-      autoprefixer-rails (>= 9.1.0)
-      popper_js (>= 2.11.8, < 3)
     brakeman (6.1.2)
       racc
     builder (3.3.0)
@@ -145,7 +140,6 @@ GEM
     docile (1.4.0)
     drb (2.2.1)
     erubi (1.13.0)
-    execjs (2.9.1)
     faraday (2.9.2)
       faraday-net_http (>= 2.0, < 3.2)
     faraday-multipart (1.0.4)
@@ -290,7 +284,6 @@ GEM
       racc
     pg (1.5.6)
     pkg-config (1.5.6)
-    popper_js (2.11.8)
     psych (5.1.2)
       stringio
     public_suffix (6.0.0)
@@ -465,7 +458,6 @@ PLATFORMS
 
 DEPENDENCIES
   bootsnap
-  bootstrap (~> 5.3)
   brakeman (~> 6.1)
   bundler-audit (~> 0.9.1)
   cancancan (~> 3.6)

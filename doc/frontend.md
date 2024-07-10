@@ -1,3 +1,13 @@
+
+# Todos
+
+## nprogress
+das wurde nicht gefunden: 
+(kam evtl. Aus einem Gem?)
+//@import "nprogress";
+
+
+
 # Guides notes
 
 Console:
@@ -7,6 +17,15 @@ Rails.application.config.assets.paths
 ## dartsass
 
 ./bin/rails dartsass:install
+
+did NOT gitignore
+
+app/assets/builds/
+
+**starten mit:**
+
+    bin/dev
+
 
 # fonts:
 
