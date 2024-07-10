@@ -3,6 +3,10 @@ require: rubocop-rails
 AllCops:
   NewCops: enable
   Exclude:
+    - 'node_modules/**/*'
+    - 'tmp/**/*'
+    - 'vendor/**/*'
+    - '.git/**/*'
     - 'app/controllers/frontend/templates_controller.rb'
 
 Style/Encoding:
