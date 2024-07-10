@@ -3,7 +3,7 @@
 require 'simplecov'
 SimpleCov.start
 
-SKIP_HTW_MIGRATION = false
+SKIP_HTW_MIGRATION = true
 
 ENV['RAILS_ENV'] = 'test'
 require File.expand_path('../config/environment', __dir__)
