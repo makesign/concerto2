@@ -10,6 +10,9 @@ ci-all: ci-test ci-lint
 ci-test:
 - bin/rails test
 
+i18n-js:
+- bin/i18n export
+
 ci-lint: bundle-audit brakeman rubocop
 bundle-audit:
 - bin/bundle-audit --update

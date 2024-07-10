@@ -40,3 +40,28 @@ ActionController::RoutingError (No route matches [GET] "/webfonts/fa-solid-900.t
 https://docs.fontawesome.com/web/use-with/ruby-on-rails
 
 @import "font-awesome";
+
+## i18n
+
+
+### original: 
+i18n-js-3.0.11
+find . -name "i18n"
+./vendor/bundle/ruby/3.3.0/gems/i18n-js-3.0.11/app/assets/javascripts/i18n
+./vendor/bundle/ruby/3.3.0/gems/i18n-js-3.0.11/spec/ruby/i18n
+./vendor/bundle/ruby/3.3.0/gems/i18n-js-3.0.11/lib/i18n
+./vendor/bundle/ruby/3.3.0/gems/i18n-js-3.0.11/lib/rails/generators/i18n
+./vendor/bundle/ruby/3.3.0/gems/i18n-tasks-1.0.14/lib/i18n
+./vendor/bundle/ruby/3.3.0/gems/i18n-1.14.5/lib/i18n
+
+### now:
+grep 18 Gemfile.lock
+      i18n (>= 1.6, < 2)
+    bootsnap (1.18.3)
+    i18n (1.14.5)
+    i18n-js (4.2.3)
+      i18n
+  i18n-js (~> 4.2)
+
+
+  
