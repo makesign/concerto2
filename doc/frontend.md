@@ -80,3 +80,9 @@ https://github.com/turbolinks/turbolinks
 
 https://github.com/hotwired/turbo
 https://github.com/hotwired/turbo-rails
+
+
+
+# todo: add popper and bootstrap again for bootstrap 5.3
+# pin 'popper', to: 'popper.js', preload: true
+# pin 'bootstrap', to: 'bootstrap.min.js', preload: true

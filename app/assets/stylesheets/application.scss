@@ -15,7 +15,8 @@
  */
 
  // Sassy ??
-@import "font-awesome";
+//@import "font-awesome";
+@use 'font-awesome' with ($fa-font-path: 'font-awesome');
 @import "application/index-manifest";
 @import "concerto_plugins";
 @import "ie";
