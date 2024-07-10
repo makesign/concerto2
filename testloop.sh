@@ -1,5 +1,5 @@
 
-#!/bin/zsh
+#!/bin/bash
 
 while true; do
     clear

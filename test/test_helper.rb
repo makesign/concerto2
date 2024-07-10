@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'simplecov'
+SimpleCov.start
 
 SKIP_HTW_MIGRATION = true
 

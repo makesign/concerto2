@@ -66,9 +66,8 @@ class UserScreenAbilityTest < ActiveSupport::TestCase
     assert ability.cannot?(:read, @kt)
     assert ability.cannot?(:read, @rpitv)
   end
-  # TODO: User Katie does not seem to have the permission to read the screen. The test fails.
+
   test 'Owning user can read private screen' do
-    skip 'htw_migration: failing test' if SKIP_HTW_MIGRATION
     ability = Ability.new(users(:katie))
     assert ability.can?(:read, @kt)
   end
@@ -79,7 +78,6 @@ class UserScreenAbilityTest < ActiveSupport::TestCase
   end
   # TODO: User Karen does not seem to have the permission to update and delete the screen. The test fails.
   test 'Owning user can update and delete screen' do
-    skip 'htw_migration: failing test' if SKIP_HTW_MIGRATION
     ability = Ability.new(users(:katie))
     assert ability.can?(:update, @kt)
     assert ability.can?(:delete, @kt)
