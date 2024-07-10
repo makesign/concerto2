@@ -2,7 +2,7 @@
 
 require 'test_helper'
 
-class ContentIntegrationTest < ActionDispatch::IntegrationTest
+class ContentIntegrationTest <  ActionDispatch::IntegrationTest
   # fixtures :all
 
   test 'signed in root urls load' do

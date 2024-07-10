@@ -2,7 +2,7 @@
 
 require 'test_helper'
 
-class ScreenTest < ActiveSupport::TestCase
+class ScreenUnitTest < ActiveSupport::TestCase
   # TODO: even after setting the screen name to "Blah", the screen object is still not considered valid.
   # Check all validations in the Screen model to ensure no other validation is causing the screen object to be invalid.
   # Inspect the errors object after setting the name to "Blah" to identify any other validation errors.
