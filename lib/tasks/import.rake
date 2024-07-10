@@ -27,7 +27,7 @@ namespace :import do
     require 'legacy_schema'
     mapping = {}
     ActiveRecord::Base.transaction do
-      V1User.all.each do |u|
+      V1User.find_each do |u|
         first, last = u.name.split(' ', 2)
 
         new_user = User.new(
@@ -54,7 +54,7 @@ namespace :import do
     require 'legacy_schema'
     mapping = {}
     ActiveRecord::Base.transaction do
-      V1Group.all.each do |g|
+      V1Group.find_each do |g|
         new_group = Group.new(
           name: g.name
         )
@@ -75,7 +75,7 @@ namespace :import do
     groups = load_mapping('group')
     users = load_mapping('user')
     ActiveRecord::Base.transaction do
-      V1Group.all.each do |g|
+      V1Group.find_each do |g|
         g.users.each do |u|
           new_membership = Membership.new(
             user_id: users[u.id],
@@ -98,7 +98,7 @@ namespace :import do
     mapping = {}
     groups = load_mapping('group')
     ActiveRecord::Base.transaction do
-      V1Feed.all.each do |f|
+      V1Feed.find_each do |f|
         f_type = f.read_attribute_before_type_cast('type').to_i
         if [1, 4].include?(f_type)
           puts "Skipping #{f.name} - Dynamic looking feed."
@@ -137,7 +137,7 @@ namespace :import do
     users = load_mapping('user')
     existing_content = load_mapping('content')
     kinds = {}
-    V1Type.all.each do |t|
+    V1Type.find_each do |t|
       kind = Kind.where(name: t.name).first
       if kind.nil?
         puts "No mapping Kind found for #{t.name}."
@@ -145,7 +145,7 @@ namespace :import do
         kinds[t.id] = kind.id
       end
     end
-    V1Content.all.each do |c|
+    V1Content.find_each do |c|
       next if existing_content.include?(c.id)
 
       ActiveRecord::Base.transaction do
@@ -191,9 +191,9 @@ namespace :import do
     users = load_mapping('user')
     content = load_mapping('content')
     feeds = load_mapping('feed')
-    V1Submission.all.each do |s|
+    V1Submission.find_each do |s|
       ActiveRecord::Base.transaction do
-        if !content.include?(s.content_id) || (content[s.content_id]).zero?
+        if content.exclude?(s.content_id) || (content[s.content_id]).zero?
           # puts "Content missing or invalid."
           next
         end
@@ -229,7 +229,7 @@ namespace :import do
     position_mapping = {}
     temp_position_mapping = {}
     ActiveRecord::Base.transaction do
-      V1Template.all.each do |t|
+      V1Template.find_each do |t|
         new_template = Template.new(
           name: t.name,
           author: t.creator,
@@ -287,7 +287,7 @@ namespace :import do
     groups = load_mapping('group')
     templates = load_mapping('template')
     ActiveRecord::Base.transaction do
-      V1Screen.all.each do |s|
+      V1Screen.find_each do |s|
         new_screen = Screen.new(
           name: s.name,
           location: s.location,
@@ -314,7 +314,7 @@ namespace :import do
     position_mapping = load_mapping('position')
     feeds = load_mapping('feed')
     ActiveRecord::Base.transaction do
-      V1Screen.all.each do |s|
+      V1Screen.find_each do |s|
         s.template.fields.each do |v1_field|
           positions = V1Subscription.where(field_id: v1_field.id, screen_id: s.id)
           positions.each do |p|

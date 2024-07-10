@@ -13,7 +13,7 @@ namespace :template do
 
       if source.blank?
         puts 'cannot find source template'
-      elsif !destination.blank?
+      elsif destination.present?
         puts 'a destination template with that name already exists'
       else
         destination = source.dup
@@ -22,7 +22,7 @@ namespace :template do
           new_media = m.dup
           new_media.attachable_id = nil
 
-          unless m.file_contents.blank?
+          if m.file_contents.present?
             t = Tempfile.new(m.id.to_s, encoding: m.file_contents.encoding)
             t.write(m.file_contents)
             new_media.file = t

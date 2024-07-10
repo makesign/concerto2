@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-Rails.logger.debug "Starting #{File.basename(__FILE__)} at #{Time.now}"
+Rails.logger.debug { "Starting #{File.basename(__FILE__)} at #{Time.zone.now}" }
 Rails.logger.debug '---- SKIP 00-inflections which was basically a db:migrate from the app... -----'
 # ## Saturday, 22.June 2024 09:39
 
@@ -93,4 +93,4 @@ Rails.logger.debug '---- SKIP 00-inflections which was basically a db:migrate fr
 #
 # File.delete("tmp/migration_tempfile") if File.exist?("tmp/migration_tempfile")
 
-Rails.logger.debug "Completed #{File.basename(__FILE__)} at #{Time.now}"
+Rails.logger.debug { "Completed #{File.basename(__FILE__)} at #{Time.zone.now}" }

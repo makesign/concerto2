@@ -50,7 +50,7 @@ module Concerto
 
     # The default locale is :en and all translations from config/locales/*.rb,yml are auto loaded.
     # config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}').to_s]
-    config.i18n.load_path += Dir[Rails.root.join('config', 'locales', '{controllers,views/*}', '*.{rb,yml}')]
+    config.i18n.load_path += Dir[Rails.root.join('config/locales/{controllers,views/*}/*.{rb,yml}')]
     config.i18n.default_locale = :en
 
     # Configure the default encoding used in templates for Ruby 1.9.
@@ -71,7 +71,7 @@ module Concerto
     config.assets.enabled = true
 
     config.before_configuration do
-      env_file = File.join(Rails.root, 'config', 'concerto_env.yml')
+      env_file = Rails.root.join('config/concerto_env.yml').to_s
       if File.exist?(env_file)
         YAML.load(File.open(env_file)).each do |key, value|
           ENV[key.to_s] = value
@@ -85,13 +85,11 @@ module Concerto
       ConcertoDevise::RegistrationsController.skip_before_action :check_for_initial_install, raise: false
     end
 
-    # run robocop after generators, see 
+    # run robocop after generators, see
     # https://docs.rubocop.org/rubocop-rails/usage.html#rails-configuration-tip
     config.generators.after_generate do |files|
       parsable_files = files.filter { |file| File.exist?(file) && file.end_with?('.rb') }
-      unless parsable_files.empty?
-        system("bundle exec rubocop -A --fail-level=E #{parsable_files.shelljoin}", exception: true)
-      end
+      system("bundle exec rubocop -A --fail-level=E #{parsable_files.shelljoin}", exception: true) unless parsable_files.empty?
     end
     # Error Handling
     # We will configure the Rails ShowErrors middleware to send all errors it
@@ -102,7 +100,4 @@ module Concerto
     #     ErrorsController.action(:render_error).call(env)
     #  end
   end
-
-
-
 end

@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-class Feed < ActiveRecord::Base
+class Feed < ApplicationRecord
   include ActiveModel::ForbiddenAttributesProtection
 
   belongs_to :group
-  validates :group, presence: true, associated: true
+  validates :group, associated: true
 
   has_many :submissions, dependent: :destroy
   has_many :contents, through: :submissions
@@ -16,7 +16,7 @@ class Feed < ActiveRecord::Base
                                  where 'submissions.moderation_flag' => true
                                }, through: :submissions, source: :content
   has_many :pending_contents, lambda {
-                                where 'submissions.moderation_flag IS NULL'
+                                where(submissions: { moderation_flag: nil })
                               }, through: :submissions, source: :content
   has_many :denied_contents, lambda {
                                where 'submissions.moderation_flag' => false
@@ -36,7 +36,7 @@ class Feed < ActiveRecord::Base
   end
 
   def parent_id_cannot_be_this_feed
-    return unless !parent_id.blank? && (parent_id == id)
+    return unless parent_id.present? && (parent_id == id)
 
     errors.add(:parent_id, I18n.t(:cant_be_this_feed))
   end

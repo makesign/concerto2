@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class User < ActiveRecord::Base
+class User < ApplicationRecord
   include ActiveModel::ForbiddenAttributesProtection
   include PublicActivity::Common if defined? PublicActivity::Common
 
@@ -13,14 +13,13 @@ class User < ActiveRecord::Base
   modules << :confirmable if ActiveRecord::Base.connection.data_source_exists?('concerto_configs') && (ConcertoConfig[:confirmable])
   devise(*modules)
 
-  before_destroy :dont_delete_last_admin
   before_create :auto_confirm
+  before_destroy :dont_delete_last_admin
 
   has_many :templates, as: :owner
   has_many :contents, dependent: :destroy
   has_many :submissions, foreign_key: 'moderator_id'
   has_many :memberships, dependent: :destroy
-  has_many :groups, through: :memberships
   has_many :screens, as: :owner, dependent: :restrict_with_exception
 
   has_many :groups, -> { where 'memberships.level > ?', Membership::LEVELS[:pending] }, through: :memberships
@@ -34,9 +33,9 @@ class User < ActiveRecord::Base
   # Devise Validations
   # We do not inherit these from devise, because it has
   # unintelligent email uniqueness checks.
-  validates_presence_of   :email
-  validates_uniqueness_of :email
-  validates_format_of     :email, with: Devise.email_regexp, allow_blank: true, if: :email_changed?
+  validates :email, presence: true
+  validates :email, uniqueness: true
+  validates     :email, format: { with: Devise.email_regexp, allow_blank: true, if: :email_changed? }
 
   scope :admin, -> { where is_admin: true }
 

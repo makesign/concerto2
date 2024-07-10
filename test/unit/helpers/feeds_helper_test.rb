@@ -26,7 +26,7 @@ class FeedsHelperTest < ActionView::TestCase
     tree = dfs_tree(Feed.roots, feed)
     assert_equal tree.length, Feed.all.length - 2
 
-    assert !tree.include?(feeds(:boring_announcements))
-    assert !tree.include?(feeds(:sleepy_announcements))
+    assert_not tree.include?(feeds(:boring_announcements))
+    assert_not tree.include?(feeds(:sleepy_announcements))
   end
 end

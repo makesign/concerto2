@@ -22,11 +22,11 @@ class VersionCheckTest < ActiveSupport::TestCase
   test 'latest version is cached for 24 hours' do
     skip 'htw_migration: failing test' if SKIP_HTW_MIGRATION
     Rails.cache.write('concerto_version', '1')
-    Rails.cache.write('concerto_version_time', Time.now - 86_300)
+    Rails.cache.write('concerto_version_time', Time.zone.now - 86_300)
     v = VersionCheck.latest_version
     assert_equal '1', v
 
-    Rails.cache.write('concerto_version_time', Time.now - 86_500)
+    Rails.cache.write('concerto_version_time', Time.zone.now - 86_500)
     v = VersionCheck.latest_version
     assert_not_equal '1', v
   end

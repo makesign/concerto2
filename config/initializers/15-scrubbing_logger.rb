@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-Rails.logger.debug "Starting #{File.basename(__FILE__)} at #{Time.now}"
+Rails.logger.debug { "Starting #{File.basename(__FILE__)} at #{Time.zone.now}" }
 
 module ActiveSupport
   class BufferedLogger
@@ -22,4 +22,4 @@ end
 
 # Rails.logger.formatter = ScrubbingFormatter.new
 
-Rails.logger.debug "Completed #{File.basename(__FILE__)} at #{Time.now}"
+Rails.logger.debug { "Completed #{File.basename(__FILE__)} at #{Time.zone.now}" }

@@ -8,7 +8,7 @@ SKIP_HTW_MIGRATION = true
 ENV['RAILS_ENV'] = 'test'
 require File.expand_path('../config/environment', __dir__)
 require 'rails/test_help'
-load "#{Rails.root}/config/initializers/02-concerto_config.rb"
+load Rails.root.join('config/initializers/02-concerto_config.rb').to_s
 
 module ActiveSupport
   class TestCase

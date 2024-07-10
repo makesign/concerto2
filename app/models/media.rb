@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Media < ActiveRecord::Base
+class Media < ApplicationRecord
   include ActiveModel::ForbiddenAttributesProtection
 
   # templates and content
@@ -28,7 +28,7 @@ class Media < ActiveRecord::Base
 
   # remove preview records that have been abandoned
   def self.cleanup_previews
-    Media.where("media.key = 'preview' and created_at < ?", PREVIEW_MEDIA_PURGE_MINS.minutes.ago).each(&:destroy)
+    Media.where("media.key = 'preview' and created_at < ?", PREVIEW_MEDIA_PURGE_MINS.minutes.ago).find_each(&:destroy)
   end
 
   # Find a valid preview, if one exists, for a media id.

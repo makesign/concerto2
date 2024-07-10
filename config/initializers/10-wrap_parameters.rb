@@ -2,7 +2,7 @@
 
 # Be sure to restart your server when you modify this file.
 
-Rails.logger.debug "Starting #{File.basename(__FILE__)} at #{Time.now}"
+Rails.logger.debug { "Starting #{File.basename(__FILE__)} at #{Time.zone.now}" }
 
 # This file contains settings for ActionController::ParamsWrapper which
 # is enabled by default.
@@ -17,4 +17,4 @@ end
 #  self.include_root_in_json = true
 # end
 
-Rails.logger.debug "Completed #{File.basename(__FILE__)} at #{Time.now}"
+Rails.logger.debug { "Completed #{File.basename(__FILE__)} at #{Time.zone.now}" }

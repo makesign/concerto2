@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-Rails.logger.debug "Starting #{File.basename(__FILE__)} at #{Time.now}"
+Rails.logger.debug { "Starting #{File.basename(__FILE__)} at #{Time.zone.now}" }
 Rails.configuration.after_initialize do
   if ActiveRecord::Base.connection.data_source_exists? 'concerto_configs'
     ActionMailer::Base.delivery_method = ConcertoConfig[:mailer_protocol].to_sym unless ConcertoConfig[:mailer_protocol].nil?
@@ -17,7 +17,7 @@ Rails.configuration.after_initialize do
         ActionMailer::Base.smtp_settings[:openssl_verify_mode] =
           'none'
       end
-      unless ConcertoConfig[:smtp_username].blank?
+      if ConcertoConfig[:smtp_username].present?
         ActionMailer::Base.smtp_settings[:authentication] = ConcertoConfig[:smtp_auth_type]
         ActionMailer::Base.smtp_settings[:user_name] = ConcertoConfig[:smtp_username]
         ActionMailer::Base.smtp_settings[:password] = ConcertoConfig[:smtp_password]
@@ -25,4 +25,4 @@ Rails.configuration.after_initialize do
     end
   end
 end
-Rails.logger.debug "Completed #{File.basename(__FILE__)} at #{Time.now}"
+Rails.logger.debug { "Completed #{File.basename(__FILE__)} at #{Time.zone.now}" }

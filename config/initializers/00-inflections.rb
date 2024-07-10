@@ -2,7 +2,7 @@
 
 # Be sure to restart your server when you modify this file.
 
-Rails.logger.debug "Starting #{File.basename(__FILE__)} at #{Time.now}"
+Rails.logger.debug { "Starting #{File.basename(__FILE__)} at #{Time.zone.now}" }
 
 # Add new inflection rules using the following format
 # (all these examples are active by default):
@@ -19,4 +19,4 @@ end
 #   inflect.acronym 'RESTful'
 # end
 
-Rails.logger.debug "Completed #{File.basename(__FILE__)} at #{Time.now}"
+Rails.logger.debug { "Completed #{File.basename(__FILE__)} at #{Time.zone.now}" }

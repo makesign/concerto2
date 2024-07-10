@@ -2,7 +2,7 @@
 
 # Be sure to restart your server when you modify this file.
 
-Rails.logger.debug "Starting #{File.basename(__FILE__)} at #{Time.now}"
+Rails.logger.debug { "Starting #{File.basename(__FILE__)} at #{Time.zone.now}" }
 
 # rails 7.1.:
 # Be sure to restart your server when you modify this file.
@@ -23,4 +23,4 @@ Rails.application.config.assets.precompile += %w[application.css application.js 
 
 Rails.application.config.assets.precompile += %w[bootstrap.min.js popper.js]
 
-Rails.logger.debug "Completed #{File.basename(__FILE__)} at #{Time.now}"
+Rails.logger.debug { "Completed #{File.basename(__FILE__)} at #{Time.zone.now}" }

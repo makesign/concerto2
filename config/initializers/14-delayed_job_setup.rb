@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-Rails.logger.debug "Starting #{File.basename(__FILE__)} at #{Time.now}"
+Rails.logger.debug { "Starting #{File.basename(__FILE__)} at #{Time.zone.now}" }
 
 require 'delayed_job'
 
@@ -19,4 +19,4 @@ Delayed::Worker.plugins << DelayedJobHeartbeat
 # Slow DJ down to run every 15 seconds instead of 5.
 Delayed::Worker.sleep_delay = 15
 
-Rails.logger.debug "Completed #{File.basename(__FILE__)} at #{Time.now}"
+Rails.logger.debug { "Completed #{File.basename(__FILE__)} at #{Time.zone.now}" }

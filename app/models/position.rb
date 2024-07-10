@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-class Position < ActiveRecord::Base
+class Position < ApplicationRecord
   include ActiveModel::ForbiddenAttributesProtection
 
   belongs_to :field
-  validates :field, presence: true, associated: true
+  validates :field, associated: true
 
   belongs_to :template, optional: true
 
@@ -53,7 +53,7 @@ class Position < ActiveRecord::Base
   # Concerto 1 template descriptor, build this position
   # to have the correct attributes.
   def import_hash(data)
-    return false if data.nil? || data.empty?
+    return false if data.blank?
 
     # If these keys exist, we need to process them first.
     # This prevents race conditions where calling width before

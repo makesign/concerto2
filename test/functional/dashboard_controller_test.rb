@@ -2,7 +2,7 @@
 
 require 'test_helper'
 
-class DashboardControllerTest < ActionController::TestCase
+class DashboardControllerTest < ActionDispatch::IntegrationTest
   include Devise::Test::ControllerHelpers
 
   def setup

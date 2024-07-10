@@ -20,7 +20,7 @@ if user.nil?
   user = User.new(email: 'concerto@infrastructure.de', password: 'geheim12', password_confirmation: 'geheim12',
                   first_name: 'Tick', last_name: 'Tack', is_admin: true)
 end
-user.confirmed_at = Date.today
+user.confirmed_at = Time.zone.today
 user.receive_moderation_notifications = true
 user.save
 
@@ -47,7 +47,7 @@ user.save
 # 42% of fields with stranger names like "Graphics (Full-Screen)"
 
 # NOTE: This is replicated in config/initializers/17-required_data.rb because an instance must have fields.
-Kind.all.each do |kind|
+Kind.find_each do |kind|
   Field.where(name: kind.name).first_or_create!(kind: Kind.where(name: kind.name).first)
 end
 
@@ -213,13 +213,13 @@ Position.where(field_id: Field.where(name: 'Time').first.id, template_id: graysw
 # Create initial subscriptions for the sample Screen
 feed_id = feed.id
 screen_id = screen.id
-Field.where('name NOT IN (?)', %w[Dynamic Time]).each do |f|
+Field.where.not(name: %w[Dynamic Time]).find_each do |f|
   Subscription.where(feed_id:, field_id: f.id, screen_id:).first_or_create!(weight: 1)
 end
 
 # Page import
-seed_file = File.join(Rails.root, 'db', 'seed_assets', 'pages.yml')
+seed_file = Rails.root.join('db/seed_assets/pages.yml').to_s
 seeds = YAML.load_file(seed_file)
 Page.create(seeds['pages'])
 
-puts "created seeds in #{Rails.env}"
+Rails.logger.debug { "created seeds in #{Rails.env}" }

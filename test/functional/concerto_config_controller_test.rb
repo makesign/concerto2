@@ -2,7 +2,7 @@
 
 require 'test_helper'
 
-class ConcertoConfigControllerTest < ActionController::TestCase
+class ConcertoConfigControllerTest < ActionDispatch::IntegrationTest
   include Devise::Test::ControllerHelpers
 
   def setup
@@ -28,7 +28,7 @@ class ConcertoConfigControllerTest < ActionController::TestCase
     sign_in users(:admin)
     put :update, params: { concerto_config: { 'public_concerto' => 'false', 'new_key' => 'new_value' } }
     assert_redirected_to concerto_config_path
-    assert !ConcertoConfig[:public_concerto]
+    assert_not ConcertoConfig[:public_concerto]
     assert_equal 'new_value', ConcertoConfig[:new_key]
   end
 

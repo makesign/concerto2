@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Subscription < ActiveRecord::Base
+class Subscription < ApplicationRecord
   include ActiveModel::ForbiddenAttributesProtection
 
   define_model_callbacks :filter_contents
@@ -27,10 +27,10 @@ class Subscription < ActiveRecord::Base
   belongs_to :screen
 
   # Validations
-  validates :feed, presence: true, associated: true
-  validates :screen, presence: true, associated: true
-  validates :field, presence: true, associated: true
-  validates_uniqueness_of :feed_id, scope: %i[screen_id field_id]
+  validates :feed, associated: true
+  validates :screen, associated: true
+  validates :field, associated: true
+  validates :feed_id, uniqueness: { scope: %i[screen_id field_id] }
 
   # Get weight name of a subscription
   def weight_name
@@ -39,7 +39,7 @@ class Subscription < ActiveRecord::Base
 
   # Get an array of all the approved active content to be shown in a screen's field.
   def contents
-    @contents = feed.approved_contents.active.all.reorder('submissions.seq_no, contents.start_time').to_a
+    @contents = feed.approved_contents.active.reorder('submissions.seq_no, contents.start_time').to_a
     run_callbacks :filter_contents do
       @contents.select! { |c| c.can_display_in?(screen, field) }
     end

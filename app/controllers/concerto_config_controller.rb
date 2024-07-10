@@ -16,13 +16,13 @@ class ConcertoConfigController < ApplicationController
     @imagemagick_installed = command?('convert')
     @rmagick_installed = Gem::Specification.find_all_by_name('rmagick').any?
     @not_using_sqlite = ActiveRecord::Base.configurations[Rails.env]['adapter'] != 'sqlite3'
-    @not_world_writable = !File.stat(Rails.root).world_writable?
+    @not_world_writable = !Rails.root.stat.world_writable?
     # Using Ruby methods to stat a directory and convert the mod bit to the familiar 3-digit octal
     # The logic here and in the view assumes a *nix system - no idea what other posix systems will return
-    @rails_root_perms = File.stat(Rails.root).mode.to_s(8)[-3, 3] == '700' # should be 700 on a shared box
-    @rails_log_perms = File.stat(Rails.root.join('log')).mode.to_s(8)[-3, 3] == '600' # should be 600 on a shared box
-    @rails_tmp_perms = File.stat(Rails.root.join('tmp')).writable?
-    @webserver_ownership = File.stat(Rails.root).owned?
+    @rails_root_perms = Rails.root.stat.mode.to_s(8)[-3, 3] == '700' # should be 700 on a shared box
+    @rails_log_perms = Rails.root.join('log').stat.mode.to_s(8)[-3, 3] == '600' # should be 600 on a shared box
+    @rails_tmp_perms = Rails.root.join('tmp').stat.writable?
+    @webserver_ownership = Rails.root.stat.owned?
 
     return if ConcertoConfig['mailer_from'].blank?
 

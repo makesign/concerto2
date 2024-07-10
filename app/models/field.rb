@@ -1,14 +1,13 @@
 # frozen_string_literal: true
 
-class Field < ActiveRecord::Base
+class Field < ApplicationRecord
   def initialize(*, &)
-    puts '------- field initialize ------'
+    Rails.logger.debug '------- field initialize ------'
     super
   end
   include ActiveModel::ForbiddenAttributesProtection
 
   belongs_to :kind
-  validates :kind_id, presence: true
 
   has_many :subscriptions, dependent: :destroy
   has_many :positions, dependent: :destroy

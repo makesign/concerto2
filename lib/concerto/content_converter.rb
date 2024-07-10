@@ -72,9 +72,11 @@ module Concerto
           if original_filepath.end_with?('.pdf') && command?('pdftoppm')
             # scale the longest side to 1920 and maintain the aspect ratio
             scale = '-scale-to 1920'
-            Rails.logger.debug("pdftoppm -singlefile #{scale} -png \"#{original_filepath}\" \"/tmp/#{File.basename(
-              original_filepath, '.*'
-            )}_1\"")
+            Rails.logger.debug do
+              "pdftoppm -singlefile #{scale} -png \"#{original_filepath}\" \"/tmp/#{File.basename(
+                original_filepath, '.*'
+              )}_1\""
+            end
             `pdftoppm -singlefile #{scale} -png "#{original_filepath}" "/tmp/#{File.basename(original_filepath,
                                                                                              '.*')}_1"`
           else

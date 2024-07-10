@@ -10,7 +10,7 @@ class ScreenFeedAbilityTest < ActiveSupport::TestCase
     feed = feeds(:invisible_feed)
 
     ability = Ability.new(screen)
-    assert !ability.can?(:read, feed), 'Should not be able to read feed'
+    assert_not ability.can?(:read, feed), 'Should not be able to read feed'
 
     s = Subscription.new
     s.feed = feed

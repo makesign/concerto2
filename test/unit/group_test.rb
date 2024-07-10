@@ -8,7 +8,7 @@ class GroupTest < ActiveSupport::TestCase
     g = groups(:wtg)
     group = Group.new({ name: g.name })
     assert_equal g.name, group.name, 'Names are set equal'
-    assert !group.valid?, "Names can't be equal"
+    assert_not group.valid?, "Names can't be equal"
     group.name = 'Fooasdasdasda'
     assert group.valid?, 'Unique name is OK'
   end
@@ -17,13 +17,13 @@ class GroupTest < ActiveSupport::TestCase
   test 'group has member?' do
     g = groups(:wtg)
     assert g.has_member?(users(:katie)), 'Katie is in WTG'
-    assert !g.has_member?(users(:kristen)), 'Kristen is not in the WTG'
+    assert_not g.has_member?(users(:kristen)), 'Kristen is not in the WTG'
   end
 
   test 'moderators returns list of moderators for the group' do
     g = groups(:wtg)
     assert g.moderators.include?(memberships(:katie_wtg)), 'Katie is a moderator'
-    assert !g.moderators.include?(memberships(:karen_wtg)), 'Karen is not a moderator'
+    assert_not g.moderators.include?(memberships(:karen_wtg)), 'Karen is not a moderator'
   end
 
   test 'user has permission' do
@@ -39,11 +39,11 @@ class GroupTest < ActiveSupport::TestCase
       assert g.user_has_permissions?(u, :regular, :feed, [level])
       assert g.user_has_permissions?(u, :regular, :feed, [:all, level])
     end
-    assert !g.user_has_permissions?(u, :regular, :screen, %i[all subscriptions])
+    assert_not g.user_has_permissions?(u, :regular, :screen, %i[all subscriptions])
   end
 
   test "sole leader can't resign leadership" do
-    assert !groups(:wtg).can_resign_leadership?(memberships(:katie_wtg))
+    assert_not groups(:wtg).can_resign_leadership?(memberships(:katie_wtg))
   end
 
   test 'non-leader can resign leadership' do
@@ -53,7 +53,7 @@ class GroupTest < ActiveSupport::TestCase
   test 'can delete if group owns nothing' do
     assert groups(:unused).is_deletable?
 
-    assert !groups(:wtg).is_deletable?
+    assert_not groups(:wtg).is_deletable?
     Feed.delete_all
     Screen.delete_all
     assert groups(:wtg).is_deletable?
@@ -70,7 +70,7 @@ class GroupTest < ActiveSupport::TestCase
 
   test "can't delete if group owns feeds" do
     Screen.delete_all
-    assert !groups(:wtg).is_deletable?
+    assert_not groups(:wtg).is_deletable?
   end
 
   test 'creating a group with a new leader' do
@@ -93,7 +93,7 @@ class GroupTest < ActiveSupport::TestCase
     g = groups(:wtg)
     u = users(:kristen)
 
-    assert !g.has_member?(u)
+    assert_not g.has_member?(u)
     m = Membership.new({ group: g, user: u, level: Membership::LEVELS[:regular] })
     g.memberships << m
     g.update_membership_perms

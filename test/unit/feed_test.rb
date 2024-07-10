@@ -66,7 +66,7 @@ class FeedTest < ActiveSupport::TestCase
   end
 
   test 'boring_announcements fixture is not root' do
-    assert !feeds(:boring_announcements).is_root?
+    assert_not feeds(:boring_announcements).is_root?
   end
 
   # A feed cannot be it's own parent
@@ -130,15 +130,15 @@ class FeedTest < ActiveSupport::TestCase
   test 'subscribable lists unsubscribed feeds' do
     f = Feed.subscribable(screens(:two), fields(:one))
     assert f.include?(feeds(:boring_announcements))
-    assert !f.include?(feeds(:secret_announcements)) # This feed is private
-    assert !f.include?(feeds(:service)) # This feed already exists
+    assert_not f.include?(feeds(:secret_announcements)) # This feed is private
+    assert_not f.include?(feeds(:service)) # This feed already exists
 
     accessible_by_screen_one = Feed.accessible_by(Ability.new(screens(:one)), :read)
     assert accessible_by_screen_one.include? feeds(:secret_announcements)
     f = Feed.subscribable(screens(:one), fields(:one))
     assert f.include?(feeds(:boring_announcements))
     assert f.include?(feeds(:secret_announcements)) # This feed is private, but owned via a shared user
-    assert !f.include?(feeds(:service)) # This feed already exists
+    assert_not f.include?(feeds(:service)) # This feed already exists
   end
 
   test 'a group leader or supporter can create feeds' do

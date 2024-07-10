@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-class Page < ActiveRecord::Base
+class Page < ApplicationRecord
   before_create :add_slug
   before_update :add_slug
-  validates_uniqueness_of :title
+  validates :title, uniqueness: true
 
   def add_slug
     self.slug = title.parameterize

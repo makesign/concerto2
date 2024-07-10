@@ -3,7 +3,7 @@
 require 'test_helper'
 
 module Frontend
-  class ScreensControllerTest < ActionController::TestCase
+  class ScreensControllerTest < ActionDispatch::IntegrationTest
     include Devise::Test::ControllerHelpers
     # fixtures :screens
 
@@ -15,12 +15,12 @@ module Frontend
 
     test 'private screen frontend is not public' do
       get(:show, params: { id: screens(:one).id })
-      assert_response 401
+      assert_response :unauthorized
     end
 
     test 'private screen setup data is not public' do
       get(:setup, params: { id: screens(:one).id, format: :json })
-      assert_response 403
+      assert_response :forbidden
     end
 
     test 'should get screen setup' do

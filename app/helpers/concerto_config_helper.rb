@@ -45,13 +45,13 @@ module ConcertoConfigHelper
   end
 
   def root_perms_text
-    "#{Rails.root} has permission #{File.stat(Rails.root).mode.to_s(8)[-3,
-                                                                       3]}" + (@rails_root_perms == 700 ? '' : ' instead of 700').to_s
+    "#{Rails.root} has permission #{Rails.root.stat.mode.to_s(8)[-3,
+                                                                 3]}" + (@rails_root_perms == 700 ? '' : ' instead of 700').to_s
   end
 
   def rails_log_text
-    "#{Rails.root.join('log')} has permission #{File.stat(Rails.root.join('log')).mode.to_s(8)[-3,
-                                                                                               3]}" + (@rails_log_perms == 600 ? '' : ' instead of 600').to_s
+    "#{Rails.root.join('log')} has permission #{Rails.root.join('log').stat.mode.to_s(8)[-3,
+                                                                                         3]}" + (@rails_log_perms == 600 ? '' : ' instead of 600').to_s
   end
 
   def rails_tmp_text

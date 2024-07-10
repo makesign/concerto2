@@ -39,16 +39,16 @@ class ApplicationController < ActionController::Base
   # is the logged in user or anonymous.
   def current_screen
     if @current_screen.nil?
-      unless request.authorization.blank?
+      if request.authorization.present?
         (user, pass) = http_basic_user_name_and_password
         if (user == 'screen') && !pass.nil?
-          @current_screen = Screen.find_by_screen_token(pass)
+          @current_screen = Screen.find_by(screen_token: pass)
           cookies.permanent[:concerto_screen_token] = pass if params.key? :request_cookie
         end
       end
       if @current_screen.nil? && cookies.key?(:concerto_screen_token)
         token = cookies[:concerto_screen_token]
-        @current_screen = Screen.find_by_screen_token(token)
+        @current_screen = Screen.find_by(screen_token: token)
       end
     end
     @current_screen
@@ -213,10 +213,10 @@ class ApplicationController < ActionController::Base
       # make an effort to catch all mail-related exceptions after sending the mail - IOError will catch anything for sendmail, SMTP for the rest
       rescue IOError, Net::SMTPAuthenticationError, Net::SMTPServerBusy, Net::SMTPSyntaxError, Net::SMTPFatalError,
              Net::SMTPUnknownError => e
-        Rails.logger.debug "Mail delivery failed at #{Time.now} for #{options[:recipient]}: #{e.message}"
+        Rails.logger.debug { "Mail delivery failed at #{Time.zone.now} for #{options[:recipient]}: #{e.message}" }
         ConcertoConfig.first.create_activity action: :system_notification, params: { message: t(:smtp_send_error) }
       rescue OpenSSL::SSL::SSLError => e
-        Rails.logger.debug "Mail delivery failed at #{Time.now} for #{options[:recipient]}: #{e.message} -- might need to disable SSL Verification in settings"
+        Rails.logger.debug { "Mail delivery failed at #{Time.zone.now} for #{options[:recipient]}: #{e.message} -- might need to disable SSL Verification in settings" }
         ConcertoConfig.first.create_activity action: :system_notification, params: { message: t(:smtp_send_error_ssl) }
       end
     end

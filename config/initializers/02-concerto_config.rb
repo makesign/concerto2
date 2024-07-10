@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-Rails.logger.debug "Starting #{File.basename(__FILE__)} at #{Time.now}"
+Rails.logger.debug { "Starting #{File.basename(__FILE__)} at #{Time.zone.now}" }
 
 require 'socket'
 begin
@@ -8,7 +8,7 @@ begin
   concerto_hostname = Addrinfo.getaddrinfo(Socket.gethostname, 80).first.getnameinfo.first
 rescue SocketError => e
   concerto_hostname = ''
-  Rails.logger.debug "Socket error in trying to determine hostname: #{e}"
+  Rails.logger.debug { "Socket error in trying to determine hostname: #{e}" }
 end
 Rails.configuration.after_initialize do
   if ActiveRecord::Base.connection.data_source_exists?('concerto_configs') && ConcertoConfig.columns_hash.key?('plugin_id')
@@ -87,4 +87,4 @@ Rails.configuration.after_initialize do
                                                             category: 'System')
   end
 end
-Rails.logger.debug "Completed #{File.basename(__FILE__)} at #{Time.now}"
+Rails.logger.debug { "Completed #{File.basename(__FILE__)} at #{Time.zone.now}" }

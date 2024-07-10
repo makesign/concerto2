@@ -32,7 +32,7 @@ namespace :i18n do
       I18n.available_locales.each do |locale|
         I18n.locale = locale
         begin
-          I18n.translate(key, raise: true)
+          I18n.t(key, raise: true)
         rescue I18n::MissingInterpolationArgument
           # noop
         rescue I18n::MissingTranslationData

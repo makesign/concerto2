@@ -6,10 +6,10 @@ class FieldConfigTest < ActiveSupport::TestCase
   test 'require things to be present' do
     fc = FieldConfig.new
     fc.screen = screens(:one)
-    assert !fc.valid?
+    assert_not fc.valid?
 
     fc.field = fields(:one)
-    assert !fc.valid?
+    assert_not fc.valid?
 
     fc.key = 'key'
     assert fc.valid?
@@ -20,7 +20,7 @@ class FieldConfigTest < ActiveSupport::TestCase
     fc.save
 
     dup = FieldConfig.new(screen_id: screens(:one).id, field_id: fields(:one).id, key: 'foo', value: 'baz')
-    assert !dup.valid?
+    assert_not dup.valid?
 
     dup.screen = screens(:two)
     assert dup.valid?
@@ -58,9 +58,9 @@ class FieldConfigTest < ActiveSupport::TestCase
     assert fc.key_options.blank?
 
     fc = field_configs(:three)
-    assert !fc.key_options.blank?
+    assert_not fc.key_options.blank?
 
     fc = field_configs(:four)
-    assert !fc.key_options.blank?
+    assert_not fc.key_options.blank?
   end
 end

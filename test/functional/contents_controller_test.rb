@@ -2,7 +2,7 @@
 
 require 'test_helper'
 
-class ContentsControllerTest < ActionController::TestCase
+class ContentsControllerTest < ActionDispatch::IntegrationTest
   include Devise::Test::ControllerHelpers
 
   def setup
@@ -61,7 +61,7 @@ class ContentsControllerTest < ActionController::TestCase
 
   test 'broken default type raises exception' do
     sign_in users(:katie)
-    default = ConcertoConfig.find_by_key('default_upload_type')
+    default = ConcertoConfig.find_by(key: 'default_upload_type')
     default.destroy
 
     assert_raise RuntimeError do

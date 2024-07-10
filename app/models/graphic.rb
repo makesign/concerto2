@@ -7,7 +7,7 @@ class GraphicValidator < ActiveModel::Validator
                      'image/x-png']
 
     if !record.media.empty? &&
-       !(graphic_types + Concerto::ContentConverter.supported_types).include?(record.media[0].file_type)
+       (graphic_types + Concerto::ContentConverter.supported_types).exclude?(record.media[0].file_type)
       record.errors.add :media, I18n.t(:file_type_unsupported, type: record.media[0].file_type)
     end
   end

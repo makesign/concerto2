@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-Rails.logger.debug "Starting #{File.basename(__FILE__)} at #{Time.now}"
+Rails.logger.debug { "Starting #{File.basename(__FILE__)} at #{Time.zone.now}" }
 Rails.configuration.after_initialize do
   # Concerto user analytics configuration
   if ActiveRecord::Base.connection.data_source_exists?('concerto_configs') && ConcertoConfig.columns_hash.key?('plugin_id')
@@ -10,4 +10,4 @@ Rails.configuration.after_initialize do
                                                                               description: 'The Web Property ID provided by Google Analytics.')
   end
 end
-Rails.logger.debug "Completed #{File.basename(__FILE__)} at #{Time.now}"
+Rails.logger.debug { "Completed #{File.basename(__FILE__)} at #{Time.zone.now}" }

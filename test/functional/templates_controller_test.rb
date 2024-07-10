@@ -2,7 +2,7 @@
 
 require 'test_helper'
 
-class TemplatesControllerTest < ActionController::TestCase
+class TemplatesControllerTest < ActionDispatch::IntegrationTest
   include Devise::Test::ControllerHelpers
   include ActionDispatch::TestProcess
 

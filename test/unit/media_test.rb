@@ -39,6 +39,6 @@ class MediaTest < ActiveSupport::TestCase
     old.save
 
     assert Media.valid_preview(recent.id)
-    assert !Media.valid_preview(old.id)
+    assert_not Media.valid_preview(old.id)
   end
 end

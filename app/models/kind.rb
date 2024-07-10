@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Kind < ActiveRecord::Base
+class Kind < ApplicationRecord
   include ActiveModel::ForbiddenAttributesProtection
 
   has_many :contents

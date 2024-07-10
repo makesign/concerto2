@@ -11,8 +11,8 @@ class DynamicContent < Content
 
   after_initialize :set_kind, :create_config
 
-  after_find :protected_load_config
   before_validation :save_config
+  after_find :protected_load_config
 
   attr_accessor :config
 
@@ -124,7 +124,7 @@ class DynamicContent < Content
     new_count = [0, new_content.count - old_content.count].max
     leftover_count = [0, old_content.count - new_content.count].max
 
-    Rails.logger.debug("Reusing #{old_reuse_count}, Making #{new_count}, Trashing #{leftover_count}.")
+    Rails.logger.debug { "Reusing #{old_reuse_count}, Making #{new_count}, Trashing #{leftover_count}." }
 
     new_children.concat(old_content.slice(0, old_reuse_count))
     # Here we add a bunch of empty new contents.  We can't do the traditional Content.new * N because it will
@@ -237,8 +237,8 @@ class DynamicContent < Content
   # Use a pid to ensure that only one dynamic content refresher is running.
   # If the pid doesn't exist, call #{self.refresh}.
   def self.pid_locked_refresh
-    FileUtils.mkdir_p(Rails.root.join('tmp', 'pids'))
-    pid_name = Rails.root.join('tmp', 'pids', 'dynamic_content_refresh')
+    FileUtils.mkdir_p(Rails.root.join('tmp/pids'))
+    pid_name = Rails.root.join('tmp/pids/dynamic_content_refresh')
     Rails.logger.info 'Not updating dynamic content, pid exists' if File.exist?(pid_name)
 
     File.open(pid_name, 'w') {}

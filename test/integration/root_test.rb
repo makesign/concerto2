@@ -12,7 +12,7 @@ class RootTest < ActionDispatch::IntegrationTest
     assert_response :success
 
     # And it should never ever ever redirect
-    assert !redirect?
+    assert_not redirect?
   end
 
   test 'root url shows login when not public' do

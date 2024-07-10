@@ -15,7 +15,7 @@ class ContentsController < ApplicationController
     content_types = Rails.application.config.content_types + Rails.application.config._unused_content_types_
     content_models = content_types.map { |type| type.model_name.singular }
 
-    unless params[:type].blank?
+    if params[:type].present?
       content_models.each do |model|
         # sometimes it comes in all lowercase, sometimes camelized
         @content_const = model.camelize.constantize if params[:type].camelize == model.to_s.camelize
@@ -58,8 +58,8 @@ class ContentsController < ApplicationController
   # child of Content (Feed) a 400 error is thrown.
   def new
     # We might already have a content type,
-    if @content_const.nil? || !@content_const.ancestors.include?(Content)
-      Rails.logger.debug "Content type #{@content_const} found not OK, trying default."
+    if @content_const.nil? || @content_const.ancestors.exclude?(Content)
+      Rails.logger.debug { "Content type #{@content_const} found not OK, trying default." }
       default_upload_type = ConcertoConfig[:default_upload_type]
       raise t(:missing_default_type) unless default_upload_type
 
@@ -69,8 +69,8 @@ class ContentsController < ApplicationController
 
     # We don't recognize the requested content type, or
     # its not a child of Content so we'll return a 400.
-    if @content_const.nil? || !@content_const.ancestors.include?(Content)
-      render text: t(:unrecognized_type), status: 400
+    if @content_const.nil? || @content_const.ancestors.exclude?(Content)
+      render text: t(:unrecognized_type), status: :bad_request
     else
       @content = @content_const.new
       @content.duration = ConcertoConfig[:default_content_duration].to_i
@@ -103,7 +103,7 @@ class ContentsController < ApplicationController
       # pull out the media_id otherwise, new will try to find it even though it's not yet linked
       media_attributes = prams[:media_attributes]
       media_attributes.each do |key, attribute|
-        next if !attribute.include?(:id) || attribute[:id].blank?
+        next if attribute.exclude?(:id) || attribute[:id].blank?
 
         media_ids << attribute[:id]
         prams[:media_attributes][key].delete :id
@@ -292,9 +292,9 @@ class ContentsController < ApplicationController
       end
       format.js do
         if result.nil?
-          render text: 'Unable to perform action.', status: 400
+          render text: 'Unable to perform action.', status: :bad_request
         else
-          render text: result, status: 200
+          render text: result, status: :ok
         end
       end
     end

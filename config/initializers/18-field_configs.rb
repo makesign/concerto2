@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-Rails.logger.debug "Starting #{File.basename(__FILE__)} at #{Time.now}"
+Rails.logger.debug { "Starting #{File.basename(__FILE__)} at #{Time.zone.now}" }
 
 # A hashes of some of the possible field configs.
 # Each hash entry represents a possible field config.
@@ -23,4 +23,4 @@ Rails.application.config.field_configs = {
   repeat_content: { type: :select, values: %w[Suppress Reload] }
 }
 
-Rails.logger.debug "Completed #{File.basename(__FILE__)} at #{Time.now}"
+Rails.logger.debug { "Completed #{File.basename(__FILE__)} at #{Time.zone.now}" }

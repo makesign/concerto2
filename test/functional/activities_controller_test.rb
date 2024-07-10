@@ -2,5 +2,5 @@
 
 require 'test_helper'
 
-class ActivitiesControllerTest < ActionController::TestCase
+class ActivitiesControllerTest < ActionDispatch::IntegrationTest
 end

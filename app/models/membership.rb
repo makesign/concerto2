@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Membership < ActiveRecord::Base
+class Membership < ApplicationRecord
   include ActiveModel::ForbiddenAttributesProtection
 
   # Membership levels
@@ -36,15 +36,15 @@ class Membership < ActiveRecord::Base
   before_save :compact_permissions
 
   belongs_to :user
-  validates :user, presence: true, associated: true
+  validates :user, associated: true
   belongs_to :group
-  validates :group, presence: true, associated: true
+  validates :group, associated: true
 
   # Newsfeed
   include PublicActivity::Common if defined? PublicActivity::Common
 
   # Validations
-  validates_uniqueness_of :user_id, scope: :group_id
+  validates :user_id, uniqueness: { scope: :group_id }
 
   # Scoping shortcuts for leaders/regular
   scope :leader, -> { where level: Membership::LEVELS[:leader] }
