@@ -66,7 +66,7 @@ class UserScreenAbilityTest < ActiveSupport::TestCase
     assert ability.cannot?(:read, @kt)
     assert ability.cannot?(:read, @rpitv)
   end
-  
+
   test 'Owning user can read private screen' do
     ability = Ability.new(users(:katie))
     assert ability.can?(:read, @kt)
