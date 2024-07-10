@@ -23,11 +23,11 @@ basedir = File.dirname(__FILE__)
 # through the ConcertoPlugins controller.
 
 group :concerto_plugins do
-  gem 'concerto_calendar'
-  gem 'concerto_frontend'
-  gem 'concerto_hardware'
+  # gem 'concerto_calendar'
+  # gem 'concerto_frontend'
+  # gem 'concerto_hardware'
   # gem "concerto_iframe"
-  gem 'concerto_remote_video'
+  # gem 'concerto_remote_video'
   # TODO: see https://github.com/makesign/concerto2/issues/4
   # gem 'concerto_simple_rss'
   # gem "concerto_weather", :git => 'https://github.com/concerto/concerto-weather.git', :branch => 'rails5'
