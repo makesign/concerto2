@@ -11,6 +11,8 @@
 # which gets instantiated in engines to enable use of the Concerto
 # Plugin interface.
 
+ADDONS = [].freeze
+
 class ConcertoPlugin < ApplicationRecord
   include ActiveModel::ForbiddenAttributesProtection
   include PublicActivity::Common if defined? PublicActivity::Common
@@ -21,22 +23,21 @@ class ConcertoPlugin < ApplicationRecord
   scope :enabled, -> { where(enabled: true) }
 
   def self.concerto_addons
-    addons = []
-    begin
-      # we shouldn't be checking github if it's just a script launching rails
-      if !defined?(Rails::Console) && File.split($PROGRAM_NAME).last != 'rake' && Octokit.rate_limit.remaining > 1
-        repositories = Octokit.repos 'concerto-addons'
-        repositories.each do |r|
-          addons << [r.name.titleize, r.name]
-        end
-      end
-    rescue Faraday::ConnectionFailed => e
-      Rails.logger.error("concerto-addons repos could not be enumerated - #{e.message}")
-    end
-    addons
+    []
+    # begin
+    #   # we shouldn't be checking github if it's just a script launching rails
+    #   if !defined?(Rails::Console) && File.split($PROGRAM_NAME).last != 'rake' && Octokit.rate_limit.remaining > 1
+    #     repositories = Octokit.repos 'concerto-addons'
+    #     repositories.each do |r|
+    #       addons << [r.name.titleize, r.name]
+    #     end
+    #   end
+    # rescue Faraday::ConnectionFailed => e
+    #   Rails.logger.error("concerto-addons repos could not be enumerated - #{e.message}")
+    # end
   end
 
-  ADDONS = concerto_addons
+  # ADDONS = concerto_addons
 
   # Find the Engine's module from among the installed engines.
   def engine

@@ -115,8 +115,6 @@ gem 'delayed_job', '~> 4.1'
 
 gem 'kaminari', '~> 1.2'
 
-gem 'octokit', '~> 9.1'
-
 gem 'font-awesome-sass', '~> 6.5'
 
 gem 'bootstrap', '~> 5.3'
