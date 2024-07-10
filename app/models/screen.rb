@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Screen < ActiveRecord::Base
+class Screen < ApplicationRecord
   include ActiveModel::ForbiddenAttributesProtection
 
   # Define integration hooks for Concerto Plugins
@@ -20,9 +20,8 @@ class Screen < ActiveRecord::Base
   # devise
 
   belongs_to :owner, polymorphic: true
-  validates :owner_id, presence: true
   belongs_to :template
-  validates :template, presence: true, associated: true
+  validates :template, associated: true
 
   has_many :subscriptions, dependent: :destroy
   has_many :positions, through: :template
@@ -61,7 +60,7 @@ class Screen < ActiveRecord::Base
   # Scopes
   ONLINE_THRESHOLD = 5.minutes
   OFFLINE_THRESHOLD = 5.minutes
-  scope :online, -> { where('frontend_updated_at >= ?', Clock.time - Screen::ONLINE_THRESHOLD) }
+  scope :online, -> { where(frontend_updated_at: (Clock.time - Screen::ONLINE_THRESHOLD)..) }
   scope :offline, lambda {
                     where('frontend_updated_at IS NULL OR frontend_updated_at < ?', Clock.time - Screen::OFFLINE_THRESHOLD)
                   }
@@ -167,7 +166,7 @@ class Screen < ActiveRecord::Base
   end
 
   def temp_token=(token)
-    return unless token.present? # TODO: Validate
+    return if token.blank? # TODO: Validate
 
     self.authentication_token = "temp:#{token}"
   end
