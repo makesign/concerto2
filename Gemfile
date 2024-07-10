@@ -119,7 +119,6 @@ gem 'octokit', '~> 9.1'
 
 gem 'font-awesome-sass', '~> 6.5'
 
-
 gem 'faraday-retry', '~> 2.2'
 
 gem 'rmagick', '~> 6.0'
