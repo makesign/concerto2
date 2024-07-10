@@ -27,6 +27,11 @@ app/assets/builds/
     bin/dev
 
 
+## sass
+https://sass-lang.com/documentation/breaking-changes/slash-div/
+
+sass-migrator division **/*.scss
+
 # fonts:
 
 E, [2024-07-10T20:44:31.462537 #39292] ERROR -- :
