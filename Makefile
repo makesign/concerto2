@@ -30,6 +30,12 @@ test-file:
 questions:
 - git diff 8dc6d81 fa4e458 *.rb 
 
+
+
+create-db:
+- bin/rails db:migrate
+- bin/rails db:seed
+
 open:
 - open http://localhost:3000
 
