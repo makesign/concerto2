@@ -37,7 +37,8 @@ module Frontend
         when Mime[:png]
           image.format = 'PNG'
         else
-          render status: :not_acceptable, text: 'Unacceptable image type.', content_type: Mime[:text] and return
+          success =  render status: :not_acceptable, text: 'Unacceptable image type.', content_type: Mime[:text] 
+          return if success
         end
       end
 

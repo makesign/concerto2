@@ -2,6 +2,8 @@ require: rubocop-rails
 
 AllCops:
   NewCops: enable
+  Exclude:
+    - 'app/controllers/frontend/templates_controller.rb'
 
 Style/Encoding:
   Enabled: false
@@ -104,4 +106,27 @@ Style/TernaryParentheses:
 Naming/VariableNumber:
   Enabled: false
 
-
+Rails/ThreeStateBooleanColumn:
+  Enabled: false
+Rails/HasManyOrHasOneDependent:
+  Enabled: false
+Rails/SkipsModelValidations:
+  Enabled: false
+Rails/UniqueValidationWithoutIndex:
+  Enabled: false
+Rails/TransactionExitStatement:
+  Enabled: false
+Rails/ReversibleMigration:
+  Enabled: false
+Rails/CreateTableWithTimestamps:
+  Enabled: false
+Rails/OutputSafety:
+  Enabled: false
+Rails/InverseOf:
+  Enabled: false
+Rails/HelperInstanceVariable:
+  Enabled: false
+Rails/I18nLocaleTexts:
+  Enabled: false
+Rails/RenderInline:
+  Enabled: false

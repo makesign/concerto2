@@ -20,6 +20,8 @@ brakeman:
 - bin/brakeman -q -w3
 rubocop:
 - bin/rubocop --parallel
+rubocop-a:
+- bin/rubocop -A
 
 tests-questions:
 - git show --name-only 8dc6d81
