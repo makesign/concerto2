@@ -2,7 +2,7 @@
 
 require 'test_helper'
 
-class ConcertoPluginsControllerTest < ActionDispatch::IntegrationTest
+class ConcertoPluginsControllerTest < ActionController::TestCase
   include Devise::Test::ControllerHelpers
 
   def setup

@@ -2,8 +2,9 @@
 
 require 'test_helper'
 
-class ContentsControllerTest < ActionDispatch::IntegrationTest
+class ContentsControllerTest <  ActionController::TestCase
   include Devise::Test::ControllerHelpers
+  #include Devise::Test::IntegrationHelpers
 
   def setup
     request.env['devise.mapping'] = Devise.mappings[:user]

@@ -130,3 +130,5 @@ Rails/I18nLocaleTexts:
   Enabled: false
 Rails/RenderInline:
   Enabled: false
+Rails/ActionControllerTestCase:
+  Enabled: false

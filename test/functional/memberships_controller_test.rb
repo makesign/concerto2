@@ -2,7 +2,7 @@
 
 require 'test_helper'
 
-class MembershipsControllerTest < ActionDispatch::IntegrationTest
+class MembershipsControllerTest < ActionController::TestCase
   include Devise::Test::ControllerHelpers
 
   def setup

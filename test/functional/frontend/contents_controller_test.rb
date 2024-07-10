@@ -3,7 +3,7 @@
 require 'test_helper'
 
 module Frontend
-  class ContentsControllerTest < ActionDispatch::IntegrationTest
+  class ContentsControllerTest< ActionController::TestCase
     include Devise::Test::ControllerHelpers
     # fixtures :screens
     # fixtures :fields

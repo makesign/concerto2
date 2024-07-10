@@ -3,7 +3,7 @@
 require 'test_helper'
 
 module Frontend
-  class ScreensControllerTest < ActionDispatch::IntegrationTest
+  class ScreensControllerTest < ActionController::TestCase
     include Devise::Test::ControllerHelpers
     # fixtures :screens
 
@@ -67,7 +67,7 @@ module Frontend
     end
 
     test 'v1 redirects to screen' do
-      get(:index, params: { mac: 'a1:b2:c3' })
+      get(:index, params: { mac: 'a1:b2:c3' })  
       assert_redirected_to frontend_screen_path(screens(:two))
     end
 
@@ -102,7 +102,7 @@ module Frontend
     # Log in the screen the same way the player would for a first-time request
     # be sure to call with a screen which has proper credentials
     def authorize_screen_via_basic(screen)
-      @request.env['HTTP_AUTHORIZATION'] =
+      request.env['HTTP_AUTHORIZATION'] =
         ActionController::HttpAuthentication::Basic.encode_credentials('screen', screen.screen_token)
     end
   end

@@ -2,7 +2,7 @@
 
 require 'test_helper'
 
-class FeedsControllerTest < ActionDispatch::IntegrationTest
+class FeedsControllerTest < ActionController::TestCase
   include Devise::Test::ControllerHelpers
 
   def setup
