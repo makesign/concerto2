@@ -31,6 +31,8 @@ https://guides.rubyonrails.org/getting_started.html
 - [makesign/rails7-tryout-with-devise](https://github.com/makesign/rails7-tryout-with-devise)
 - [makesign/concerto2: New Rails 7 version of concerto - WIP WORK IN PROGRESS!](https://github.com/makesign/concerto2)
 
+- Upgrading Ruby on Rails: https://guides.rubyonrails.org/upgrading_ruby_on_rails.html#sass-rails
+
 ### ActiveRecord / Associations
 - [Active Record Associations — Ruby on Rails Guides](https://guides.rubyonrails.org/association_basics.html)
 - [Catalog of Patterns of Enterprise Application Architecture](https://martinfowler.com/eaaCatalog/)

@@ -1,3 +1,5 @@
+-> https://github.com/makesign/concerto2/issues/22
+
 To use retry middleware with Faraday v2.0+, install `faraday-retry` gem
 To use multipart middleware with Faraday v2.0+, install `faraday-multipart` gem; note: this is used by the ManageGHES client for uploading licenses
 /Users/kleinen/mine/current/htw/courses/project-makerspace/code/concerto-new/concerto2/config/initializers/02-concerto_config.rb:5: warning: Socket.gethostbyname is deprecated; use Addrinfo.getaddrinfo instead.
