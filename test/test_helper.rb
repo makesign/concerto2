@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
+# see
+# https://github.com/simplecov-ruby/simplecov
 require 'simplecov'
-SimpleCov.start
+SimpleCov.start 'rails'
 
 SKIP_HTW_MIGRATION = true
 
