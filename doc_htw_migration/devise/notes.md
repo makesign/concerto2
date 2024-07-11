@@ -1,4 +1,5 @@
 
+-> https://github.com/makesign/concerto2/issues/22
 
 # AAARGH! sie haben eine eigene authentifizierungslogik, siehe zb 
 feeds controller:
