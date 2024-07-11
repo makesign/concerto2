@@ -5,7 +5,6 @@
 
 require: 
   - rubocop-rails
-#  - rubocop-capybara
   
 AllCops:
   NewCops: enable

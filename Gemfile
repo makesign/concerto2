@@ -101,7 +101,6 @@ end
 
 group :test do
   # Use system testing [https://guides.rubyonrails.org/testing.html#system-testing]
-  gem 'capybara'
   gem 'selenium-webdriver'
   gem 'simplecov'
 end
@@ -150,5 +149,3 @@ gem 'twitter-bootstrap-rails-confirm', '~> 2.0'
 gem 'jquery-timepicker-rails', '~> 1.11'
 
 gem 'rubocop-rails', '~> 2.25'
-
-gem "rubocop-capybara", "~> 2.21"
