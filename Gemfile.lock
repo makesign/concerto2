@@ -329,6 +329,8 @@ GEM
       unicode-display_width (>= 2.4.0, < 3.0)
     rubocop-ast (1.31.3)
       parser (>= 3.3.1.0)
+    rubocop-capybara (2.21.0)
+      rubocop (~> 1.41)
     rubocop-rails (2.25.1)
       activesupport (>= 4.2.0)
       rack (>= 1.1)
@@ -438,6 +440,7 @@ DEPENDENCIES
   redcarpet (~> 3.6)
   rmagick (~> 6.0)
   rubocop (~> 1.64)
+  rubocop-capybara (~> 2.21)
   rubocop-rails (~> 2.25)
   selenium-webdriver
   simplecov

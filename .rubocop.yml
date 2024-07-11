@@ -1,5 +1,12 @@
-require: rubocop-rails
+# see 
+# https://docs.rubocop.org/rubocop/configuration.html
+# https://github.com/rubocop/rubocop/blob/master/config/default.yml
+# https://github.com/rubocop/rubocop-capybara
 
+require: 
+  - rubocop-rails
+#  - rubocop-capybara
+  
 AllCops:
   NewCops: enable
   Exclude:
@@ -7,6 +14,7 @@ AllCops:
     - 'tmp/**/*'
     - 'vendor/**/*'
     - '.git/**/*'
+    - 'bin/**/*'
     - 'app/controllers/frontend/templates_controller.rb'
 
 Style/Encoding:
