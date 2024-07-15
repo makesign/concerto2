@@ -151,3 +151,8 @@ dc-db:
 
 quick-push:
 - git commit -am "commit at $(shell date "+%H:%M:%S")" && git push && open https://github.com/htw-imi-showtime/showtime-website/actions
+
+
+test-db-setup:
+- bin/rails db:schema:load RAILS_ENV=test
+- bin/rails db:seed RAILS_ENV=test

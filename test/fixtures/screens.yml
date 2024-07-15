@@ -21,6 +21,8 @@ one_without_fields:
   height: 1080
   authentication_token: auth:0123456asfdabcdef
   locale: en
+
+
 two:
   name: SGS Screen
   location: SGS
