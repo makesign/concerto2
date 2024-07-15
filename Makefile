@@ -142,3 +142,7 @@ quick-push:
 test-db-setup:
 - bin/rails db:schema:load RAILS_ENV=test
 - bin/rails db:seed RAILS_ENV=test
+
+test-db-drop:
+- bin/rails db:drop RAILS_ENV=test
+test-db-reset: test-db-drop test-db-setup
