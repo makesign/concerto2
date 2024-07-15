@@ -1,17 +1,13 @@
 # Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
 
 one:
-  name: 'TickerField'
+  name: MyString
   kind: ticker
 
 two:
-  name: 'MyString'
+  name: MyString
   kind: text
 
 graphics:
-  name: 'Graphics'
+  name: Graphics
   kind: graphics
-
-fof_field:
-  name: 'FoF_Field'
-  kind: fof_kind

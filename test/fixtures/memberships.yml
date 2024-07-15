@@ -18,7 +18,6 @@ karen_wtg:
 
 kristen_rpitv:
   user: kristen
-  user: kristen
   group: rpitv
   level: <%= Membership::LEVELS[:denied] %>
 

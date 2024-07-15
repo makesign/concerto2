@@ -5,23 +5,11 @@ one:
   location: Katie's Room
   is_public: false
   owner: katie (User)
-  template: two
+  template: one
   width: 1920
   height: 1080
   authentication_token: auth:0123456789abcdef
   locale: en
-
-one_without_fields:
-  name: Like the first Screen but without fields
-  location: Katie's Room
-  is_public: false
-  owner: katie (User)
-  template: two
-  width: 1920
-  height: 1080
-  authentication_token: auth:0123456asfdabcdef
-  locale: en
-
 
 two:
   name: SGS Screen
@@ -37,7 +25,7 @@ rpitv:
   location: Sharp Hall
   is_public: false
   owner: rpitv (Group)
-  template: two
+  template: one
   authentication_token: mac:deadbeef
 
 

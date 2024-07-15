@@ -1,19 +1,9 @@
-# as feeds have a recursive tree structure, this yaml map needs to be ordered:
---- !omap
-root:
-  name: Root of all Service Events
-  description: This feed is for community service related announcements
-  group: wtg
-  is_submittable: true
-  is_viewable: true
-  content_types:
-    "Graphic": "1"
-    "Ticker": "1"
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
 
 service:
   name: Service Events
-  description: This feed is for community service related announcements
-  parent: root
+  description: This feed is for community service related announcments
+  parent_id:
   group: wtg
   is_submittable: true
   is_viewable: true

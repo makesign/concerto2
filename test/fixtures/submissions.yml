@@ -23,13 +23,13 @@ denied_ticker:
 
 active_approved_ticker:
   content: active_ticker
-  feed: service(Feed)
+  feed: service
   moderation_flag: true
   moderator: katie
   duration: 1
 
 active_approved_ticker2:
-  content: active_ticker2(Feed)
+  content: active_ticker2
   feed: service2
   moderation_flag: true
   moderator: katie
