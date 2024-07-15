@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Template < ActiveRecord::Base
+class Template < ApplicationRecord
   require 'mime/types'
 
   include ActiveModel::ForbiddenAttributesProtection

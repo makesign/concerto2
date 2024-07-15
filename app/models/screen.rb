@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Screen < ActiveRecord::Base
+class Screen < ApplicationRecord
   include ActiveModel::ForbiddenAttributesProtection
 
   # Define integration hooks for Concerto Plugins
