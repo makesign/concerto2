@@ -10,7 +10,7 @@ class PagesController < ApplicationController
   # GET /pages/1
   def show
     @page = Page.find_by(slug: params[:id])
-    @file_path = File.join(Rails.root, 'app', 'views', 'pages', "#{@page.title.parameterize}.#{@page.language}.md")
+    @file_path = Rails.root.join('app', 'views', 'pages', "#{@page.title.parameterize}.#{@page.language}.md").to_s
     @markdown = Redcarpet::Markdown.new(Redcarpet::Render::HTML, autolink: true, space_after_headers: true)
     auth!
   end
@@ -24,7 +24,7 @@ class PagesController < ApplicationController
   # GET /pages/1/edit
   def edit
     @page = Page.find_by(slug: params[:id])
-    @file_path = File.join(Rails.root, 'app', 'views', 'pages', "#{@page.title.parameterize}.#{@page.language}.md")
+    @file_path = Rails.root.join('app', 'views', 'pages', "#{@page.title.parameterize}.#{@page.language}.md").to_s
     auth!
   end
 

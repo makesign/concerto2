@@ -11,7 +11,7 @@ namespace :db do
     # Transaction.delete_all
     puts 'removing users'
     # except for admin
-    User.all.each do |u|
+    User.find_each do |u|
       u.delete unless u.id == 1
     end
 

@@ -8,7 +8,7 @@ class KindTest < ActiveSupport::TestCase
     k = kinds(:text)
     kind = Kind.new(k.attributes)
     kind.name = ''
-    assert !kind.valid?, 'Kind name is blank'
+    assert_not kind.valid?, 'Kind name is blank'
     kind.name = 'Blah'
     assert kind.valid?, 'Kind name has entry'
   end
@@ -18,7 +18,7 @@ class KindTest < ActiveSupport::TestCase
     k = kinds(:text)
     kind = Kind.new({ name: k.name })
     assert_equal k.name, kind.name, 'Names are set equal'
-    assert !kind.valid?, "Names can't be equal"
+    assert_not kind.valid?, "Names can't be equal"
     kind.name = 'Fooasdasdasda'
     assert kind.valid?, 'Unique name is OK'
   end

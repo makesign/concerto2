@@ -1,11 +1,17 @@
 .RECIPEPREFIX = -
 
 rails: open
-- rails server
+- bin/dev
+#- rails server
 
+sass:
+- bin/dartsass:build
 ci-all: ci-test ci-lint
 ci-test:
 - bin/rails test
+
+i18n-js:
+- bin/i18n export
 
 ci-lint: bundle-audit brakeman rubocop
 bundle-audit:
@@ -14,6 +20,8 @@ brakeman:
 - bin/brakeman -q -w3
 rubocop:
 - bin/rubocop --parallel
+rubocop-a:
+- bin/rubocop -A
 
 tests-questions:
 - git show --name-only 8dc6d81
@@ -23,6 +31,12 @@ test-file:
 
 questions:
 - git diff 8dc6d81 fa4e458 *.rb 
+
+
+
+create-db:
+- bin/rails db:migrate
+- bin/rails db:seed
 
 open:
 - open http://localhost:3000

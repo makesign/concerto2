@@ -2,7 +2,7 @@
 
 require 'test_helper'
 
-class ScreenTest < ActiveSupport::TestCase
+class ScreenUnitTest < ActiveSupport::TestCase
   # TODO: even after setting the screen name to "Blah", the screen object is still not considered valid.
   # Check all validations in the Screen model to ensure no other validation is causing the screen object to be invalid.
   # Inspect the errors object after setting the name to "Blah" to identify any other validation errors.
@@ -18,7 +18,7 @@ class ScreenTest < ActiveSupport::TestCase
     screen.template = Template.new(t.attributes)
     screen.authentication_token = 'auth:nametest' # Must be unique
     screen.name = ''
-    assert !screen.valid?, 'Screen name is blank'
+    assert_not screen.valid?, 'Screen name is blank'
     screen.name = 'Blah'
     screen.valid?
     screen.errors
@@ -32,9 +32,9 @@ class ScreenTest < ActiveSupport::TestCase
     screen.owner = users(:katie)
     screen.authentication_token = 'auth:tpltest' # Must be unique
     screen.template_id = ''
-    assert !screen.valid?, 'Screen template is blank'
+    assert_not screen.valid?, 'Screen template is blank'
     screen.template_id = 0
-    assert !screen.valid?, 'Screen template is unassociated'
+    assert_not screen.valid?, 'Screen template is unassociated'
     screen.template = templates(:one)
     assert screen.valid?, 'Screen template is associated with one'
   end
@@ -46,7 +46,7 @@ class ScreenTest < ActiveSupport::TestCase
     s.valid?
     assert_equal [], s.errors.full_messages, 'Screen owned by user'
     s.owner_type = 'Media'
-    assert !s.valid?, 'Screen cannot be owner by pants'
+    assert_not s.valid?, 'Screen cannot be owner by pants'
     s.owner_type = 'User'
     assert s.valid?, 'Screen can be owner by user'
     s.owner = groups(:wtg)
@@ -54,15 +54,15 @@ class ScreenTest < ActiveSupport::TestCase
     s.owner = nil
     s.owner_type = 'Group'
     s.owner_id = ''
-    assert !s.valid?, 'Screen owner must be set'
+    assert_not s.valid?, 'Screen owner must be set'
     s.owner = nil
     s.owner_type = ''
     s.owner_id = users(:kristen).id
-    assert !s.valid?, 'Screen owner type must be set'
+    assert_not s.valid?, 'Screen owner type must be set'
     s.owner = nil
     s.owner_type = 'User'
     s.owner_id = 0
-    assert !s.valid?, 'Screen owner must be valid'
+    assert_not s.valid?, 'Screen owner must be valid'
   end
 
   test 'that a screen has an aspect ratio' do
@@ -114,10 +114,10 @@ class ScreenTest < ActiveSupport::TestCase
   end
 
   test 'find by mac' do
-    assert_equal screens(:two), Screen.find_by_mac('a1:b2:c3')
-    assert_equal screens(:two), Screen.find_by_mac('a1b2c3')
-    assert_equal screens(:two), Screen.find_by_mac('00:00:00:a1:b2:c3')
-    assert_nil Screen.find_by_mac('123')
+    assert_equal screens(:two), Screen.with_mac('a1:b2:c3')
+    assert_equal screens(:two), Screen.with_mac('a1b2c3')
+    assert_equal screens(:two), Screen.with_mac('00:00:00:a1:b2:c3')
+    assert_nil Screen.with_mac('123')
   end
 
   test 'mac get and set' do
@@ -152,11 +152,11 @@ class ScreenTest < ActiveSupport::TestCase
     s = Screen.new
     s.mac_address = 'abc123'
     assert s.auth_by_mac?
-    assert !s.unsecured?
+    assert_not s.unsecured?
 
     s = screens(:one)
     assert s.auth_by_token?
-    assert !s.unsecured?
+    assert_not s.unsecured?
 
     s.authentication_token = 'bogus:007'
     assert s.unsecured?

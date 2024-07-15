@@ -66,7 +66,7 @@ class ConcertoPlugin < ApplicationRecord
       require 'open-uri'
       version = JSON.parse(open("https://rubygems.org/api/v1/versions/#{gem_name}.json")).first['number']
     rescue Exception => e
-      Rails.logger.debug("Unable to determine current rubygems version for #{gem_name} - #{e.message}")
+      Rails.logger.debug { "Unable to determine current rubygems version for #{gem_name} - #{e.message}" }
     end
     version
   end

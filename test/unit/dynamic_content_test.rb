@@ -52,7 +52,7 @@ class DynamicContentTest < ActiveSupport::TestCase
     dynamic = DynamicContent.where("name = 'Sample Dynamic Content Feed'").first
     child = Ticker.where("name = 'Concerto TV Google Play'").first
 
-    assert !child.is_expired?
+    assert_not child.is_expired?
     dynamic.expire_children
 
     child.reload
@@ -76,8 +76,8 @@ class DynamicContentTest < ActiveSupport::TestCase
     assert dynamic.config['last_refresh_attempt'].nil?
     assert dynamic.refresh!
     assert dynamic.config['last_ok_refresh'].nil?
-    assert !dynamic.config['last_bad_refresh'].nil?
-    assert !dynamic.config['last_refresh_attempt'].nil?
+    assert_not dynamic.config['last_bad_refresh'].nil?
+    assert_not dynamic.config['last_refresh_attempt'].nil?
   end
 
   test 'refresh success sets last_ok_refresh' do
@@ -88,15 +88,15 @@ class DynamicContentTest < ActiveSupport::TestCase
     assert dynamic.config['last_bad_refresh'].nil?
     assert dynamic.config['last_refresh_attempt'].nil?
     assert dynamic.refresh
-    assert !dynamic.config['last_ok_refresh'].nil?
+    assert_not dynamic.config['last_ok_refresh'].nil?
     assert dynamic.config['last_bad_refresh'].nil?
-    assert !dynamic.config['last_refresh_attempt'].nil?
+    assert_not dynamic.config['last_refresh_attempt'].nil?
   end
 
   test 'refresh_needed? false when no interval specified' do
     dynamic = TestHarness.new({ name: 'test', user: users(:katie) })
     dynamic.config.delete('interval')
-    assert !dynamic.refresh_needed?
+    assert_not dynamic.refresh_needed?
   end
 
   test 'refresh_needed? true when interval exists and never updated' do
@@ -111,7 +111,7 @@ class DynamicContentTest < ActiveSupport::TestCase
 
     # not needed if time hasn't expired
     dynamic.config['last_refresh_attempt'] = Clock.time.to_i
-    assert !dynamic.refresh_needed?
+    assert_not dynamic.refresh_needed?
   end
 
   test 'refresh class method refreshes the content' do
@@ -125,7 +125,7 @@ class DynamicContentTest < ActiveSupport::TestCase
     DynamicContent.refresh
     dynamic = TestHarness.find(dynamic.id)
 
-    assert !dynamic.config['last_refresh_attempt'].nil?
+    assert_not dynamic.config['last_refresh_attempt'].nil?
 
     # check that a new child's submission matches the parent's submission
     ticker = dynamic.children.first
@@ -159,7 +159,7 @@ class DynamicContentTest < ActiveSupport::TestCase
     dynamic = DynamicContent.new
     assert dynamic.action_allowed?(:manual_refresh, nil)
     assert dynamic.action_allowed?(:delete_children, nil)
-    assert !dynamic.action_allowed?(:bogus_action, nil)
+    assert_not dynamic.action_allowed?(:bogus_action, nil)
   end
 
   test 'manual_refresh'  do

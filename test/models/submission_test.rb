@@ -37,10 +37,10 @@ class SubmissionTest < ActiveSupport::TestCase
   test 'submission requires feed' do
     skip 'htw_migration: failing test' if SKIP_HTW_MIGRATION
     blank = Submission.new
-    assert !blank.valid?
+    assert_not blank.valid?
 
     s = Submission.new({ content: contents(:futuristic_ticker), duration: 10 })
-    assert !s.valid?, "Submission doesn't have feed"
+    assert_not s.valid?, "Submission doesn't have feed"
     s.feed = feeds(:service)
     assert s.valid?, 'Submission has feed'
   end
@@ -49,7 +49,7 @@ class SubmissionTest < ActiveSupport::TestCase
   test 'submission requires content' do
     skip 'htw_migration: failing test' if SKIP_HTW_MIGRATION
     s = Submission.new({ feed: feeds(:service), duration: 10 })
-    assert !s.valid?, "Submission doesn't have content"
+    assert_not s.valid?, "Submission doesn't have content"
     s.content_id = contents(:futuristic_ticker).id
     assert s.valid?, 'Submission has content'
   end
@@ -59,7 +59,7 @@ class SubmissionTest < ActiveSupport::TestCase
   test 'submissions must be unique' do
     skip 'htw_migration: failing test' if SKIP_HTW_MIGRATION
     s = Submission.new({ content: contents(:old_ticker), feed: feeds(:service), duration: 10 })
-    assert !s.valid?, 'Submission already exists'
+    assert_not s.valid?, 'Submission already exists'
     s.content = contents(:futuristic_ticker)
     assert s.valid?, "Submission doesn't exist"
   end
@@ -67,21 +67,21 @@ class SubmissionTest < ActiveSupport::TestCase
   # Verify is_approved? is only true for approved content
   test 'is_approved?' do
     assert submissions(:approved_ticker).is_approved?
-    assert !submissions(:denied_ticker).is_approved?
-    assert !submissions(:pending_ticker).is_approved?
+    assert_not submissions(:denied_ticker).is_approved?
+    assert_not submissions(:pending_ticker).is_approved?
   end
 
   # Verify is_denied? is only true for denied content
   test 'is_denied?' do
-    assert !submissions(:approved_ticker).is_denied?
+    assert_not submissions(:approved_ticker).is_denied?
     assert submissions(:denied_ticker).is_denied?
-    assert !submissions(:pending_ticker).is_denied?
+    assert_not submissions(:pending_ticker).is_denied?
   end
 
   # Verify is_pending? is only true for pending content
   test 'is_pending?' do
-    assert !submissions(:approved_ticker).is_pending?
-    assert !submissions(:denied_ticker).is_pending?
+    assert_not submissions(:approved_ticker).is_pending?
+    assert_not submissions(:denied_ticker).is_pending?
     assert submissions(:pending_ticker).is_pending?
   end
 
@@ -111,7 +111,7 @@ class SubmissionTest < ActiveSupport::TestCase
   test "submissions to moderate for feed doesn't include dynamic children" do
     subs = feeds(:important_announcements).submissions_to_moderate
     assert subs.include?(submissions(:important_dynamic))
-    assert !subs.include?(submissions(:important_dynamic_child))
+    assert_not subs.include?(submissions(:important_dynamic_child))
   end
 
   test 'moderation_text returns expected results' do

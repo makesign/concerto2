@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
-class Submission < ActiveRecord::Base
+class Submission < ApplicationRecord
   include ActiveModel::ForbiddenAttributesProtection
 
   belongs_to :content, autosave: true
-  validates :content, presence: true, associated: true
+  validates :content, associated: true
 
   belongs_to :feed
-  validates :feed, presence: true, associated: true
+  validates :feed, associated: true
 
   belongs_to :moderator, class_name: 'User', optional: true
   validates :moderator, presence: { unless: proc { |s| s.is_pending? || (s.content && s.content.is_expired?) } },
@@ -18,13 +18,13 @@ class Submission < ActiveRecord::Base
   # Validations
 
   validates :duration, numericality: { greater_than: 0 }
-  validates_uniqueness_of :content_id, scope: :feed_id # Enforce content can only be submitted to a feed once
+  validates :content_id, uniqueness: { scope: :feed_id } # Enforce content can only be submitted to a feed once
 
   # Scoping shortcuts for approved/denied/pending
   scope :approved, -> { where moderation_flag: true }
   scope :denied, -> { where moderation_flag: false }
-  scope :pending, -> { where 'moderation_flag IS NULL' }
-  scope :unsent, -> { where 'pending_notification_sent IS NULL' }
+  scope :pending, -> { where(moderation_flag: nil) }
+  scope :unsent, -> { where(pending_notification_sent: nil) }
 
   # Scoping shortcuts for active/expired/future
   def self.active

@@ -2,7 +2,7 @@
 
 require 'test_helper'
 
-class ScreenTest < ActiveSupport::TestCase
+class ScreenTest < ActionController::TestCase
   test 'valid_fixtures' do
     skip 'htw_migration: failing test' if SKIP_HTW_MIGRATION
     %i[one two three].each do |fixture_name|

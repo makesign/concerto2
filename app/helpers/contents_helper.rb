@@ -8,7 +8,7 @@ module ContentsHelper
 
   def get_available_types
     allowed_types = allowed_content_types(@feeds)
-    available_types = content_types.delete_if { |subclass| !allowed_types.include?(subclass.name) }
+    available_types = content_types.delete_if { |subclass| allowed_types.exclude?(subclass.name) }
     available_types.sort_by do |subclass|
       (subclass.name == ConcertoConfig['default_upload_type'].titleize ? '00' : '') + subclass.display_name
     end

@@ -20,7 +20,7 @@ class UsersController < ApplicationController
     @memberships = @user.memberships.joins(:group).order('groups.name')
     auth!({ action: :read, object: @memberships })
 
-    @contents = @user.contents.where('parent_id IS NULL').reorder('start_time desc')
+    @contents = @user.contents.where(parent_id: nil).reorder('start_time desc')
     @contents_count = @contents.count
     @contents = Kaminari.paginate_array(@contents).page(params[:page])
     auth!({ action: :read, object: @contents })
@@ -35,6 +35,13 @@ class UsersController < ApplicationController
   def new
     @user = User.new
     auth!(action: :manage)
+    respond_with(@user)
+  end
+
+  # GET /users/1/edit
+  def edit
+    @user = User.find(params[:id])
+    auth!
     respond_with(@user)
   end
 
@@ -57,13 +64,6 @@ class UsersController < ApplicationController
       # user could not be saved, return new user form with validation errors
       render 'new'
     end
-  end
-
-  # GET /users/1/edit
-  def edit
-    @user = User.find(params[:id])
-    auth!
-    respond_with(@user)
   end
 
   # PUT /users/1

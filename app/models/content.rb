@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
-class Content < ActiveRecord::Base
+class Content < ApplicationRecord
   include ActiveModel::ForbiddenAttributesProtection
 
   belongs_to :user
-  validates :user, presence: true, associated: true
+  validates :user, associated: true
   belongs_to :kind
-  validates :kind, presence: true, associated: true
+  validates :kind, associated: true
   has_many :submissions, dependent: :destroy, after_add: :after_add_callback
   has_many :feeds, through: :submissions
   has_many :media, as: :attachable, dependent: :destroy
@@ -20,7 +20,7 @@ class Content < ActiveRecord::Base
   validate :cannot_be_own_parent
 
   def cannot_be_own_parent
-    return unless !parent_id.blank? && (parent_id == id)
+    return unless parent_id.present? && (parent_id == id)
 
     errors.add(:parent_id, I18n.t(:cant_be_this_content))
   end
@@ -53,7 +53,7 @@ class Content < ActiveRecord::Base
 
   # Scoped relations for feed approval states
   has_many :approved_feeds, -> { where 'submissions.moderation_flag' => true }, through: :submissions, source: :feed
-  has_many :pending_feeds, -> { where 'submissions.moderation_flag IS NULL' }, through: :submissions, source: :feed
+  has_many :pending_feeds, -> { where(submissions: { moderation_flag: nil }) }, through: :submissions, source: :feed
   has_many :denied_feeds, -> { where 'submissions.moderation_flag' => false }, through: :submissions, source: :feed
 
   # Magic to let us generate routes
@@ -103,7 +103,7 @@ class Content < ActiveRecord::Base
         "#{_start_time[:date]} #{_start_time[:time]}".gsub(I18n.t('time.am'), 'am').gsub(I18n.t('time.pm'),
                                                                                          'pm'), "#{I18n.t('time.formats.date_long_year')} %I:%M %P"
       )
-      write_attribute(:start_time, Time.zone.parse(Time.iso8601(t.to_s).to_s(:db)))
+      write_attribute(:start_time, Time.zone.parse(Time.iso8601(t.to_s).to_fs(:db)))
     else
       write_attribute(:start_time, _start_time)
     end
@@ -119,7 +119,7 @@ class Content < ActiveRecord::Base
         "#{_end_time[:date]} #{_end_time[:time]}".gsub(I18n.t('time.am'), 'am').gsub(I18n.t('time.pm'),
                                                                                      'pm'), "#{I18n.t('time.formats.date_long_year')} %I:%M %P"
       )
-      write_attribute(:end_time, Time.zone.parse(Time.iso8601(t.to_s).to_s(:db)))
+      write_attribute(:end_time, Time.zone.parse(Time.iso8601(t.to_s).to_fs(:db)))
     else
       write_attribute(:end_time, _end_time)
     end
@@ -221,7 +221,7 @@ class Content < ActiveRecord::Base
       filtered_contents = []
       screen_feeds = []
       # Get screen subscriptions matching search parameters
-      Subscription.where(subscription_params).each do |subscription|
+      Subscription.where(subscription_params).find_each do |subscription|
         screen_feeds.push(subscription.feed) unless screen_feeds.include?(subscription.feed)
       end
       # Get contents from the screen's feeds

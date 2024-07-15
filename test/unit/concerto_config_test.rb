@@ -15,7 +15,7 @@ class ConcertoConfigTest < ActiveSupport::TestCase
     assert ConcertoConfig[:allow_user_screen_creation]
 
     ConcertoConfig.set :allow_user_screen_creation, false
-    assert !ConcertoConfig[:allow_user_screen_creation]
+    assert_not ConcertoConfig[:allow_user_screen_creation]
   end
 
   # Test that we can create config entries.
@@ -51,7 +51,7 @@ class ConcertoConfigTest < ActiveSupport::TestCase
 
     ConcertoConfig.delete_unused_configs
 
-    assert !ConcertoConfig.where(key: 'whitelisted_key').empty?
+    assert_not ConcertoConfig.where(key: 'whitelisted_key').empty?
     assert ConcertoConfig.where(key: 'nonwhitelisted_key').empty?
   end
 

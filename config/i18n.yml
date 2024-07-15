@@ -13,6 +13,15 @@
 # https://github.com/fnando/i18n-js#export-configuration
 #
 #
+---
+# translations:
+#   - file: "app/javascript/i18n/translations.js"
+#     only: ['*.contents.*.js', '*.js', '*.time.am', '*.time.pm']
+
 translations:
-  - file: "app/assets/javascripts/i18n/translations.js"
-    only: ['*.contents.*.js', '*.js', '*.time.am', '*.time.pm']
+  - file: "app/javascript/i18n/translations.js"
+    patterns:
+      - "*"
+      - "!*.activerecord"
+      - "!*.errors"
+      - "!*.number.nth"

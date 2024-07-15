@@ -4,6 +4,7 @@ require 'test_helper'
 
 class ContentsControllerTest < ActionController::TestCase
   include Devise::Test::ControllerHelpers
+  # include Devise::Test::IntegrationHelpers
 
   def setup
     request.env['devise.mapping'] = Devise.mappings[:user]
@@ -61,7 +62,7 @@ class ContentsControllerTest < ActionController::TestCase
 
   test 'broken default type raises exception' do
     sign_in users(:katie)
-    default = ConcertoConfig.find_by_key('default_upload_type')
+    default = ConcertoConfig.find_by(key: 'default_upload_type')
     default.destroy
 
     assert_raise RuntimeError do

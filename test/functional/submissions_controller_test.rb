@@ -46,7 +46,7 @@ class SubmissionsControllerTest < ActionController::TestCase
     @submission1 = submissions(:active_approved_ticker)
     @submission2 = submissions(:approved_image)
     get :reorder, params: { feed_id: @feed.id, id: @submission1.id, before: @submission2.id }
-    assert_response 403, 'nonmoderators cannot reorder feed items'
+    assert_response :forbidden, 'nonmoderators cannot reorder feed items'
   end
 
   test 'moderators can reorder feed items' do
@@ -56,7 +56,7 @@ class SubmissionsControllerTest < ActionController::TestCase
     @submission1 = submissions(:active_approved_ticker)
     @submission2 = submissions(:approved_image)
     get :reorder, params: { feed_id: @feed.id, id: @submission1.id, before: @submission2.id }
-    assert_response 200, 'moderators can reorder feed items'
+    assert_response :ok, 'moderators can reorder feed items'
     assert Submission.find(@submission1.id).seq_no < Submission.find(@submission2.id).seq_no, 'items were reordered'
   end
 
@@ -67,7 +67,7 @@ class SubmissionsControllerTest < ActionController::TestCase
     @submission1 = submissions(:active_approved_ticker)
     @submission2 = submissions(:active_approved_ticker2)
     get :reorder, params: { feed_id: @feed.id, id: @submission1.id, before: @submission2.id }
-    assert_response 400
+    assert_response :bad_request
   end
 
   test 'reordered items must be approved' do
@@ -77,7 +77,7 @@ class SubmissionsControllerTest < ActionController::TestCase
     @submission1 = submissions(:active_approved_ticker)
     @submission2 = submissions(:pending_ticker)
     get :reorder, params: { feed_id: @feed.id, id: @submission1.id, before: @submission2.id }
-    assert_response 400
+    assert_response :bad_request
   end
 
   test 'reordered items must be active' do
@@ -87,7 +87,7 @@ class SubmissionsControllerTest < ActionController::TestCase
     @submission1 = submissions(:active_approved_ticker)
     @submission2 = submissions(:approved_ticker)
     get :reorder, params: { feed_id: @feed.id, id: @submission1.id, before: @submission2.id }
-    assert_response 400
+    assert_response :bad_request
   end
 
   test 'children of reordered submissions have same seqno as parent' do
@@ -98,7 +98,7 @@ class SubmissionsControllerTest < ActionController::TestCase
     @submission2 = submissions(:boring_approved_image)
     @child1 = submissions(:boring_approved_child)
     get :reorder, params: { feed_id: @feed.id, id: @parent1.id, before: @submission2.id }
-    assert_response 200
+    assert_response :ok
     assert Submission.find(@parent1.id).seq_no == Submission.find(@child1.id).seq_no, 'child seqno should match parent'
   end
 end

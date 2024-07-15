@@ -10,11 +10,11 @@
 # The variable can then be accessed like this: ConcertoConfig[:public_concerto]
 # and modified by calling ConcertoConfig.set(public_concerto,true)
 
-class ConcertoConfig < ActiveRecord::Base
+class ConcertoConfig < ApplicationRecord
   include ActiveModel::ForbiddenAttributesProtection
 
-  validates_presence_of   :key
-  validates_uniqueness_of :key
+  validates :key, presence: true
+  validates :key, uniqueness: true
 
   # Newsfeed
   include PublicActivity::Common if defined? PublicActivity::Common
@@ -133,10 +133,10 @@ class ConcertoConfig < ActiveRecord::Base
     hit = Rails.cache.read('ConcertoConfig')
 
     if hit.nil? || hit[key].nil? || hit['config_last_updated'].nil? || last_updated != hit['config_last_updated']
-      Rails.logger.debug("Cache miss on #{key}")
+      Rails.logger.debug { "Cache miss on #{key}" }
       nil
     else
-      Rails.logger.debug("Cache hit on #{key} -  #{hit[key]}")
+      Rails.logger.debug { "Cache hit on #{key} -  #{hit[key]}" }
       hit[key]
     end
   end
@@ -146,7 +146,7 @@ class ConcertoConfig < ActiveRecord::Base
   # We include the last update entry in this hash and use it later for cache validation.
   def self.cache_rebuild
     data = {}
-    ConcertoConfig.all.each do |config|
+    ConcertoConfig.find_each do |config|
       next unless config.can_cache?
 
       data[config.key] = if config.value_type == 'boolean'
@@ -165,7 +165,7 @@ class ConcertoConfig < ActiveRecord::Base
 
   def self.delete_unused_configs
     # remove any config items not in the whitelist on the ConcertoConfig class
-    ConcertoConfig.all.each do |config|
+    ConcertoConfig.find_each do |config|
       config.destroy unless @@config_items.include?(config.key)
     end
   end

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-Rails.logger.debug "Starting #{File.basename(__FILE__)} at #{Time.now}"
+Rails.logger.debug { "Starting #{File.basename(__FILE__)} at #{Time.zone.now}" }
 
 Rails.configuration.after_initialize do
   # Concerto Plugins Initializer
@@ -32,4 +32,4 @@ Rails.configuration.after_initialize do
     end
   end
 end
-Rails.logger.debug "Completed #{File.basename(__FILE__)} at #{Time.now}"
+Rails.logger.debug { "Completed #{File.basename(__FILE__)} at #{Time.zone.now}" }

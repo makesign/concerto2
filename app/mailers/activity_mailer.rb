@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class ActivityMailer < ActionMailer::Base
+class ActivityMailer < ApplicationMailer
   def submission_update(activity)
     @activity = activity
     return unless @activity.trackable.content.user.receive_moderation_notifications?

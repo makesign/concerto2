@@ -31,7 +31,7 @@ class MediaController < ApplicationController
       elsif media.file_size.positive? && media.file_type == 'image/jpeg'
         # if it's a photo then auto orient it
         adjusted_image = ConcertoImageMagick.load_image(media.file_contents)
-        unless adjusted_image.blank?
+        if adjusted_image.present?
           adjusted_image.auto_orient!
 
           media.file_data = adjusted_image.to_blob
@@ -50,7 +50,7 @@ class MediaController < ApplicationController
       @medias << media
     end
     results = @medias.map { |m| { id: m.id } }
-    unless image_info.blank?
+    if image_info.present?
       results.first[:info] =
         "#{number_to_human_size(image_info[:size])}, #{image_info[:width]}x#{image_info[:height]}"
     end

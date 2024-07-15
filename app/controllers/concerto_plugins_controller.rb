@@ -143,15 +143,15 @@ class ConcertoPluginsController < ApplicationController
 
     # start a big string to put the Gemfile contents in until it's written to the filesystem
     gemfile_content = ''
-    ConcertoPlugin.all.each do |plugin|
+    ConcertoPlugin.find_each do |plugin|
       gem_args = []
       gem_args << "\"#{plugin.gem_name}\""
 
-      gem_args << "\"#{plugin.gem_version}\"" unless plugin.gem_version.blank?
+      gem_args << "\"#{plugin.gem_version}\"" if plugin.gem_version.present?
 
-      gem_args << "git: \"#{plugin.source_url}\"" if (plugin.source == 'git') && !plugin.source_url.blank?
+      gem_args << "git: \"#{plugin.source_url}\"" if (plugin.source == 'git') && plugin.source_url.present?
 
-      gem_args << "path: \"#{plugin.source_url}\"" if (plugin.source == 'path') && !plugin.source_url.blank?
+      gem_args << "path: \"#{plugin.source_url}\"" if (plugin.source == 'path') && plugin.source_url.present?
 
       gemfile_content = "#{gemfile_content}\ngem #{gem_args.join(', ')}\n"
     end

@@ -23,11 +23,11 @@ basedir = File.dirname(__FILE__)
 # through the ConcertoPlugins controller.
 
 group :concerto_plugins do
-  gem 'concerto_calendar'
-  gem 'concerto_frontend'
-  gem 'concerto_hardware'
+  # gem 'concerto_calendar'
+  # gem 'concerto_frontend'
+  # gem 'concerto_hardware'
   # gem "concerto_iframe"
-  gem 'concerto_remote_video'
+  # gem 'concerto_remote_video'
   # TODO: see https://github.com/makesign/concerto2/issues/4
   # gem 'concerto_simple_rss'
   # gem "concerto_weather", :git => 'https://github.com/concerto/concerto-weather.git', :branch => 'rails5'
@@ -88,6 +88,10 @@ group :development do
   # Use console on exceptions pages [https://github.com/rails/web-console]
   gem 'web-console'
 
+  gem 'i18n-js', '~> 4.2'
+
+  gem 'i18n-tasks', '~> 1.0'
+
   # Add speed badges [https://github.com/MiniProfiler/rack-mini-profiler]
   # gem "rack-mini-profiler"
 
@@ -97,7 +101,6 @@ end
 
 group :test do
   # Use system testing [https://guides.rubyonrails.org/testing.html#system-testing]
-  gem 'capybara'
   gem 'selenium-webdriver'
   gem 'simplecov'
 end
@@ -116,8 +119,6 @@ gem 'delayed_job', '~> 4.1'
 gem 'kaminari', '~> 1.2'
 
 gem 'font-awesome-sass', '~> 6.5'
-
-gem 'bootstrap', '~> 5.3'
 
 gem 'faraday-retry', '~> 2.2'
 
@@ -138,3 +139,13 @@ gem 'brakeman', '~> 6.1'
 gem 'rubocop', '~> 1.64'
 
 gem 'pg', '~> 1.5'
+
+gem 'jquery-rails', '~> 4.6'
+
+gem 'bootstrap-datepicker-rails', '~> 1.10'
+
+gem 'twitter-bootstrap-rails-confirm', '~> 2.0'
+
+gem 'jquery-timepicker-rails', '~> 1.11'
+
+gem 'rubocop-rails', '~> 2.25'

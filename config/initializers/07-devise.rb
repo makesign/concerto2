@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-Rails.logger.debug "Starting #{File.basename(__FILE__)} at #{Time.now}"
+Rails.logger.debug { "Starting #{File.basename(__FILE__)} at #{Time.zone.now}" }
 
 Rails.configuration.after_initialize do
   Devise.setup do |config|
@@ -324,4 +324,4 @@ Devise.setup do |config|
   # config.sign_in_after_change_password = true
 end
 
-Rails.logger.debug "Completed #{File.basename(__FILE__)} at #{Time.now}"
+Rails.logger.debug { "Completed #{File.basename(__FILE__)} at #{Time.zone.now}" }

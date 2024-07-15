@@ -8,6 +8,44 @@ module Frontend
 
     layout 'frontend'
 
+    # GET /frontend
+    # Handles cases where the ID is not provided:
+    #   public legacy screens screetest/functional/frontend/screens_controller_test.rbns - a MAC address is provided instead of an ID
+    #   private screens - send to ID based on authentication token from cookie or GET param
+    #   private screen setup - a short token is stored in the session or GET param
+    def index
+      if !current_screen.nil?
+        send_to_screen(current_screen)
+      elsif params[:mac]
+        screen = Screen.with_mac(params[:mac])
+        if screen
+          if screen.is_public?
+            redirect_to frontend_screen_path(screen), status: :moved_permanently
+          else
+            render plain: 'Forbidden.', status: :forbidden
+          end
+        else
+          render plain: 'Screen not found.', status: :not_found
+        end
+      elsif (@temp_token = session[:screen_temp_token] || params[:screen_temp_token])
+        screen = Screen.with_temp_token(@temp_token)
+        if screen.nil?
+          send_temp_token
+        else
+          sign_in_screen screen
+          complete_auth(screen)
+        end
+      else
+        # We're going to store the temporary token in the session for
+        # browser clients, and send it via the body for API requests.
+        # Currently, the token is spoofable during the setup window,
+        # but the consequences are limited.
+        @temp_token = Screen.generate_temp_token
+        session[:screen_temp_token] = @temp_token
+        send_temp_token
+      end
+    end
+
     # GET /frontend/:id
     def show
       @preview = params.key?(:preview) && params[:preview] == 'true'
@@ -17,13 +55,13 @@ module Frontend
         auth! action: (@preview ? :preview : :display)
       rescue ActiveRecord::ActiveRecordError
         # TODO: Could this just be a regular 404?
-        render plain: 'Screen not found.', status: 404
+        render plain: 'Screen not found.', status: :not_found
       rescue CanCan::AccessDenied
         if current_screen.nil?
           headers['WWW-Authenticate'] = 'Basic realm="Frontend Screen"'
-          render plain: 'Screen requires authentication.', status: 401
+          render plain: 'Screen requires authentication.', status: :unauthorized
         else
-          render plain: 'Incorrect authorization.', status: 403
+          render plain: 'Incorrect authorization.', status: :forbidden
         end
       else
         @js_files = ['frontend.js']
@@ -42,44 +80,6 @@ module Frontend
     # Requested by browser to find CORS policy
     def show_options
       head :ok
-    end
-
-    # GET /frontend
-    # Handles cases where the ID is not provided:
-    #   public legacy screens screens - a MAC address is provided instead of an ID
-    #   private screens - send to ID based on authentication token from cookie or GET param
-    #   private screen setup - a short token is stored in the session or GET param
-    def index
-      if !current_screen.nil?
-        send_to_screen(current_screen)
-      elsif params[:mac]
-        screen = Screen.find_by_mac(params[:mac])
-        if screen
-          if screen.is_public?
-            redirect_to frontend_screen_path(screen), status: :moved_permanently
-          else
-            render plain: 'Forbidden.', status: 403
-          end
-        else
-          render plain: 'Screen not found.', status: 404
-        end
-      elsif (@temp_token = session[:screen_temp_token] || params[:screen_temp_token])
-        screen = Screen.find_by_temp_token @temp_token
-        if screen.nil?
-          send_temp_token
-        else
-          sign_in_screen screen
-          complete_auth(screen)
-        end
-      else
-        # We're going to store the temporary token in the session for
-        # browser clients, and send it via the body for API requests.
-        # Currently, the token is spoofable during the setup window,
-        # but the consequences are limited.
-        @temp_token = Screen.generate_temp_token
-        session[:screen_temp_token] = @temp_token
-        send_temp_token
-      end
     end
 
     def send_to_screen(screen)
@@ -124,9 +124,9 @@ module Frontend
         allow_screen_if_unsecured @screen
         auth! action: (@preview ? :preview : :display)
       rescue ActiveRecord::ActiveRecordError
-        render json: {}, status: 404
+        render json: {}, status: :not_found
       rescue CanCan::AccessDenied
-        render json: {}, status: 403
+        render json: {}, status: :forbidden
       else
         # If we got the dimensions then keep them so we can indicate its orientation in the screen list.
         if params['width'].present? && params['height'].present? && !@preview
@@ -141,7 +141,7 @@ module Frontend
             nil
           end
           @screen.update_columns(height:, width:)
-          Rails.logger.debug("updated screen #{@screen.id} dimensions #{width}w x #{height} h")
+          Rails.logger.debug { "updated screen #{@screen.id} dimensions #{width}w x #{height} h" }
         end
 
         # field_configs = []  # Cache the field_configs
@@ -159,11 +159,11 @@ module Frontend
           @screen.template.positions.each do |p|
             p.field_contents_path = frontend_screen_field_contents_path(@screen, p.field, format: :json)
             p.field.config = {}
-            FieldConfig.default.where(field_id: p.field_id).each do |d_fc|
+            FieldConfig.default.where(field_id: p.field_id).find_each do |d_fc|
               p.field.config[d_fc.key] = d_fc.value
               # field_configs << d_fc
             end
-            @screen.field_configs.where(field_id: p.field_id).each do |fc|
+            @screen.field_configs.where(field_id: p.field_id).find_each do |fc|
               p.field.config[fc.key] = fc.value
               # field_configs << fc
             end

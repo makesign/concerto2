@@ -8,10 +8,10 @@ class ConcertoPluginTest < ActiveSupport::TestCase
     # NOTE: this tests stalls, probably because gem download is switched off
     # a duplicate rubygem
     p = ConcertoPlugin.new(gem_name: 'concerto_weather', source: 'rubygems')
-    assert !p.valid?
+    assert_not p.valid?
     # not a valid rubygem
     p = ConcertoPlugin.new(gem_name: 'concerto_invalidgem', source: 'rubygems')
-    assert !p.valid?
+    assert_not p.valid?
 
     # not a valid git
     # some of these prompt for a github account, so they're commented out until I can find a solution
@@ -20,7 +20,7 @@ class ConcertoPluginTest < ActiveSupport::TestCase
     # assert p.valid?
     p = ConcertoPlugin.new(gem_name: 'concerto_invalidgem', source: 'git',
                            source_url: '')
-    assert !p.valid?
+    assert_not p.valid?
     # p = ConcertoPlugin.new(:gem_name => 'concerto_invalidgem', :source => 'git',
     #   :source_url => 'http://github.com/concerto/concerto_invalidgem.git')
     # assert !p.valid?
@@ -28,9 +28,9 @@ class ConcertoPluginTest < ActiveSupport::TestCase
     # path
     p = ConcertoPlugin.new(gem_name: 'concerto_invalidgem', source: 'path',
                            source_url: '')
-    assert !p.valid?
+    assert_not p.valid?
     p = ConcertoPlugin.new(gem_name: 'concerto_invalidgem', source: 'path',
                            source_url: '../concerto_invalidgem.invalid_path')
-    assert !p.valid?
+    assert_not p.valid?
   end
 end

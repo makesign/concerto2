@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Screen < ActiveRecord::Base
+class Screen < ApplicationRecord
   include ActiveModel::ForbiddenAttributesProtection
 
   # Define integration hooks for Concerto Plugins
@@ -20,9 +20,8 @@ class Screen < ActiveRecord::Base
   # devise
 
   belongs_to :owner, polymorphic: true
-  validates :owner_id, presence: true
   belongs_to :template
-  validates :template, presence: true, associated: true
+  validates :template, associated: true
 
   has_many :subscriptions, dependent: :destroy
   has_many :positions, through: :template
@@ -43,7 +42,7 @@ class Screen < ActiveRecord::Base
   # something like if owner_type.is_class (however that would work)
   validates :owner, presence: true, associated: true, if: proc { %w[User Group].include?(owner_type) }
   # Authentication token must be unique, prevents mac address collisions with legacy screens.
-  validates :authentication_token, uniqueness: { allow_nil: true, allow_blank: true }
+  validates :authentication_token, uniqueness: { allow_blank: true }
   validate :unsecured_screens_must_be_public
 
   validates :locale, format: { with: /\A[a-z]{2}(-[A-Z]{2}){0,1}\Z/, message: 'format is xx or xx-XX' },
@@ -61,7 +60,7 @@ class Screen < ActiveRecord::Base
   # Scopes
   ONLINE_THRESHOLD = 5.minutes
   OFFLINE_THRESHOLD = 5.minutes
-  scope :online, -> { where('frontend_updated_at >= ?', Clock.time - Screen::ONLINE_THRESHOLD) }
+  scope :online, -> { where(frontend_updated_at: (Clock.time - Screen::ONLINE_THRESHOLD)..) }
   scope :offline, lambda {
                     where('frontend_updated_at IS NULL OR frontend_updated_at < ?', Clock.time - Screen::OFFLINE_THRESHOLD)
                   }
@@ -107,7 +106,7 @@ class Screen < ActiveRecord::Base
     frontend_updated_at.nil? || frontend_updated_at < (Clock.time - within)
   end
 
-  def self.find_by_mac(mac_addr)
+  def self.with_mac(mac_addr)
     mac = MacAddr.condense(mac_addr)
     token = "mac:#{mac}"
     Screen.where(authentication_token: token).first
@@ -130,7 +129,7 @@ class Screen < ActiveRecord::Base
     token_by_type('auth')
   end
 
-  def self.find_by_screen_token(token)
+  def self.with_screen_token(token)
     return nil if token.blank?
 
     begin
@@ -167,7 +166,7 @@ class Screen < ActiveRecord::Base
   end
 
   def temp_token=(token)
-    return unless !token.nil? && !token.empty? # TODO: Validate
+    return if token.blank? # TODO: Validate
 
     self.authentication_token = "temp:#{token}"
   end
@@ -176,7 +175,7 @@ class Screen < ActiveRecord::Base
     token_by_type('temp')
   end
 
-  def self.find_by_temp_token(token)
+  def self.with_temp_token(token)
     return nil if token.blank?
 
     begin
@@ -200,7 +199,7 @@ class Screen < ActiveRecord::Base
 
   # Radio button default
   def auth_action
-    return AUTH_NEW_TOKEN unless new_temp_token.blank?
+    return AUTH_NEW_TOKEN if new_temp_token.present?
     return AUTH_NO_SECURITY if unsecured?
     return AUTH_KEEP_TOKEN if auth_in_progress? || auth_by_token?
     return AUTH_LEGACY_SCREEN if auth_by_mac?

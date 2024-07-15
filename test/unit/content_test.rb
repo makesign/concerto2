@@ -117,12 +117,12 @@ class ContentTest < ActiveSupport::TestCase
     assert subclasses.include?(Graphic)
     assert subclasses.include?(DynamicContent)
     assert subclasses.include?(TestContent)
-    assert !subclasses.include?(Content)
+    assert_not subclasses.include?(Content)
   end
 
   test 'default content allows no actions' do
     c = Content.new
-    assert !c.action_allowed?(:save, users(:katie))
+    assert_not c.action_allowed?(:save, users(:katie))
   end
 
   test 'default content does no actions' do
@@ -148,11 +148,11 @@ class ContentTest < ActiveSupport::TestCase
                    duration: 10,
                    user: users(:katie),
                    start_time: 2.days.ago,
-                   end_time: Time.now.tomorrow)
+                   end_time: Time.zone.now.tomorrow)
     assert c.save
 
     Submission.create({ content: c, duration: 5, feed: feeds(:announcements) })
-    assert !c.is_denied?
+    assert_not c.is_denied?
     assert Submission.create({
                                content: c,
                                duration: 5,
@@ -160,7 +160,7 @@ class ContentTest < ActiveSupport::TestCase
                                moderator: users(:admin),
                                moderation_flag: true
                              })
-    assert !c.is_denied?
+    assert_not c.is_denied?
     assert Submission.create({
                                content: c,
                                duration: 5,
@@ -178,7 +178,7 @@ class ContentTest < ActiveSupport::TestCase
                    duration: 10,
                    user: users(:katie),
                    start_time: 2.days.ago,
-                   end_time: Time.now.tomorrow)
+                   end_time: Time.zone.now.tomorrow)
     assert c.save
 
     assert Submission.create({
@@ -188,7 +188,7 @@ class ContentTest < ActiveSupport::TestCase
                                moderator: users(:admin),
                                moderation_flag: true
                              })
-    assert !c.is_pending?
+    assert_not c.is_pending?
     assert Submission.create({
                                content: c,
                                duration: 5,
@@ -196,7 +196,7 @@ class ContentTest < ActiveSupport::TestCase
                                moderator: users(:admin),
                                moderation_flag: false
                              })
-    assert !c.is_pending?
+    assert_not c.is_pending?
     Submission.create({ content: c, duration: 5, feed: feeds(:announcements) })
     assert c.is_pending?
   end
@@ -208,7 +208,7 @@ class ContentTest < ActiveSupport::TestCase
                    duration: 10,
                    user: users(:katie),
                    start_time: 2.days.ago,
-                   end_time: Time.now.tomorrow)
+                   end_time: Time.zone.now.tomorrow)
     assert c.save
 
     assert Submission.create({
@@ -226,12 +226,12 @@ class ContentTest < ActiveSupport::TestCase
                               moderator: users(:admin),
                               moderation_flag: false
                             })
-    assert !c.is_approved?
+    assert_not c.is_approved?
     sub.moderation_flag = true
     sub.save
     assert c.is_approved?
     Submission.create({ content: c, duration: 5, feed: feeds(:announcements) })
-    assert !c.is_approved?
+    assert_not c.is_approved?
   end
 
   test 'base preview is empty' do

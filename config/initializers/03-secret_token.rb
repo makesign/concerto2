@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 Rails.configuration.after_initialize do
-  Rails.logger.debug "Starting #{File.basename(__FILE__)} at #{Time.now}"
+  Rails.logger.debug { "Starting #{File.basename(__FILE__)} at #{Time.zone.now}" }
 
   secret_token = ENV.fetch('SECRET_TOKEN', nil)
 
@@ -22,5 +22,5 @@ Rails.configuration.after_initialize do
   Rails.application.config.secret_token = secret_token
   Rails.application.config.secret_key_base = secret_token
   ENV['SECRET_KEY_BASE'] = secret_token
-  Rails.logger.debug "Completed #{File.basename(__FILE__)} at #{Time.now}"
+  Rails.logger.debug { "Completed #{File.basename(__FILE__)} at #{Time.zone.now}" }
 end

@@ -1,8 +1,9 @@
 # frozen_string_literal: true
 
-class Group < ActiveRecord::Base
+class Group < ApplicationRecord
   include ActiveModel::ForbiddenAttributesProtection
 
+  before_save :update_membership_perms
   after_create :create_leader
 
   has_many :feeds, dependent: :restrict_with_error
@@ -16,7 +17,7 @@ class Group < ActiveRecord::Base
 
   # Scoped relation for members and pending members
   has_many :all_users, lambda {
-                         where ['memberships.level != ?', Membership::LEVELS[:denied]]
+                         where.not(memberships: { level: Membership::LEVELS[:denied] })
                        }, through: :memberships, source: :user
 
   # Scoped relation for leaders
@@ -26,8 +27,6 @@ class Group < ActiveRecord::Base
 
   # Validations
   validates :name, presence: true, uniqueness: true
-
-  before_save :update_membership_perms
 
   default_scope { order 'LOWER(groups.name)' }
 
@@ -45,7 +44,7 @@ class Group < ActiveRecord::Base
   end
 
   def create_leader
-    return unless new_leader.present?
+    return if new_leader.blank?
 
     self.new_leader = Membership.create(user_id: new_leader, group_id: id,
                                         level: Membership::LEVELS[:leader])

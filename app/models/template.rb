@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Template < ActiveRecord::Base
+class Template < ApplicationRecord
   require 'mime/types'
 
   include ActiveModel::ForbiddenAttributesProtection
@@ -115,7 +115,7 @@ class Template < ActiveRecord::Base
       dw = ConcertoImageMagick.new_drawing_object
 
       positions.each do |position|
-        next if !only_fields.empty? && !only_fields.include?(position.field_id)
+        next if !only_fields.empty? && only_fields.exclude?(position.field_id)
 
         dw = ConcertoImageMagick.draw_block(dw, fill_color: 'black', stroke_opacity: 0, fill_opacity: 0.6,
                                                 width:, height:, left: position.left, right: position.right, top: position.top, bottom: position.bottom)
@@ -146,8 +146,8 @@ class Template < ActiveRecord::Base
 
     Zip::File.open(zipfile_path, Zip::File::CREATE) do |zipfile|
       zipfile.file.open("#{name}.xml", 'w') { |f| f.print xml }
-      zipfile.file.open(img.file_name, 'w') { |f| f.write img.file_contents } unless img.blank?
-      zipfile.file.open(css.file_name, 'w') { |f| f.print css.file_contents } unless css.blank?
+      zipfile.file.open(img.file_name, 'w') { |f| f.write img.file_contents } if img.present?
+      zipfile.file.open(css.file_name, 'w') { |f| f.print css.file_contents } if css.present?
     end
 
     zipfile_path
@@ -203,7 +203,7 @@ class Template < ActiveRecord::Base
         xml_data = entry.get_input_stream.read
       elsif extension == 'css'
         css_file = entry
-      elsif %w[jpg png].include?(extension) && !entry.name.include?('preview')
+      elsif %w[jpg png].include?(extension) && entry.name.exclude?('preview')
         image_file = entry
       end
     end

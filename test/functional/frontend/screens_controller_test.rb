@@ -15,12 +15,12 @@ module Frontend
 
     test 'private screen frontend is not public' do
       get(:show, params: { id: screens(:one).id })
-      assert_response 401
+      assert_response :unauthorized
     end
 
     test 'private screen setup data is not public' do
       get(:setup, params: { id: screens(:one).id, format: :json })
-      assert_response 403
+      assert_response :forbidden
     end
 
     test 'should get screen setup' do
@@ -102,7 +102,7 @@ module Frontend
     # Log in the screen the same way the player would for a first-time request
     # be sure to call with a screen which has proper credentials
     def authorize_screen_via_basic(screen)
-      @request.env['HTTP_AUTHORIZATION'] =
+      request.env['HTTP_AUTHORIZATION'] =
         ActionController::HttpAuthentication::Basic.encode_credentials('screen', screen.screen_token)
     end
   end

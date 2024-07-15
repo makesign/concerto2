@@ -26,7 +26,7 @@ module ApplicationHelper
   def render_partial_if(partial, default = nil, locals = {})
     if lookup_context.exists?(partial, [], true)
       render(partial:, locals:)
-    elsif !default.blank?
+    elsif default.present?
       render partial: default, locals:
     end
   end
@@ -34,7 +34,7 @@ module ApplicationHelper
   # render tooltip
   def tooltip_tag(tip, text = nil, options = nil)
     results = []
-    results << "#{content_tag(:span, text, options)} " if !text.nil? && !text.blank?
+    results << "#{content_tag(:span, text, options)} " if !text.nil? && text.present?
     results << content_tag(:i, nil,
                            { class: 'fas fa-question-circle muted tooltip-basic', data: { tooltip_text: tip } })
     results.join.html_safe
@@ -43,8 +43,8 @@ module ApplicationHelper
   # render the label and the toolip beside it (passed in the options as :tip)
   def label_tooltip(object_name, method, content_or_options = nil, options = nil)
     label object_name, method do
-      concat("#{content_or_options} ") if !content_or_options.nil? && !content_or_options.blank?
-      concat(tooltip_tag(options[:tip])) if !options.nil? && options.key?(:tip) && !options[:tip].blank?
+      concat("#{content_or_options} ") if !content_or_options.nil? && content_or_options.present?
+      concat(tooltip_tag(options[:tip])) if !options.nil? && options.key?(:tip) && options[:tip].present?
     end
   end
 

@@ -28,7 +28,7 @@ module ConcertoDevise
         # At first registration, the admin is given the option to
         # opt-out of error reporting.
         resource.receive_moderation_notifications = true
-        resource.confirmed_at = Date.today
+        resource.confirmed_at = Time.zone.today
       end
 
       if resource.save

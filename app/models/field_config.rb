@@ -1,17 +1,16 @@
 # frozen_string_literal: true
 
 # Key-value store for field-specific configurations
-class FieldConfig < ActiveRecord::Base
+class FieldConfig < ApplicationRecord
   include ActiveModel::ForbiddenAttributesProtection
   include PublicActivity::Common if defined? PublicActivity::Common
 
   belongs_to :field
-  validates_presence_of :field_id
   belongs_to :screen, optional: true
 
-  validates_presence_of :key
+  validates :key, presence: true
   # each combination of screen & field can only have one fieldconfig
-  validates_uniqueness_of :key, scope: %i[screen_id field_id]
+  validates :key, uniqueness: { scope: %i[screen_id field_id] }
   validates :value, numericality: { only_integer: true }, if: proc { |r| r.key_type == :integer }
 
   scope :default, -> { where(screen_id: nil) }

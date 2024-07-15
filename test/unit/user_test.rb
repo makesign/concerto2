@@ -26,12 +26,12 @@ class UserTest < ActiveSupport::TestCase
 
   test 'in_group?' do
     assert @karen.in_group?(groups(:wtg))
-    assert !@karen.in_group?(groups(:rpitv))
+    assert_not @karen.in_group?(groups(:rpitv))
   end
 
   test 'cannot delete user that owns a screen' do
     skip 'htw_migration: failing test' if SKIP_HTW_MIGRATION
-    assert !@katie.is_deletable?
+    assert_not @katie.is_deletable?
     assert @karen.is_deletable?
 
     assert_raises(ActiveRecord::DeleteRestrictionError) do
@@ -40,13 +40,13 @@ class UserTest < ActiveSupport::TestCase
   end
 
   test 'cannot delete last admin' do
-    assert !users(:admin).destroy
+    assert_not users(:admin).destroy
     assert users(:karen).destroy
   end
 
   test 'owned feeds' do
     assert @katie.owned_feeds.include?(feeds(:service))
-    assert !@karen.owned_feeds.include?(feeds(:service))
+    assert_not @karen.owned_feeds.include?(feeds(:service))
   end
 
   test 'auto confirm' do

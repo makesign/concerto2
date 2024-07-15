@@ -1,4 +1,6 @@
 // Border Radius
+@use "sass:math";
+
 @mixin border-radius($radius: 5px) {
   -webkit-border-radius: $radius;
      -moz-border-radius: $radius;
@@ -75,9 +77,9 @@
 // Opacity
 @mixin opacity($opacity: 100) {
   filter: alpha(opacity=$opacity);
-  -khtml-opacity: $opacity / 100;
-    -moz-opacity: $opacity / 100;
-         opacity: $opacity / 100;
+  -khtml-opacity: $opacity * 0.01;
+    -moz-opacity: $opacity * 0.01;
+         opacity: $opacity * 0.01;
 }
 
 // Box sizing
@@ -144,7 +146,7 @@
   // to negative-margin away, but so it goes.
   *width: 100%;
   height: 1px;
-  margin: (($baseLineHeight / 2) - 1) 1px; // 8px 1px
+  margin: (($baseLineHeight * 0.5) - 1) 1px; // 8px 1px
   *margin: -5px 0 5px;
   overflow: hidden;
   background-color: $top;
@@ -239,7 +241,7 @@
       @include input-block-level();
       float: left;
       margin-left: $gutterWidth;
-      *margin-left: $gutterWidth - (.5 / ($gridRowWidth/1px) * 100 * 1%);
+      *margin-left: $gutterWidth - (math.div(.5, math.div($gridRowWidth, 1px)) * 100 * 1%);
     }
     [class*="span"]:first-child {
       margin-left: 0;
@@ -256,7 +258,7 @@
 }
 @mixin gridFluidSpan($columns, $columnWidth, $gutterWidth) {
   width: ($columnWidth * $columns) + ($gutterWidth * ($columns - 1));
-  *width: ($columnWidth * $columns) + ($gutterWidth * ($columns - 1)) - (.5 / ($gridRowWidth/1px) * 100 * 1%);
+  *width: ($columnWidth * $columns) + ($gutterWidth * ($columns - 1)) - (math.div(.5, math.div($gridRowWidth, 1px)) * 100 * 1%);
 }
 
 @mixin gridInput($columnWidth, $gutterWidth) {

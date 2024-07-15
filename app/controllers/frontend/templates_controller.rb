@@ -22,7 +22,7 @@ module Frontend
       width = params[:width].to_f
       height = params[:height].to_f
       if (params.key?(:width) && width <= 0) || (params.key?(:height) && height <= 0)
-        render status: 400, plain: 'Bad request.'
+        render status: :bad_request, plain: 'Bad request.'
         return
       end
       unless width <= 0 && height <= 0
@@ -30,14 +30,15 @@ module Frontend
         image = ConcertoImageMagick.resize(image, width, height)
       end
 
-      unless template.media.blank?
+      if template.media.present?
         case request.format
         when Mime::Type.lookup_by_extension(:jpg)
           image.format = 'JPG'
         when Mime[:png]
           image.format = 'PNG'
         else
-          render status: 406, text: 'Unacceptable image type.', content_type: Mime[:text] and return
+          success =  render status: :not_acceptable, text: 'Unacceptable image type.', content_type: Mime[:text] 
+          return if success
         end
       end
 

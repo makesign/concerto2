@@ -24,7 +24,7 @@ module Frontend
       get(:show,
           params: { screen_id: screens(:one).id, field_id: fields(:one).id, id: contents(:sample_image).id, height: 0,
                     width: 0 })
-      assert_response 400
+      assert_response :bad_request
     end
   end
 end
