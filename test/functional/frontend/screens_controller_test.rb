@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
 require 'test_helper'
-
+SKIP_HTW_MIGRATION_nemo=false
 module Frontend
   class ScreensControllerTest < ActionController::TestCase
     include Devise::Test::ControllerHelpers
-    # fixtures :screens
+     fixtures :all
 
     test 'should get screen frontend' do
       @request.cookies['concerto_screen_token'] = screens(:one).screen_token
@@ -31,7 +31,7 @@ module Frontend
     end
 
     test 'screen setup makes sense' do
-      skip 'htw_migration: failing test' if SKIP_HTW_MIGRATION
+      skip 'htw_migration: failing test' if SKIP_HTW_MIGRATION_nemo
       @request.cookies['concerto_screen_token'] = screens(:one).screen_token
       get(:setup, params: { id: screens(:one).id, format: :json })
       data = ActiveSupport::JSON.decode(@response.body)
@@ -40,6 +40,12 @@ module Frontend
       # assert_not_nil data['template']['path']&.length
       # assert data['template']['path']&.length > 0
 
+      # Debugging output
+      puts "Data Hash: #{data.inspect}"
+      puts "Template Path: #{data.dig('template', 'path').inspect}"
+
+      assert_not_nil data.dig('template', 'path'), "Template path should not be nil"
+      assert data['template']['path'].length.positive?, "Template path should be present and not empty"
       assert_equal data['template']['positions'].length,
                    screens(:one).template.positions.length
       assert data['template']['path'].length.positive?
