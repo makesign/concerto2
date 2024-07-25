@@ -393,6 +393,7 @@ PLATFORMS
   x86_64-linux
 
 DEPENDENCIES
+  activestorage
   bootsnap
   bootstrap-datepicker-rails (~> 1.10)
   brakeman (~> 6.1)

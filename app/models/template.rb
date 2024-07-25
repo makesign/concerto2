@@ -12,10 +12,9 @@ class Template < ApplicationRecord
   ConcertoPlugin.install_callbacks(self) # Get the callbacks from plugins
 
   has_many :screens, dependent: :restrict_with_exception
-  has_many :media, as: :attachable, dependent: :destroy
   has_many :positions, -> { order(:id) }, dependent: :destroy
+  has_many_attached :media
 
-  accepts_nested_attributes_for :media
   accepts_nested_attributes_for :positions, allow_destroy: true
 
   belongs_to :owner, polymorphic: true, optional: true

@@ -7,7 +7,7 @@ class Media < ApplicationRecord
   belongs_to :attachable, polymorphic: true, optional: true
 
   # switch to active_storage
-  has_one_attached :attached_file
+  has_one_attached :nikkis_file
   # attachable
   #  has_one_attached :image do |attachable|
   #     attachable.variant( :thumb , resize_to_limit: [80, 80])

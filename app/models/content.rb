@@ -9,9 +9,8 @@ class Content < ApplicationRecord
   validates :kind, associated: true
   has_many :submissions, dependent: :destroy, after_add: :after_add_callback
   has_many :feeds, through: :submissions
-  has_many :media, as: :attachable, dependent: :destroy
+  has_many_attached :media
 
-  accepts_nested_attributes_for :media
   accepts_nested_attributes_for :submissions
 
   # Validations

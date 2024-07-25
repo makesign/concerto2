@@ -43,6 +43,8 @@
       <div class="input">
         <%= f.fields_for :media do |media| %>
           <%= media.file_field :file %>
+          <!-- Nikki war hier: -->
+          <!-- zur korrekten syntax ändern -->
           <%= media.file_field :attached_file %>
         <% end %>
       </div>

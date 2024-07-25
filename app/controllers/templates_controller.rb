@@ -47,6 +47,9 @@ class TemplatesController < ApplicationController
     # the form contains two bogus fields used for file uploads -- :template_css, :template_image
 
     css_media = @template.media.where({ key: 'css' })
+    # Nikki war hier:
+    #     .empty? scheint Probleme zu machen
+    #     ich weiß bisher aber nicht, wo die Methode herkommt
     return if css_media.empty?
 
     @template_css = css_media.first.file_contents
