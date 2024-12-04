@@ -9,7 +9,7 @@ https://api.rubyonrails.org/v7.1.2/classes/ActiveRecord/AttributeMethods/Seriali
 
 ## Sass
 
-- replase sass-rails with dartsass-rails:
+- replacee sass-rails with dartsass-rails:
 
 https://guides.rubyonrails.org/asset_pipeline.html#dartsass-rails
 ./bin/bundle add dartsass-rails

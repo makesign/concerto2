@@ -1,4 +1,4 @@
-# Todos
+# Todos -> https://github.com/makesign/concerto2/issues/19
 adapt all places where Media is handled, e.g. in the views
 <%= media.file_field :attached_file %>
 look for: 
